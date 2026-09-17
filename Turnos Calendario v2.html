@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -230,7 +230,7 @@
   table.shift-grid td.cell-v{color:#334155}
   table.shift-grid td.cell-empty{color:#cbd5e1;background:#f8fafc}
 
-  /* ====== BARRA DE INSTALACIÓN PWA ====== */
+  /* ====== BARRA DE INSTALACIÃ“N PWA ====== */
   .install-bar{
     position: fixed; left: 12px; right: 12px;
     bottom: calc(14px + env(safe-area-inset-bottom));
@@ -261,8 +261,19 @@
     to{transform:translateY(0);opacity:1}
   }
 </style>
-</head>
-<body>
+<style id="sinercom-theme">
+:root { --sinercom-magenta:#DD2FB5; --sinercom-purple:#7A29E6; --sinercom-blue:#2632F0; --sinercom-navy:#021241; --sinercom-border:#e5e2f7; }
+body { background-color:#f7f7ff !important; background-image:radial-gradient(circle at 8% 0%,rgba(221,47,181,.12),transparent 34%),radial-gradient(circle at 92% 8%,rgba(122,41,230,.10),transparent 32%),radial-gradient(circle at 85% 100%,rgba(38,50,240,.09),transparent 36%) !important; color:var(--sinercom-navy) !important; }
+header,.app-header,nav,.navbar,.topbar { background:linear-gradient(125deg,var(--sinercom-navy),#11136a 55%,var(--sinercom-purple)) !important; color:#fff !important; border-bottom-color:var(--sinercom-magenta) !important; }
+button,.btn,a.btn,input[type="submit"],input[type="button"] { border-color:transparent !important; background:linear-gradient(135deg,var(--sinercom-blue),var(--sinercom-purple)) !important; color:#fff !important; }
+button:hover,.btn:hover,a.btn:hover,input[type="submit"]:hover,input[type="button"]:hover { background:linear-gradient(135deg,var(--sinercom-purple),var(--sinercom-magenta)) !important; }
+a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--sinercom-navy); }
+.card,.tool-card,.panel,.container-card,.dashboard-card,section { border-color:var(--sinercom-border) !important; box-shadow:0 10px 28px rgba(2,18,65,.09) !important; }
+.badge,.tag,.chip,.pill { border-color:#e6d5fa !important; }
+.sinercom-brand { position:fixed;top:14px;left:16px;z-index:9999;display:flex;align-items:center;gap:9px;padding:6px 11px 6px 7px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid rgba(221,47,181,.28);box-shadow:0 8px 22px rgba(2,18,65,.16);color:var(--sinercom-navy);font:700 12px/1.1 Arial,sans-serif;letter-spacing:.04em; }
+.sinercom-brand img { width:30px;height:30px;object-fit:cover;border-radius:50%; } @media(max-width:700px){.sinercom-brand{top:8px;left:8px;}}
+</style></head>
+<body><div class="sinercom-brand"><img src="sinercom.jpeg" alt="SINERCOM"><span>SINERCOM</span></div>
 
 <header class="topbar">
   <div class="bar">
@@ -284,8 +295,8 @@
       <div class="brand-info">
         <span class="brand-name">Turnos del Personal</span>
         <span class="brand-clock">
-          <span id="fecha-hoy">—</span>
-          <span class="sep-clock">·</span>
+          <span id="fecha-hoy">â€”</span>
+          <span class="sep-clock">Â·</span>
           <span id="reloj" class="reloj">--:--:--</span>
         </span>
       </div>
@@ -294,13 +305,13 @@
   </div>
 
   <div class="nav">
-    <button id="prev" class="arrow" aria-label="Anterior">‹</button>
-    <div id="titulo" class="titulo">—</div>
-    <button id="next" class="arrow" aria-label="Siguiente">›</button>
+    <button id="prev" class="arrow" aria-label="Anterior">â€¹</button>
+    <div id="titulo" class="titulo">â€”</div>
+    <button id="next" class="arrow" aria-label="Siguiente">â€º</button>
   </div>
 
   <div class="tabs" id="tabs">
-    <button class="tab activo" data-v="dia">Día</button>
+    <button class="tab activo" data-v="dia">DÃ­a</button>
     <button class="tab" data-v="semana">Semana</button>
     <button class="tab" data-v="mes">Mes</button>
     <button class="tab" data-v="sa">SA</button>
@@ -314,20 +325,20 @@
 
 <main id="vista"></main>
 
-<!-- ===== PWA: Barra de instalación ===== -->
+<!-- ===== PWA: Barra de instalaciÃ³n ===== -->
 <div id="installBar" class="install-bar" hidden>
-  <span class="install-emoji">📲</span>
-  <span class="install-text">Instalá esta app en tu celular</span>
+  <span class="install-emoji">ðŸ“²</span>
+  <span class="install-text">InstalÃ¡ esta app en tu celular</span>
   <button id="btnInstall">Instalar</button>
-  <button id="btnInstallClose" aria-label="Cerrar">✕</button>
+  <button id="btnInstallClose" aria-label="Cerrar">âœ•</button>
 </div>
 
 <script>
 /* ================================================================
-   PWA: MANIFEST + INSTALACIÓN  (v3 — sin aviso de HTTPS)
+   PWA: MANIFEST + INSTALACIÃ“N  (v3 â€” sin aviso de HTTPS)
    ================================================================ */
 (function setupPWA(){
-  /* ---------- 1. Generar íconos PNG en canvas ---------- */
+  /* ---------- 1. Generar Ã­conos PNG en canvas ---------- */
   function makeIcon(size){
     const c = document.createElement('canvas');
     c.width = c.height = size;
@@ -399,7 +410,7 @@
   document.getElementById('manifestLink').href = manifestData;
   document.getElementById('appleIcon').href = icon192;
 
-  /* ---------- 3. Detección de entorno ---------- */
+  /* ---------- 3. DetecciÃ³n de entorno ---------- */
   const isHTTPS   = location.protocol === 'https:'
                  || location.hostname === 'localhost'
                  || location.hostname === '127.0.0.1';
@@ -409,11 +420,11 @@
 
   console.log('===== PWA =====');
   console.log('Protocolo:', location.protocol);
-  console.log('HTTPS/localhost:', isHTTPS ? '✅' : '❌');
-  console.log('Ya instalada:', isStandalone ? '✅' : 'no');
+  console.log('HTTPS/localhost:', isHTTPS ? 'âœ…' : 'âŒ');
+  console.log('Ya instalada:', isStandalone ? 'âœ…' : 'no');
   console.log('===============');
 
-  /* ---------- 4. Barra de instalación ---------- */
+  /* ---------- 4. Barra de instalaciÃ³n ---------- */
   const bar = document.getElementById('installBar');
   const barText = bar.querySelector('.install-text');
   const btnInstall = document.getElementById('btnInstall');
@@ -433,9 +444,9 @@
     e.preventDefault();
     deferredPrompt = e;
     bipFired = true;
-    console.log('✅ beforeinstallprompt listo');
+    console.log('âœ… beforeinstallprompt listo');
     if (!dismissActive){
-      barText.textContent = 'Instalá esta app en tu celular';
+      barText.textContent = 'InstalÃ¡ esta app en tu celular';
       btnInstall.textContent = 'Instalar';
       bar.hidden = false;
     }
@@ -446,10 +457,10 @@
     if (!bipFired && !dismissActive){
       if (isIOS){
         barText.textContent = 'Agregala a la pantalla de inicio desde Safari';
-        btnInstall.textContent = 'Cómo';
+        btnInstall.textContent = 'CÃ³mo';
       } else {
-        barText.textContent = 'Instalá la app desde el menú de Chrome';
-        btnInstall.textContent = 'Cómo';
+        barText.textContent = 'InstalÃ¡ la app desde el menÃº de Chrome';
+        btnInstall.textContent = 'CÃ³mo';
       }
       bar.hidden = false;
     }
@@ -468,17 +479,17 @@
     if (isIOS){
       alert(
         'Para instalar en iPhone/iPad:\n\n' +
-        '1. Tocá el botón Compartir (⬆️) abajo en Safari.\n' +
-        '2. Elegí "Añadir a pantalla de inicio".\n' +
-        '3. Confirmá con "Añadir".'
+        '1. TocÃ¡ el botÃ³n Compartir (â¬†ï¸) abajo en Safari.\n' +
+        '2. ElegÃ­ "AÃ±adir a pantalla de inicio".\n' +
+        '3. ConfirmÃ¡ con "AÃ±adir".'
       );
     } else {
       alert(
         'Para instalar en Android:\n\n' +
-        '1. Tocá el menú de Chrome (⋮) arriba a la derecha.\n' +
-        '2. Elegí "Instalar aplicación" o "Añadir a pantalla de inicio".\n' +
-        '3. Confirmá.\n\n' +
-        'Si no aparece la opción, recargá la página una vez.'
+        '1. TocÃ¡ el menÃº de Chrome (â‹®) arriba a la derecha.\n' +
+        '2. ElegÃ­ "Instalar aplicaciÃ³n" o "AÃ±adir a pantalla de inicio".\n' +
+        '3. ConfirmÃ¡.\n\n' +
+        'Si no aparece la opciÃ³n, recargÃ¡ la pÃ¡gina una vez.'
       );
     }
   });
@@ -491,7 +502,7 @@
   window.addEventListener('appinstalled', () => {
     bar.hidden = true;
     try { localStorage.removeItem('installBarDismissed'); } catch(_){}
-    console.log('✅ App instalada');
+    console.log('âœ… App instalada');
   });
 })();
 </script>
@@ -501,7 +512,7 @@
    RELOJ EN TIEMPO REAL
    ================================================================ */
 (function(){
-  const DIASC = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const DIASC = ['Dom','Lun','Mar','MiÃ©','Jue','Vie','SÃ¡b'];
   const MESESC = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   const $f = document.getElementById('fecha-hoy');
   const $r = document.getElementById('reloj');
@@ -521,7 +532,7 @@
    UNIDADES
    ================================================================ */
 const UNIDADES = [
-  { id:'san-agustin', nombre:'San Agustín', color:'#2563eb', lugares:['Spot','Playa'] },
+  { id:'san-agustin', nombre:'San AgustÃ­n', color:'#2563eb', lugares:['Spot','Playa'] },
   { id:'guadalupe',   nombre:'Guadalupe',   color:'#059669', lugares:['Shop','Playa'] },
 ];
 
@@ -531,7 +542,7 @@ const UNIDADES = [
 const NAME_FIX = {
   'Gile Stafini':   'Gile Stefani',
   'Oscar Keler':    'Oscar Keller',
-  'MG (Medio Día)': 'Max Galeano (🛻)'
+  'MG (Medio DÃ­a)': 'Max Galeano (ðŸ›»)'
 };
 function fixName(n){
   const fixed = NAME_FIX[n] || n;
@@ -539,7 +550,7 @@ function fixName(n){
 }
 
 /* ================================================================
-   FUENTE 1: SPOT SAN AGUSTÍN
+   FUENTE 1: SPOT SAN AGUSTÃN
    ================================================================ */
 const SPOT_FECHAS = [
   "1-sep.","2-sep.","3-sep.","4-sep.","5-sep.","6-sep.","7-sep.","8-sep.","9-sep.","10-sep.",
@@ -834,15 +845,15 @@ const PLAYA_CODES = {
   AV:{ nombre:'Alejandro Volken' }
 };
 const PLAYA_ROWS = [
-  { turno:'T₁', horario:'23:00 a 06:00', code:'LR' },
-  { turno:'T₂', horario:'06:00 a 14:00', code:'LB' },
-  { turno:'T₂', horario:'06:00 a 14:00', code:'LH' },
-  { turno:'T₂', horario:'07:00 a 15:00', code:'NE' },
-  { turno:'T₂', horario:'07:00 a 15:00', code:'VM' },
-  { turno:'T₃', horario:'14:00 a 22:00', code:'DB' },
-  { turno:'T₃', horario:'14:00 a 22:00', code:'SR' },
-  { turno:'T₃', horario:'15:15 a 23:00', code:'OK' },
-  { turno:'T₃', horario:'15:15 a 23:00', code:'AV' }
+  { turno:'Tâ‚', horario:'23:00 a 06:00', code:'LR' },
+  { turno:'Tâ‚‚', horario:'06:00 a 14:00', code:'LB' },
+  { turno:'Tâ‚‚', horario:'06:00 a 14:00', code:'LH' },
+  { turno:'Tâ‚‚', horario:'07:00 a 15:00', code:'NE' },
+  { turno:'Tâ‚‚', horario:'07:00 a 15:00', code:'VM' },
+  { turno:'Tâ‚ƒ', horario:'14:00 a 22:00', code:'DB' },
+  { turno:'Tâ‚ƒ', horario:'14:00 a 22:00', code:'SR' },
+  { turno:'Tâ‚ƒ', horario:'15:15 a 23:00', code:'OK' },
+  { turno:'Tâ‚ƒ', horario:'15:15 a 23:00', code:'AV' }
 ];
 function playaGetValue(code, idx){
   switch(code){
@@ -874,7 +885,7 @@ const SHOP_ROWS = [
 /* ================================================================
    FUENTE 4: PLAYA GP
    ================================================================ */
-const PLAYA_GP_CODES = { ER: 'ELVIS RANI', MG: 'Max Galeano (🛻)' };
+const PLAYA_GP_CODES = { ER: 'ELVIS RANI', MG: 'Max Galeano (ðŸ›»)' };
 
 const PLAYA_GP_ROWS = [
   { horario:'23:00 - 06:00', tipo:'Noche', valores:[
@@ -894,7 +905,7 @@ const PLAYA_GP_ROWS = [
     "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
     "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ"
   ]},
-  { horario:'06:00 - 14:00', tipo:'Mañana', valores:[
+  { horario:'06:00 - 14:00', tipo:'MaÃ±ana', valores:[
     "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
     "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
     "ER","ER","ER","ER","ER","ER",
@@ -914,7 +925,7 @@ const PLAYA_GP_ROWS = [
     "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
     "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ"
   ]},
-  { horario:'07:00 - 15:00', tipo:'Mañana', valores:[
+  { horario:'07:00 - 15:00', tipo:'MaÃ±ana', valores:[
     "LUCAS SOLVER","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
     "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
     "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
@@ -983,7 +994,7 @@ const PLAYA_GP_ROWS = [
     "LUCAS SOLVER",
     "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON"
   ]},
-  { horario:'08:00 - 12:00 / 16:00 - 20:00', tipo:'Medio Día', valores:[
+  { horario:'08:00 - 12:00 / 16:00 - 20:00', tipo:'Medio DÃ­a', valores:[
     "","","","","","NICOLAS GAMARRA","NICOLAS GAMARRA","","","","","","",
     "NICOLAS GAMARRA","NICOLAS GAMARRA","","","","","","","","","","","","","",
     "NICOLAS GAMARRA","NICOLAS GAMARRA","","","","","","","","","","","","","","",
@@ -997,7 +1008,7 @@ const PLAYA_GP_ROWS = [
     "LUCAS SOLVER","","",
     "LUCAS SOLVER","","","","","","","","","","","","","","","","","",""
   ]},
-  { horario:'🛻 Lun - Sáb medio día', tipo:'Medio Día', valores:[
+  { horario:'ðŸ›» Lun - SÃ¡b medio dÃ­a', tipo:'Medio DÃ­a', valores:[
     "MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
     "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
     "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
@@ -1013,7 +1024,7 @@ const PLAYA_GP_ROWS = [
 ];
 
 /* ================================================================
-   CONSTRUCCIÓN DE EMPLEADOS Y TURNOS
+   CONSTRUCCIÃ“N DE EMPLEADOS Y TURNOS
    ================================================================ */
 const PALETA = [
   '#3b82f6','#10b981','#f59e0b','#8b5cf6','#ef4444',
@@ -1105,7 +1116,7 @@ function horaHHMM(h, m){ return `${pad2(h)}:${pad2(m||0)}`; }
       if (!val || val === 'MA') return;
       const fIso = fechaISO(year, mes, i + 1);
       const empId = addEmp(val, 'guadalupe', 'Shop', 'Shop');
-      addTurno(fIso, empId, 'Mañana', '09:00', '17:00');
+      addTurno(fIso, empId, 'MaÃ±ana', '09:00', '17:00');
     });
   });
 })();
@@ -1143,8 +1154,8 @@ function horaHHMM(h, m){ return `${pad2(h)}:${pad2(m||0)}`; }
 /* ================================================================
    HELPERS
    ================================================================ */
-const DIAS  = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-const DIASC = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const DIAS  = ['domingo','lunes','martes','miÃ©rcoles','jueves','viernes','sÃ¡bado'];
+const DIASC = ['Dom','Lun','Mar','MiÃ©','Jue','Vie','SÃ¡b'];
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const MESES_C = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
@@ -1174,7 +1185,7 @@ function lighten(hex, amount = 0.72){
 }
 
 function cellInfo(val){
-  if (!val || val === 'AG') return { style:'', html:'·', cls:'cell-empty' };
+  if (!val || val === 'AG') return { style:'', html:'Â·', cls:'cell-empty' };
   const first = val.split('/')[0].trim();
   const fixedFirst = fixName(first);
   const emp = empByNombre[fixedFirst];
@@ -1187,23 +1198,23 @@ function cellInfo(val){
 }
 
 /* ================================================================
-   NUEVA: DESCANSANDO — colaboradores activos que hoy NO trabajan
-   Se considera "activo" si tiene al menos 1 turno en ±7 días.
+   NUEVA: DESCANSANDO â€” colaboradores activos que hoy NO trabajan
+   Se considera "activo" si tiene al menos 1 turno en Â±7 dÃ­as.
    ================================================================ */
 function personasDescansando(fechaActual){
   const fIso = isoD(fechaActual);
   const fMs  = fechaActual.getTime();
-  const VENTANA = 7 * 24 * 60 * 60 * 1000; /* ±7 días */
+  const VENTANA = 7 * 24 * 60 * 60 * 1000; /* Â±7 dÃ­as */
 
   const out = [];
   for (const emp of EMPLEADOS){
     if (filtroUnidad && emp.unidad !== filtroUnidad) continue;
 
-    /* ¿Trabaja hoy? */
+    /* Â¿Trabaja hoy? */
     const trabajaHoy = TURNOS.some(t => t.fecha === fIso && t.empleado === emp.id);
     if (trabajaHoy) continue;
 
-    /* ¿Está activo en la ventana? */
+    /* Â¿EstÃ¡ activo en la ventana? */
     const activo = TURNOS.some(t => {
       if (t.empleado !== emp.id) return false;
       const tMs = parseISO(t.fecha).getTime();
@@ -1231,13 +1242,13 @@ function renderDescansando(fechaActual){
       <div class="descanso-av" style="--c:${e.color}">${esc(iniciales(e.nombre))}</div>
       <div class="descanso-info">
         <div class="descanso-name">${esc(e.nombre)}</div>
-        <div class="descanso-lugar">${esc(e.lugar)} · ${esc(uniById[e.unidad] ? uniById[e.unidad].nombre : e.unidad)}</div>
+        <div class="descanso-lugar">${esc(e.lugar)} Â· ${esc(uniById[e.unidad] ? uniById[e.unidad].nombre : e.unidad)}</div>
       </div>
     </div>`).join('');
 
   return `<section class="descanso-bloque">
     <header class="descanso-head">
-      <span class="descanso-title"><span class="ico">🌙</span> Descansando hoy</span>
+      <span class="descanso-title"><span class="ico">ðŸŒ™</span> Descansando hoy</span>
       <span class="descanso-count">${personas.length}</span>
     </header>
     <div class="descanso-grid">${items}</div>
@@ -1347,11 +1358,11 @@ function buildPlayaGPTable(){
 function renderSA(){
   return `
     <div class="tabla-wrap" style="--tc:#2563eb">
-      <div class="tabla-head">Spot San Agustín <span class="tc-sub">Sep 2026 – Ene 2027</span></div>
+      <div class="tabla-head">Spot San AgustÃ­n <span class="tc-sub">Sep 2026 â€“ Ene 2027</span></div>
       <div class="tabla-scroll">${buildSpotSATable()}</div>
     </div>
     <div class="tabla-wrap" style="--tc:#2563eb">
-      <div class="tabla-head">Playa San Agustín <span class="tc-sub">Sep – Dic 2026</span></div>
+      <div class="tabla-head">Playa San AgustÃ­n <span class="tc-sub">Sep â€“ Dic 2026</span></div>
       <div class="tabla-scroll">${buildPlayaSATable()}</div>
     </div>
   `;
@@ -1360,7 +1371,7 @@ function renderSA(){
 function renderGP(){
   return `
     <div class="tabla-wrap" style="--tc:#059669">
-      <div class="tabla-head">Playa Guadalupe <span class="tc-sub">Sep – Dic 2026</span></div>
+      <div class="tabla-head">Playa Guadalupe <span class="tc-sub">Sep â€“ Dic 2026</span></div>
       <div class="tabla-scroll">${buildPlayaGPTable()}</div>
     </div>
   `;
@@ -1391,21 +1402,21 @@ const $vista = document.getElementById('vista');
 const $tabs = document.getElementById('tabs');
 
 function tituloActual(){
-  if (vista === 'sa') return 'San Agustín · Planillas';
-  if (vista === 'gp') return 'Guadalupe · Planillas';
+  if (vista === 'sa') return 'San AgustÃ­n Â· Planillas';
+  if (vista === 'gp') return 'Guadalupe Â· Planillas';
   if (vista === 'dia') return cap(fechaLarga(fecha));
   if (vista === 'semana'){
     const a = inicioSemana(fecha), b = new Date(a); b.setDate(b.getDate()+6);
     if (a.getMonth() === b.getMonth())
-      return `${a.getDate()} – ${b.getDate()} de ${MESES[a.getMonth()]} ${a.getFullYear()}`;
-    return `${a.getDate()} ${MESES[a.getMonth()]} – ${b.getDate()} ${MESES[b.getMonth()]}`;
+      return `${a.getDate()} â€“ ${b.getDate()} de ${MESES[a.getMonth()]} ${a.getFullYear()}`;
+    return `${a.getDate()} ${MESES[a.getMonth()]} â€“ ${b.getDate()} ${MESES[b.getMonth()]}`;
   }
   return cap(`${MESES[fecha.getMonth()]} ${fecha.getFullYear()}`);
 }
 
 function cardTurno(t, compacto){
   const e = empById[t.empleado] || { nombre: t.empleado, color:'#94a3b8' };
-  const hora = t.inicio && t.fin ? `${t.inicio} – ${t.fin}` : '—';
+  const hora = t.inicio && t.fin ? `${t.inicio} â€“ ${t.fin}` : 'â€”';
   const badge = compacto ? (e.lugar || '') : (t.tipo || 'Turno');
   const sub   = compacto ? (t.tipo || '') : (t.nota || '');
   return `<article class="turno" style="--c:${e.color}">
@@ -1417,7 +1428,7 @@ function cardTurno(t, compacto){
       </div>
       <div class="fila2">
         <span class="hora">${esc(hora)}</span>
-        ${sub ? `<span class="sep">·</span><span>${esc(sub)}</span>` : ''}
+        ${sub ? `<span class="sep">Â·</span><span>${esc(sub)}</span>` : ''}
       </div>
     </div>
   </article>`;
@@ -1431,7 +1442,7 @@ function renderDia(){
     </div>`;
 
   if (!lista.length){
-    html += `<div class="vacio">Sin turnos este día</div>`;
+    html += `<div class="vacio">Sin turnos este dÃ­a</div>`;
   } else {
     const visibles = UNIDADES.filter(u => !filtroUnidad || u.id === filtroUnidad);
     for (const u of visibles){
@@ -1578,7 +1589,7 @@ $vista.addEventListener('touchend', e => {
 
 /* Init */
 render();
-console.log('✅ Cargados:', EMPLEADOS.length, 'colaboradores y', TURNOS.length, 'turnos');
+console.log('âœ… Cargados:', EMPLEADOS.length, 'colaboradores y', TURNOS.length, 'turnos');
 </script>
 </body>
 </html>

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planilla Control Descarga Camión</title>
+    <title>Planilla Control Descarga CamiÃ³n</title>
     <style>
         * {
             box-sizing: border-box;
@@ -43,7 +43,7 @@
             text-transform: uppercase;
         }
 
-        /* Pestañas */
+        /* PestaÃ±as */
         .tabs {
             display: flex;
             gap: 10px;
@@ -85,7 +85,7 @@
             display: block;
         }
 
-        /* Botones de acción */
+        /* Botones de acciÃ³n */
         .acciones {
             display: flex;
             gap: 15px;
@@ -257,22 +257,33 @@
             }
         }
     </style>
-</head>
-<body>
+<style id="sinercom-theme">
+:root { --sinercom-magenta:#DD2FB5; --sinercom-purple:#7A29E6; --sinercom-blue:#2632F0; --sinercom-navy:#021241; --sinercom-border:#e5e2f7; }
+body { background-color:#f7f7ff !important; background-image:radial-gradient(circle at 8% 0%,rgba(221,47,181,.12),transparent 34%),radial-gradient(circle at 92% 8%,rgba(122,41,230,.10),transparent 32%),radial-gradient(circle at 85% 100%,rgba(38,50,240,.09),transparent 36%) !important; color:var(--sinercom-navy) !important; }
+header,.app-header,nav,.navbar,.topbar { background:linear-gradient(125deg,var(--sinercom-navy),#11136a 55%,var(--sinercom-purple)) !important; color:#fff !important; border-bottom-color:var(--sinercom-magenta) !important; }
+button,.btn,a.btn,input[type="submit"],input[type="button"] { border-color:transparent !important; background:linear-gradient(135deg,var(--sinercom-blue),var(--sinercom-purple)) !important; color:#fff !important; }
+button:hover,.btn:hover,a.btn:hover,input[type="submit"]:hover,input[type="button"]:hover { background:linear-gradient(135deg,var(--sinercom-purple),var(--sinercom-magenta)) !important; }
+a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--sinercom-navy); }
+.card,.tool-card,.panel,.container-card,.dashboard-card,section { border-color:var(--sinercom-border) !important; box-shadow:0 10px 28px rgba(2,18,65,.09) !important; }
+.badge,.tag,.chip,.pill { border-color:#e6d5fa !important; }
+.sinercom-brand { position:fixed;top:14px;left:16px;z-index:9999;display:flex;align-items:center;gap:9px;padding:6px 11px 6px 7px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid rgba(221,47,181,.28);box-shadow:0 8px 22px rgba(2,18,65,.16);color:var(--sinercom-navy);font:700 12px/1.1 Arial,sans-serif;letter-spacing:.04em; }
+.sinercom-brand img { width:30px;height:30px;object-fit:cover;border-radius:50%; } @media(max-width:700px){.sinercom-brand{top:8px;left:8px;}}
+</style></head>
+<body><div class="sinercom-brand"><img src="sinercom.jpeg" alt="SINERCOM"><span>SINERCOM</span></div>
     <div class="container">
-        <h1>Planilla Control de Descarga Camión San Agustín</h1>
+        <h1>Planilla Control de Descarga CamiÃ³n San AgustÃ­n</h1>
 
-        <!-- Pestañas -->
+        <!-- PestaÃ±as -->
         <div class="tabs">
-            <button class="tab-btn active" data-tab="tab-editar">📝 Planilla</button>
-            <button class="tab-btn" data-tab="tab-historial">📋 Historial Guardado</button>
+            <button class="tab-btn active" data-tab="tab-editar">ðŸ“ Planilla</button>
+            <button class="tab-btn" data-tab="tab-historial">ðŸ“‹ Historial Guardado</button>
         </div>
 
-        <!-- Contenido de pestañas -->
+        <!-- Contenido de pestaÃ±as -->
         <div id="tab-editar" class="tab-content active">
             <div class="acciones">
-                <button class="btn btn-guardar" id="btn-guardar">💾 Guardar</button>
-                <button class="btn btn-limpiar" id="btn-limpiar">🧹 Limpiar</button>
+                <button class="btn btn-guardar" id="btn-guardar">ðŸ’¾ Guardar</button>
+                <button class="btn btn-limpiar" id="btn-limpiar">ðŸ§¹ Limpiar</button>
             </div>
 
             <div class="tabla-wrapper">
@@ -282,11 +293,11 @@
                             <th>FECHA</th>
                             <th>HORARIO</th>
                             <th>TK</th>
-                            <th>TEMPERATURA TK (°C)</th>
+                            <th>TEMPERATURA TK (Â°C)</th>
                             <th>Producto</th>
                             <th>PATENTE CAMION</th>
                             <th>NOMBRE CHOFER</th>
-                            <th>LITROS CONVERTIDOS (Según Remito)</th>
+                            <th>LITROS CONVERTIDOS (SegÃºn Remito)</th>
                             <th>LITROS FUSION (Antes)</th>
                             <th>LITROS VARILLA (Antes)</th>
                             <th>LITROS DESCARGADOS</th>
@@ -416,19 +427,19 @@
                 </table>
             </div>
             <div class="observacion">
-                * Las diferencias (FUSION y VARILLA) se calculan automáticamente.
+                * Las diferencias (FUSION y VARILLA) se calculan automÃ¡ticamente.
             </div>
         </div>
 
-        <!-- Pestaña Historial -->
+        <!-- PestaÃ±a Historial -->
         <div id="tab-historial" class="tab-content">
-            <h2 style="font-size:18px; margin-bottom:12px; color:#1e3a5f;">📋 Registros Guardados</h2>
+            <h2 style="font-size:18px; margin-bottom:12px; color:#1e3a5f;">ðŸ“‹ Registros Guardados</h2>
             <div id="historial-contenedor">
-                <div class="vacio">No hay registros guardados todavía.</div>
+                <div class="vacio">No hay registros guardados todavÃ­a.</div>
             </div>
             <div class="acciones-historial">
-                <button class="btn btn-descargar" id="btn-descargar-txt">⬇️ Descargar historial en TXT</button>
-                <button class="btn btn-limpiar" id="btn-borrar-historial" style="background:#6c757d;">🗑️ Borrar todo el historial</button>
+                <button class="btn btn-descargar" id="btn-descargar-txt">â¬‡ï¸ Descargar historial en TXT</button>
+                <button class="btn btn-limpiar" id="btn-borrar-historial" style="background:#6c757d;">ðŸ—‘ï¸ Borrar todo el historial</button>
             </div>
         </div>
     </div>
@@ -496,7 +507,7 @@
                 return datos;
             }
 
-            // ---------- GESTIÓN DE HISTORIAL (localStorage) ----------
+            // ---------- GESTIÃ“N DE HISTORIAL (localStorage) ----------
             function cargarHistorial() {
                 const stored = localStorage.getItem('historialDescargas');
                 if (!stored) return [];
@@ -541,18 +552,18 @@
                 const contenedor = document.getElementById('historial-contenedor');
                 const registros = cargarHistorial();
                 if (registros.length === 0) {
-                    contenedor.innerHTML = '<div class="vacio">No hay registros guardados todavía.</div>';
+                    contenedor.innerHTML = '<div class="vacio">No hay registros guardados todavÃ­a.</div>';
                     return;
                 }
 
                 let html = '';
                 registros.forEach((registro, idx) => {
                     html += `<div style="margin-bottom: 30px; border-bottom: 2px dashed #ccc; padding-bottom: 15px;">`;
-                    html += `<div style="font-weight:600; font-size:15px; color:#1e3a5f; margin-bottom:8px;">📌 Registro #${idx+1} — ${registro.timestamp}</div>`;
+                    html += `<div style="font-weight:600; font-size:15px; color:#1e3a5f; margin-bottom:8px;">ðŸ“Œ Registro #${idx+1} â€” ${registro.timestamp}</div>`;
                     html += `<div class="tabla-wrapper"><table class="historial-tabla" style="min-width:1100px;">`;
                     html += `<thead><tr>
                                 <th>TK</th><th>Producto</th><th>FECHA</th><th>HORARIO</th>
-                                <th>TEMP (°C)</th><th>PATENTE</th><th>CHOFER</th>
+                                <th>TEMP (Â°C)</th><th>PATENTE</th><th>CHOFER</th>
                                 <th>LITROS CONV.</th><th>FUSION (A)</th><th>VARILLA (A)</th>
                                 <th>DESCARGADOS</th><th>FUSION (D)</th><th>VARILLA (D)</th>
                                 <th>DIF. FUSION</th><th>DIF. VARILLA</th><th>RECEPCIONA</th>
@@ -589,7 +600,7 @@
                 document.querySelectorAll('[data-borrar-idx]').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const idx = parseInt(this.getAttribute('data-borrar-idx'));
-                        if (confirm(`¿Eliminar el registro #${idx+1}?`)) {
+                        if (confirm(`Â¿Eliminar el registro #${idx+1}?`)) {
                             let registros = cargarHistorial();
                             registros.splice(idx, 1);
                             guardarHistorial(registros);
@@ -607,19 +618,19 @@
                     return;
                 }
 
-                const header = ['TK', 'Producto', 'Fecha', 'Horario', 'Temp(°C)', 'Patente', 'Chofer',
+                const header = ['TK', 'Producto', 'Fecha', 'Horario', 'Temp(Â°C)', 'Patente', 'Chofer',
                     'Litros Conv.', 'Fusion(A)', 'Varilla(A)', 'Descargados', 'Fusion(D)',
                     'Varilla(D)', 'Dif Fus', 'Dif Var', 'Recepciona'
                 ];
 
                 let contenido = '============================================================\n';
-                contenido += '   REGISTROS DE DESCARGA DE CAMIÓN - SAN AGUSTÍN\n';
+                contenido += '   REGISTROS DE DESCARGA DE CAMIÃ“N - SAN AGUSTÃN\n';
                 contenido += '============================================================\n\n';
 
                 registros.forEach((reg, idx) => {
-                    contenido += `📌 REGISTRO #${idx+1}  (${reg.timestamp})\n`;
+                    contenido += `ðŸ“Œ REGISTRO #${idx+1}  (${reg.timestamp})\n`;
                     contenido += '------------------------------------------------------------\n';
-                    // Línea de encabezados
+                    // LÃ­nea de encabezados
                     contenido += header.join(' | ') + '\n';
                     contenido += header.map(() => '------').join(' | ') + '\n';
 
@@ -659,7 +670,7 @@
                 filas.forEach(row => updateDifferences(row));
             }
 
-            // ---------- MANEJO DE PESTAÑAS ----------
+            // ---------- MANEJO DE PESTAÃ‘AS ----------
             function mostrarPestana(id) {
                 document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
                 document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -667,9 +678,9 @@
                 document.querySelector(`.tab-btn[data-tab="${id}"]`).classList.add('active');
             }
 
-            // ---------- INICIALIZACIÓN ----------
+            // ---------- INICIALIZACIÃ“N ----------
             function init() {
-                // Pestañas
+                // PestaÃ±as
                 document.querySelectorAll('.tab-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const tabId = this.getAttribute('data-tab');
@@ -685,14 +696,14 @@
 
                 // Limpiar planilla
                 document.getElementById('btn-limpiar').addEventListener('click', function() {
-                    if (confirm('¿Limpiar todos los datos de la planilla?')) {
+                    if (confirm('Â¿Limpiar todos los datos de la planilla?')) {
                         limpiarPlanilla();
                     }
                 });
 
                 // Borrar historial
                 document.getElementById('btn-borrar-historial').addEventListener('click', function() {
-                    if (confirm('¿Eliminar todo el historial de registros?')) {
+                    if (confirm('Â¿Eliminar todo el historial de registros?')) {
                         guardarHistorial([]);
                         renderizarHistorial();
                     }
