@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contrato de Trabajo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #e6e9ef;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .contract-container {
+      max-width: 210mm;
+      width: 100%;
+      background: white;
+      padding: 0 14mm 10mm 14mm;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      border-radius: 4px;
+      margin-bottom: 15px;
+      line-height: 1.35;
+      color: #1e1e1e;
+      font-size: 11pt;
+      min-height: 260mm;
+      display: flex;
+      flex-direction: column;
+    }
+    .content {
+      flex: 1;
+    }
+    /* --- ENCABEZADO --- */
+    .header-logo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #1a3a5c;
+      padding: 2mm 0 3mm 0;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .header-logo .logo-text {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #1a3a5c;
+      line-height: 1.1;
+    }
+    .header-logo .logo-text small {
+      display: block;
+      font-size: 0.5rem;
+      font-weight: normal;
+      color: #3d5a73;
+    }
+    .header-logo .cuit {
+      font-size: 0.8rem;
+      color: #2c3e50;
+    }
+    .header-logo .cuit .empty-field { min-width: 60px; }
+    h1 {
+      font-size: 16px;
+      text-align: center;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 0 0 6px 0;
+      line-height: 1.3;
+    }
+    h1 span {
+      font-size: 0.75rem;
+      text-transform: none;
+      font-weight: normal;
+    }
+    p { margin: 3px 0; text-align: justify; }
+    strong { font-weight: 700; }
+    /* --- CAMPOS EDITABLES (amarillos en pantalla) --- */
+    .empty-field {
+      background-color: #fff9b0;
+      padding: 0 4px;
+      border-radius: 2px;
+      display: inline-block;
+      font-weight: 500;
+      border-bottom: 1px dashed #b8860b; /* ← línea punteada en pantalla */
+      color: #1e1e1e;
+      min-width: 60px;
+    }
+    /* --- MODO PDF: sin amarillo Y SIN LÍNEA INFERIOR --- */
+    .pdf-mode .empty-field {
+      background-color: transparent !important;
+      border-bottom: none !important; /* ← ELIMINA LA LÍNEA */
+    }
+    .empty-field-sm { min-width: 50px; }
+    .empty-field-md { min-width: 120px; }
+    .empty-field-lg { min-width: 170px; }
+    /* --- FIRMAS --- */
+    .firma-section {
+      margin-top: 20mm;
+      padding-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 6px 20px;
+      border-top: 1px solid #ccc;
+    }
+    .firma-item {
+      flex: 1 1 100px;
+      text-align: center;
+      margin-top: 2px;
+    }
+    .firma-item .line {
+      border-top: 1px solid #333;
+      margin: 8px 0 4px 0;
+      width: 100%;
+    }
+    .firma-item span { font-size: 0.8rem; }
+    /* --- BOTÓN --- */
+    .btn-pdf {
+      background: #1a3a5c;
+      color: white;
+      border: none;
+      padding: 10px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+      transition: 0.2s;
+      letter-spacing: 0.3px;
+      margin-top: 6px;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+    .btn-pdf:hover { background: #0f2a44; transform: scale(1.02); }
+    .btn-pdf:active { transform: scale(0.97); }
+    .note {
+      font-size: 0.8rem;
+      color: #3d3d3d;
+      margin-top: 6px;
+      background: #f2f5fa;
+      padding: 6px 14px;
+      border-radius: 30px;
+    }
+    @media (max-width: 650px) {
+      .contract-container { padding: 0 8mm 10mm 8mm; font-size: 10pt; }
+      .header-logo { flex-direction: column; align-items: center; text-align: center; }
+      .firma-section { flex-direction: column; align-items: center; }
+      .firma-item { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="contract-container" id="contract-content">
+
+  <div class="content">
+
+    <div class="header-logo">
+      <div class="logo-text">
+        SINERCOM
+        <small>energías que potencian</small>
+      </div>
+      <div class="cuit">
+        <strong>CUIT:</strong> <span class="empty-field empty-field-sm">30-71426416-4</span>
+      </div>
+    </div>
+
+    <h1>CONTRATO INDIVIDUAL DE TRABAJO CON PERÍODO DE PRUEBA <br><span>ART. 92 BIS, LEY 20.744</span></h1>
+
+    <p><strong>PRELIMINAR</strong> <em>(A- PARTES)</em> Entre <strong>SINERCOM SRL</strong> CUIT <span class="empty-field">30-71426416-4</span>, con domicilio en <span class="empty-field empty-field-md">Habegger N° 511</span> de la ciudad de <span class="empty-field">Reconquista</span>, provincia de Santa Fe, en adelante EL EMPLEADOR, inscripto en el AFIP -- DGI bajo <strong>CUIT N° <span class="empty-field">30-71426416-4</span>.</strong> y el Srta. <span class="empty-field empty-field-lg">YOST BIANCA MARIA DE LOS MILAGROS</span>, DNI Nº <span class="empty-field">47208606</span> CUIL Nº <span class="empty-field">27-47208606-0</span> con domicilio en calle <span class="empty-field empty-field-md">25 DE MAYO N° 1191</span> de la LOCALIDAD DE <span class="empty-field">SAN AGUSTIN</span>, Provincia de Santa Fe, llamado EL EMPLEADO, celebran este <strong>CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO INDETERMINADO CON PERÍODO DE PRUEBA</strong>, en los términos de los art. 92 bis de la ley 20.744, reformados por las leyes 24.465 y 25.250, 25.877 y demás normas laborales y supletoriamente a las declaraciones y estipulaciones siguientes:</p>
+
+    <p><strong>PRIMERA</strong> <em>(I- OBJETO)</em> El EMPLEADOR contrata al EMPLEADO para realizar las tareas siguientes: <span class="empty-field empty-field-lg">OPERARIO DE SHOP</span> (susceptible de modificación que no implique un cambio sustancial) y su actividad se regirá por el Convenio Colectivo de Trabajo Nº <span class="empty-field">345/2002</span>.</p>
+
+    <p><strong>SEGUNDA</strong> <em>(II- PLAZO)</em> <strong>a)</strong> El plazo contractual será indeterminado, pero regirá el período de prueba previsto en el artículo 92 bis de la ley 20.744, con las reformas de las leyes 24.465, 25.250 y 25.877. <strong>b)</strong> Durante el periodo de prueba, es decir <span class="empty-field">3 meses</span> desde el inicio de la relación laboral cualquiera de las partes y de acuerdo al art. 2 de la Ley 25.877 modificatoria del art. 92 bis de la LCT, podrá rescindir el contrato de trabajo sin expresión de causa alguna y sin derecho a indemnización por antigüedad.</p>
+
+    <p><strong>TERCERA</strong> <em>(III- JORNADA Y LUGAR DE TRABAJO)</em> La jornada laboral tendrá <span class="empty-field">8</span> horas, y se desarrollará en Calle <span class="empty-field empty-field-lg">AUTOVIA 19 Y ACCESO A SAN AGUSTIN</span> de la ciudad de <span class="empty-field">SANTA FE</span>, <strong>pudiendo modificarse a opción del EMPLEADOR según las necesidades laborales lo requieran.</strong></p>
+
+    <p><strong>CUARTA</strong> <em>(IV- SALARIO)</em> La remuneración mensual bruta <em>(antes de los descuentos), <strong>y dejando a salvo futuras modificaciones</strong>,</em> será de pesos <span class="empty-field empty-field-lg">UN MILLON DOSCIENTOS SESENTA MIL QUINIENTOS VEINTISIETE ($ 1.260.527)</span>, a cobrar por mes vencido.</p>
+
+    <p><strong>QUINTA</strong> <em>(V- DATOS PERSONALES)</em> <strong>a)</strong> El empleado denuncia en este acto con carácter de declaración jurada sus datos personales: Nacionalidad <span class="empty-field">argentino</span>, Sexo <span class="empty-field">femenino</span>, edad <span class="empty-field">19</span> años, Documento <span class="empty-field">47208606</span> (DNI, <del>LC, LE</del>), Fecha de nacimiento <span class="empty-field">23/03/2006</span> domicilio calle <span class="empty-field empty-field-md">25 DE MAYO N° 1191</span> de la LOCALIDAD DE <span class="empty-field">SAN AGUSTIN</span>, Teléfono <span class="empty-field">(342) 6981152</span> Hija de <span class="empty-field empty-field-md">YOST ANGEL DANIEL</span> Y <span class="empty-field empty-field-md">ESPINDOLA DEOLINDA ISABEL</span> <strong>b)</strong> El trabajador deberá presentar y entregar la documentación legalmente necesaria que se archivará en su legajo personal. <strong>c)</strong> Por otra parte asume especialmente el compromiso de actualizar los datos que se modificaren, de lo contrario serán plenamente eficaces cualesquiera notificaciones en los domicilios y con los datos consignados en el presente.</p>
+
+    <p><strong>SEXTA</strong> <em>(VI- DOMICILIOS)</em> Los domicilios declarados precedentemente tienen carácter de declaración jurada y mientras no sean modificados eficazmente -- denuncia por escrito ante empleador - serán eficaces a los efectos de cualesquiera notificaciones. Asimismo a partir de la segunda notificación será plenamente valido el domicilio alternativo denunciado.</p>
+
+    <p><strong>SÉPTIMA</strong> <em>(VII- VIGENCIA)</em> El presente contrato comenzará su vigencia en la fecha <span class="empty-field">07/01/2026</span> rigiendo el periodo de prueba -- Art. 92 bis LCT - hasta fecha <span class="empty-field">07/07/2026</span> plazo en el cual cualquiera de las partes y de acuerdo al art. 2 de la Ley 25.877 modificatoria del art. 92 bis de la LCT, podrá rescindir el contrato de trabajo sin expresión de causa alguna y sin derecho a indemnización por antigüedad.</p>
+
+    <p><strong>OCTAVA</strong> <em>(IX- LUGAR Y FECHA)</em> Celebrado en la ciudad de <span class="empty-field">SANTA FE</span>, provincia Santa Fe a los <span class="empty-field">07</span> DIAS DEL MES DE <span class="empty-field">ENERO</span> DE <span class="empty-field">2026</span></p>
+
+  </div>
+
+  <!-- FIRMAS -->
+  <div class="firma-section">
+    <div class="firma-item"><div class="line"></div><span><strong>Firma</strong></span></div>
+    <div class="firma-item"><div class="line"></div><span><strong>Aclaración</strong></span></div>
+    <div class="firma-item"><div class="line"></div><span><strong>DNI</strong></span></div>
+  </div>
+
+</div>
+
+<button class="btn-pdf" id="downloadPdfBtn">📄 Guardar como PDF</button>
+<p class="note">💡 Los campos en amarillo son editables en la pantalla. En el PDF se verán sin sombreado ni línea inferior.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+  (function() {
+    const downloadBtn = document.getElementById('downloadPdfBtn');
+    const contractElement = document.getElementById('contract-content');
+
+    downloadBtn.addEventListener('click', function() {
+      downloadBtn.textContent = '⏳ Generando PDF...';
+      downloadBtn.disabled = true;
+
+      // 🔥 Activamos el modo PDF (quita amarillo y línea inferior)
+      contractElement.classList.add('pdf-mode');
+
+      html2canvas(contractElement, {
+        scale: 2,
+        letterRendering: true,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        width: contractElement.scrollWidth,
+        height: contractElement.scrollHeight,
+        windowWidth: contractElement.scrollWidth,
+        windowHeight: contractElement.scrollHeight
+      }).then((canvas) => {
+        // 🔥 Quitamos el modo PDF para que la pantalla siga con amarillo
+        contractElement.classList.remove('pdf-mode');
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.98);
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+
+        const pdfWidth = 210;
+        const pdfHeight = 297;
+        const margin = 0;
+
+        const imgWidth = pdfWidth - margin * 2;
+        const imgHeight = (canvas.height / canvas.width) * imgWidth;
+
+        const finalHeight = Math.min(imgHeight, pdfHeight - margin * 2);
+        const finalWidth = (finalHeight / imgHeight) * imgWidth;
+
+        const x = (pdfWidth - finalWidth) / 2;
+        const y = 0;
+
+        pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
+        pdf.save('Contrato_de_Trabajo_Periodo_Prueba.pdf');
+
+        downloadBtn.textContent = '📄 Guardar como PDF';
+        downloadBtn.disabled = false;
+      }).catch((err) => {
+        contractElement.classList.remove('pdf-mode');
+        console.error('Error:', err);
+        downloadBtn.textContent = '📄 Guardar como PDF';
+        downloadBtn.disabled = false;
+        alert('Error al generar el PDF. Intenta nuevamente.');
+      });
+    });
+  })();
+</script>
+
+<script>
+  (function makeEditable() {
+    document.querySelectorAll('.empty-field').forEach(field => {
+      field.setAttribute('contenteditable', 'true');
+      field.setAttribute('spellcheck', 'false');
+    });
+  })();
+</script>
+
+</body>
+</html>

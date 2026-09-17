@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apercibimientos — Tiendas Spot</title>
+<style>
+  :root{
+    --ink:#16202e;
+    --ink-soft:#41506b;
+    --line:#d9e0ea;
+    --bg:#eef2f7;
+    --paper:#ffffff;
+    --accent:#b91c1c;
+    --accent-soft:#fef2f2;
+    --brand:#1e3a5f;
+    --brand-soft:#eaf1f8;
+    --edit:#f59e0b;
+    --edit-soft:#fffbeb;
+    --ok:#15803d;
+    --ok-soft:#ecfdf5;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+
+  body{
+    font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- BARRA SUPERIOR ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    background:var(--brand); color:#fff;
+    padding:14px 22px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+    box-shadow:0 2px 12px rgba(15,30,50,.18);
+  }
+  .topbar h1{
+    font-size:1.05rem; margin:0; font-weight:600; letter-spacing:.4px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .topbar h1 .dot{
+    width:10px; height:10px; border-radius:50%;
+    background:#f87171;
+    box-shadow:0 0 0 4px rgba(248,113,113,.25);
+  }
+  .topbar small{
+    display:block; font-weight:400; font-size:.72rem;
+    opacity:.75; letter-spacing:.3px;
+  }
+  .topbar-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+
+  .btn{
+    border:1px solid rgba(255,255,255,.35);
+    background:rgba(255,255,255,.1);
+    color:#fff; padding:8px 16px; border-radius:7px;
+    font-size:.82rem; font-weight:600; cursor:pointer;
+    transition:.18s; display:inline-flex; align-items:center; gap:7px;
+    font-family:inherit;
+  }
+  .btn:hover{background:rgba(255,255,255,.22);}
+  .btn:active{transform:translateY(1px);}
+  .btn.warn{border-color:rgba(255,200,120,.55); background:rgba(245,158,11,.22);}
+  .btn.warn:hover{background:rgba(245,158,11,.4);}
+  .btn.ok{border-color:rgba(120,230,160,.55); background:rgba(21,128,61,.3);}
+  .btn.ok:hover{background:rgba(21,128,61,.5);}
+  .btn.ghost{border-color:rgba(255,255,255,.2); background:transparent;}
+  .btn[hidden]{display:none !important;}
+
+  .status-msg{
+    font-size:.75rem; color:#bbf7d0; font-weight:600;
+    opacity:0; transition:opacity .3s;
+  }
+  .status-msg.show{opacity:1;}
+
+  /* ---------- PESTAÑAS ---------- */
+  .tabs{
+    display:flex; gap:8px; flex-wrap:wrap;
+    padding:18px 22px 0;
+    max-width:1000px; margin:0 auto;
+  }
+  .tab{
+    border:1px solid var(--line); background:#fff; color:var(--ink-soft);
+    padding:9px 16px; border-radius:8px 8px 0 0;
+    font-size:.82rem; font-weight:600; cursor:pointer;
+    transition:.18s; border-bottom:none; position:relative; top:1px;
+    font-family:inherit;
+    display:inline-flex; align-items:center; gap:7px;
+  }
+  .tab:hover{color:var(--brand); border-color:#b9c9dc;}
+  .tab.active{
+    background:var(--paper); color:var(--brand);
+    box-shadow:0 -3px 0 var(--accent) inset;
+    border-color:var(--line);
+  }
+  .tab .contador-tab{
+    background:var(--brand-soft); color:var(--brand);
+    padding:1px 8px; border-radius:20px;
+    font-size:.68rem; font-weight:700;
+  }
+  .tab.active .contador-tab{
+    background:var(--accent-soft); color:var(--accent);
+  }
+
+  /* ---------- CONTENEDOR ---------- */
+  .wrap{max-width:1000px; margin:0 auto; padding:0 22px 60px;}
+
+  .panel{
+    display:none; background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:0 10px 10px 10px;
+    box-shadow:0 4px 22px rgba(20,40,70,.07);
+    padding:0; animation:fade .22s ease;
+  }
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+
+  /* ---------- BARRA DE HERRAMIENTAS DEL DOCUMENTO ---------- */
+  .doc-toolbar{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:14px 26px;
+    background:var(--brand-soft);
+    border-bottom:1px solid var(--line);
+    border-radius:0 10px 0 0;
+    font-size:.8rem;
+    color:var(--ink-soft);
+  }
+  .doc-toolbar label{
+    display:flex; align-items:center; gap:8px;
+    font-weight:600; color:var(--brand);
+  }
+  .doc-toolbar select{
+    font-family:inherit; font-size:.8rem;
+    padding:6px 10px; border-radius:6px;
+    border:1px solid #b9c9dc; background:#fff; color:var(--ink);
+    max-width:320px; outline:none;
+  }
+  .doc-toolbar select:focus{border-color:var(--brand); box-shadow:0 0 0 3px rgba(30,58,95,.1);}
+  .doc-toolbar .hint{
+    margin-left:auto; font-size:.74rem; color:#7b8aa3; font-style:italic;
+  }
+  body.edit-mode .doc-toolbar{background:var(--edit-soft); border-bottom-color:#f3d79a;}
+  body.edit-mode .doc-toolbar .hint{color:#b45309; font-style:normal; font-weight:600;}
+
+  .btn-reg{
+    font-family:inherit; font-size:.78rem; font-weight:700;
+    padding:7px 14px; border-radius:7px; cursor:pointer;
+    border:1px solid var(--ok);
+    background:var(--ok); color:#fff;
+    transition:.18s; display:inline-flex; align-items:center; gap:6px;
+    letter-spacing:.2px;
+  }
+  .btn-reg:hover{background:#0f5f2e; border-color:#0f5f2e;}
+  .btn-reg:active{transform:translateY(1px);}
+
+  /* ---------- HOJA CARTA ---------- */
+  .sheet{padding:48px 58px 54px; max-width:820px; margin:0 auto;}
+
+  .sheet .membrete{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    border-bottom:2px solid var(--brand);
+    padding-bottom:14px; margin-bottom:26px; gap:20px; flex-wrap:wrap;
+  }
+  .sheet .membrete .marca{
+    font-size:.95rem; font-weight:700; letter-spacing:1.6px;
+    color:var(--brand); text-transform:uppercase;
+  }
+  .sheet .membrete .marca span{
+    display:block; font-size:.68rem; font-weight:500; letter-spacing:1px;
+    color:var(--ink-soft); text-transform:none; margin-top:2px;
+  }
+  .sheet .membrete .lugar{
+    text-align:right; font-size:.82rem; color:var(--ink-soft); line-height:1.45;
+  }
+
+  .sheet .titulo-doc{
+    text-align:center; font-size:1rem; font-weight:700;
+    letter-spacing:2.4px; text-transform:uppercase; color:var(--accent);
+    margin:0 0 26px; padding:9px 0;
+    background:var(--accent-soft);
+    border-top:1px solid #f3c9c9; border-bottom:1px solid #f3c9c9;
+  }
+
+  .destinatario{margin:0 0 22px; font-size:.9rem;}
+  .destinatario .campo{
+    display:flex; gap:8px; padding:6px 0; border-bottom:1px dotted var(--line);
+  }
+  .destinatario .campo strong{
+    min-width:150px; color:var(--ink-soft); font-weight:600;
+    font-size:.78rem; text-transform:uppercase; letter-spacing:.6px; padding-top:2px;
+  }
+  .destinatario .campo span{font-weight:600; color:var(--ink);}
+
+  .cuerpo{font-size:.92rem; text-align:justify; color:#1f2b3d;}
+  .cuerpo p{margin:0 0 15px;}
+  .cuerpo .hecho{
+    background:#f8fafc; border-left:3px solid var(--brand);
+    padding:14px 18px; margin:0 0 16px; border-radius:0 6px 6px 0;
+  }
+  .cuerpo .apercibimiento{
+    background:var(--accent-soft); border-left:3px solid var(--accent);
+    padding:13px 18px; margin:0 0 16px; border-radius:0 6px 6px 0;
+  }
+  .cuerpo .apercibimiento strong{color:var(--accent);}
+
+  .cierre{margin-top:30px; font-size:.9rem; color:#1f2b3d;}
+
+  .firma{
+    margin-top:52px; display:flex; justify-content:space-between;
+    gap:40px; flex-wrap:wrap;
+  }
+  .firma .bloque{flex:1; min-width:200px; text-align:center;}
+  .firma .linea{border-top:1px solid #8b98ab; margin-bottom:7px;}
+  .firma .rol{
+    font-size:.74rem; color:var(--ink-soft); text-transform:uppercase;
+    letter-spacing:.9px; font-weight:600;
+  }
+  .firma .nom{font-size:.8rem; color:var(--ink); font-weight:600; margin-top:3px;}
+
+  .pie-doc{
+    margin-top:38px; padding-top:12px; border-top:1px solid var(--line);
+    font-size:.68rem; color:#8b98ab;
+    display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+
+  /* ---------- MODO EDICIÓN ---------- */
+  [data-field]{
+    border-radius:4px;
+    transition:background .15s, box-shadow .15s;
+  }
+  body.edit-mode [data-field]{
+    background:var(--edit-soft);
+    box-shadow:0 0 0 1px #f0c14b;
+    outline:none;
+    padding:2px 5px;
+    margin:0 -5px;
+    cursor:text;
+  }
+  body.edit-mode [data-field]:focus{
+    background:#fff8e1;
+    box-shadow:0 0 0 2px var(--edit);
+  }
+  body.edit-mode [data-field]:hover{
+    background:#fef3c7;
+  }
+
+  /* ---------- CABECERAS DE PANEL ---------- */
+  .panel-head{
+    padding:26px 26px 0;
+    display:flex; justify-content:space-between; align-items:center;
+    gap:14px; flex-wrap:wrap;
+  }
+  .panel-head h2{
+    margin:0; font-size:1rem; color:var(--brand); letter-spacing:.4px;
+    display:flex; align-items:center; gap:9px;
+  }
+  .panel-head .count{
+    font-size:.76rem; color:var(--ink-soft); background:var(--brand-soft);
+    padding:4px 11px; border-radius:20px; font-weight:600;
+  }
+  .panel-head .acciones-bd{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+
+  .btn-mini{
+    font-family:inherit; font-size:.76rem; font-weight:600;
+    padding:6px 12px; border-radius:6px; cursor:pointer;
+    border:1px solid var(--line); background:#fff; color:var(--brand);
+    transition:.18s; display:inline-flex; align-items:center; gap:5px;
+  }
+  .btn-mini:hover{background:var(--brand-soft); border-color:#b9c9dc;}
+  .btn-mini.primary{background:var(--brand); color:#fff; border-color:var(--brand);}
+  .btn-mini.primary:hover{background:#16294a;}
+
+  .buscador{padding:16px 26px 0;}
+  .buscador input{
+    width:100%; max-width:360px;
+    padding:10px 14px; border:1px solid var(--line); border-radius:8px;
+    font-size:.85rem; font-family:inherit; color:var(--ink);
+    outline:none; transition:.18s;
+  }
+  .buscador input:focus{border-color:var(--brand); box-shadow:0 0 0 3px rgba(30,58,95,.1);}
+
+  .tabla-scroll{padding:16px 26px 30px; overflow-x:auto;}
+  table{
+    width:100%; border-collapse:collapse; font-size:.82rem; min-width:720px;
+  }
+  thead th{
+    background:var(--brand); color:#fff; text-align:left;
+    padding:10px 12px; font-weight:600; font-size:.72rem;
+    letter-spacing:.7px; text-transform:uppercase; white-space:nowrap;
+  }
+  thead th:first-child{border-radius:7px 0 0 0;}
+  thead th:last-child{border-radius:0 7px 0 0;}
+  tbody td{
+    padding:9px 12px; border-bottom:1px solid var(--line);
+    color:#26334a; vertical-align:middle;
+  }
+  tbody tr:nth-child(even){background:#f8fafc;}
+  tbody tr:hover{background:var(--brand-soft);}
+  tbody td.cuil{
+    font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+    font-size:.78rem; white-space:nowrap; color:var(--ink-soft);
+  }
+  .badge{
+    display:inline-block; padding:2px 9px; border-radius:20px;
+    font-size:.68rem; font-weight:700; letter-spacing:.4px;
+    background:var(--brand-soft); color:var(--brand); white-space:nowrap;
+  }
+  .badge.apercibido{background:var(--accent-soft); color:var(--accent);}
+  .badge.ok{background:var(--ok-soft); color:var(--ok);}
+
+  .col-acciones{display:none; width:1%; white-space:nowrap;}
+  body.edit-mode .col-acciones{display:table-cell;}
+
+  .row-actions{display:flex; gap:6px; justify-content:flex-end;}
+  .icon-btn{
+    border:1px solid var(--line); background:#fff; cursor:pointer;
+    width:28px; height:28px; border-radius:6px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:.8rem; transition:.18s; padding:0; line-height:1;
+  }
+  .icon-btn:hover{background:var(--brand-soft); border-color:#b9c9dc;}
+  .icon-btn.danger:hover{background:var(--accent-soft); border-color:#f3c9c9;}
+
+  .sin-resultados{
+    padding:22px; text-align:center; color:var(--ink-soft);
+    font-size:.85rem; display:none;
+  }
+
+  /* ---------- HISTORIAL ---------- */
+  .hist-resumen{
+    padding:0 26px 6px;
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .stat-card{
+    flex:1; min-width:150px;
+    background:linear-gradient(135deg, var(--brand-soft), #f7fafd);
+    border:1px solid #d8e4f0;
+    border-radius:10px;
+    padding:14px 18px;
+  }
+  .stat-card .num{
+    font-size:1.5rem; font-weight:700; color:var(--brand);
+    line-height:1.1;
+  }
+  .stat-card .lbl{
+    font-size:.7rem; text-transform:uppercase; letter-spacing:.7px;
+    color:var(--ink-soft); font-weight:600; margin-top:3px;
+  }
+
+  .hist-fecha{
+    font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+    font-size:.74rem; color:var(--ink-soft); white-space:nowrap;
+  }
+  .hist-motivo{
+    max-width:320px;
+    font-size:.78rem; color:var(--ink-soft);
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+    overflow:hidden; line-height:1.45;
+  }
+
+  .hist-vacio{
+    padding:48px 26px;
+    text-align:center;
+    display:none;
+  }
+  .hist-vacio .icono{
+    font-size:2.4rem; opacity:.35; margin-bottom:10px;
+  }
+  .hist-vacio h3{
+    margin:0 0 6px; font-size:.95rem; color:var(--ink-soft);
+  }
+  .hist-vacio p{
+    margin:0; font-size:.82rem; color:#8b98ab;
+  }
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(15,25,45,.55);
+    display:none; align-items:center; justify-content:center;
+    z-index:100; padding:20px; backdrop-filter:blur(2px);
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#fff; border-radius:12px; width:100%; max-width:440px;
+    padding:26px 26px 22px;
+    box-shadow:0 24px 60px rgba(10,20,40,.35);
+    animation:pop .2s ease;
+    max-height:90vh; overflow-y:auto;
+  }
+  @keyframes pop{from{transform:scale(.96); opacity:0;} to{transform:scale(1); opacity:1;}}
+  .modal h3{
+    margin:0 0 18px; font-size:1rem; color:var(--brand);
+    letter-spacing:.3px;
+  }
+  .modal label{
+    display:block; margin-bottom:13px;
+    font-size:.74rem; font-weight:700; color:var(--ink-soft);
+    text-transform:uppercase; letter-spacing:.6px;
+  }
+  .modal label input{
+    display:block; width:100%; margin-top:5px;
+    padding:9px 12px; border:1px solid var(--line); border-radius:7px;
+    font-family:inherit; font-size:.86rem; color:var(--ink);
+    outline:none; transition:.18s; text-transform:none; letter-spacing:normal;
+    font-weight:500;
+  }
+  .modal label input:focus{
+    border-color:var(--brand); box-shadow:0 0 0 3px rgba(30,58,95,.1);
+  }
+  .modal-actions{
+    display:flex; justify-content:flex-end; gap:9px; margin-top:20px;
+  }
+  .modal-actions button{
+    font-family:inherit; font-size:.82rem; font-weight:600;
+    padding:9px 18px; border-radius:7px; cursor:pointer;
+    transition:.18s; border:1px solid var(--line);
+    background:#fff; color:var(--ink-soft);
+  }
+  .modal-actions button:hover{background:#f1f5f9;}
+  .modal-actions button.primary{
+    background:var(--brand); color:#fff; border-color:var(--brand);
+  }
+  .modal-actions button.primary:hover{background:#16294a;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:720px){
+    .sheet{padding:30px 22px 36px;}
+    .destinatario .campo{flex-direction:column; gap:2px;}
+    .destinatario .campo strong{min-width:0;}
+    .firma{flex-direction:column; gap:34px;}
+    .topbar{padding:12px 16px;}
+    .doc-toolbar .hint{margin-left:0;}
+    .hist-motivo{max-width:180px;}
+  }
+
+  /* ---------- IMPRESIÓN ---------- */
+  @page{ size:A4; margin:16mm; }
+
+  @media print{
+    body{background:#fff;}
+    .topbar,.tabs,.buscador,.no-print,.doc-toolbar,.modal-overlay{display:none !important;}
+    .wrap{padding:0; max-width:none;}
+    .panel{display:none !important; border:none; box-shadow:none; border-radius:0;}
+    .panel.active{display:block !important;}
+    .sheet{padding:0; max-width:none;}
+    body.edit-mode [data-field]{
+      background:transparent !important;
+      box-shadow:none !important;
+      padding:0 !important;
+      margin:0 !important;
+    }
+    .cuerpo .hecho,.cuerpo .apercibimiento{
+      background:#fff !important;
+      border-left:3px solid #444 !important;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    }
+    .sheet .titulo-doc{background:#fff !important;}
+    .col-acciones{display:none !important;}
+    table{font-size:.72rem;}
+    thead th{
+      background:#333 !important; color:#fff !important;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= BARRA SUPERIOR ================= -->
+<header class="topbar">
+  <h1>
+    <span class="dot"></span>
+    <div>
+      Apercibimientos Disciplinarios
+      <small>Tiendas Spot · Santa Fe</small>
+    </div>
+  </h1>
+
+  <div class="topbar-actions">
+    <span class="status-msg" id="statusMsg">✓ Cambios guardados</span>
+
+    <button class="btn warn" id="btnEditar">✏️ Editar</button>
+    <button class="btn ok"   id="btnGuardar" hidden>💾 Guardar</button>
+    <button class="btn ghost" id="btnCancelar" hidden>✖ Cancelar</button>
+
+    <button class="btn" onclick="window.print()">🖨 Imprimir / PDF</button>
+  </div>
+</header>
+
+<!-- ================= PESTAÑAS ================= -->
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-target="p-apercibimiento">Apercibimiento</button>
+  <button class="tab" data-target="p-historial">
+    Historial
+    <span class="contador-tab" id="tabHistCount">0</span>
+  </button>
+  <button class="tab" data-target="p-bd">Base de datos</button>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============================================================
+       PANEL GENERAL — APERCIBIMIENTO
+  ============================================================= -->
+  <section class="panel active" id="p-apercibimiento">
+
+    <div class="doc-toolbar no-print">
+      <label>
+        Cargar datos de:
+        <select id="selEmpleado">
+          <option value="">— Seleccionar empleado —</option>
+        </select>
+      </label>
+
+      <button class="btn-reg" id="btnRegistrar" title="Guardar el apercibimiento en el historial">
+        📋 Registrar en historial
+      </button>
+
+      <span class="hint" id="toolbarHint">Presioná “Editar” para modificar el texto.</span>
+    </div>
+
+    <div class="sheet" id="hoja">
+
+      <div class="membrete">
+        <div class="marca">
+          Tiendas Spot
+          <span>Estación de Servicio · Santa Fe</span>
+        </div>
+        <div class="lugar">
+          <div data-field="lugar">Santa Fe, 14 de septiembre de 2026</div>
+          <div data-field="direccion">3000 – Santa Fe – Santa Fe</div>
+        </div>
+      </div>
+
+      <h2 class="titulo-doc">Apercibimiento</h2>
+
+      <div class="destinatario">
+        <div class="campo">
+          <strong>Apellido y Nombre</strong>
+          <span data-field="nombre">GOMEZ, Macarena</span>
+        </div>
+        <div class="campo">
+          <strong>CUIL</strong>
+          <span data-field="cuil">27-45344901-2</span>
+        </div>
+        <div class="campo">
+          <strong>Fecha del hecho</strong>
+          <span data-field="fechaHecho">14/09/2026 — Turno matutino</span>
+        </div>
+      </div>
+
+      <div class="cuerpo">
+        <p data-field="parrafo1">
+          Por medio de la presente, se le comunica que se la <strong>apercibe</strong> debido a que,
+          el día <strong>14/09/2026</strong> durante el turno matutino, usted no respetó el protocolo
+          de atención al cliente y las normas internas de la empresa.
+        </p>
+
+        <div class="hecho" data-field="hecho">
+          Se constató, mediante registros fílmicos, el uso de <strong>celular personal en horario
+          laboral y en zona de mostrador</strong>, lo que generó un malestar en los clientes que
+          hacían fila para ser atendidos, afectando la imagen de la empresa.
+        </div>
+
+        <div class="apercibimiento" data-field="apercibimiento">
+          Todo ello, bajo apercibimiento de aplicársele <strong>sanciones disciplinarias más
+          severas</strong>, tales como suspensiones e incluso el despido con justa causa, en caso
+          de reincidir en esta conducta.
+        </div>
+      </div>
+
+      <div class="cierre">
+        <p data-field="cierre">En consecuencia, queda Ud. debidamente notificado.</p>
+        <p>Sin más, saludo atte.</p>
+      </div>
+
+      <div class="firma">
+        <div class="bloque">
+          <div class="linea"></div>
+          <div class="rol">Recibí conforme</div>
+          <div class="nom" id="firmaNombre">GOMEZ, Macarena</div>
+          <div class="rol" style="margin-top:4px;" id="firmaCuil">CUIL 27-45344901-2</div>
+        </div>
+        <div class="bloque">
+          <div class="linea"></div>
+          <div class="rol">Por la empresa</div>
+          <div class="nom">Recursos Humanos</div>
+          <div class="rol" style="margin-top:4px;">Tiendas Spot</div>
+        </div>
+      </div>
+
+      <div class="pie-doc">
+        <span id="pieNombre">Apercibimiento · GOMEZ, Macarena</span>
+        <span id="pieFecha">Emitido el 14/09/2026</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PANEL HISTORIAL
+  ============================================================= -->
+  <section class="panel" id="p-historial">
+
+    <div class="panel-head">
+      <h2>
+        📋 Historial de apercibimientos
+      </h2>
+      <div class="acciones-bd">
+        <span class="count" id="contHist">0 registros</span>
+        <button class="btn-mini" id="btnExportHist">⬇ Exportar CSV</button>
+        <button class="btn-mini" id="btnLimpiarHist" style="color:#b91c1c; border-color:#f3c9c9;">🗑 Vaciar historial</button>
+      </div>
+    </div>
+
+    <div class="hist-resumen" id="histResumen">
+      <div class="stat-card">
+        <div class="num" id="statTotal">0</div>
+        <div class="lbl">Total registrados</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="statMes">0</div>
+        <div class="lbl">Este mes</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="statEmpleados">0</div>
+        <div class="lbl">Empleados apercibidos</div>
+      </div>
+    </div>
+
+    <div class="buscador no-print">
+      <input type="text" id="filtroHist" placeholder="Buscar por nombre, CUIL o motivo…" autocomplete="off">
+    </div>
+
+    <div class="tabla-scroll">
+      <table id="tabla-hist">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Registrado</th>
+            <th>Apellido y Nombre</th>
+            <th>CUIL</th>
+            <th>Fecha del hecho</th>
+            <th>Motivo</th>
+            <th style="width:1%;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-hist"></tbody>
+      </table>
+
+      <div class="hist-vacio" id="histVacio">
+        <div class="icono">📭</div>
+        <h3>Aún no hay apercibimientos registrados</h3>
+        <p>Completá el formulario en la pestaña “Apercibimiento” y presioná<br>
+           <strong>“📋 Registrar en historial”</strong> para guardarlo acá.</p>
+      </div>
+
+      <div class="sin-resultados" id="histSinResultados">Sin resultados para la búsqueda.</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PANEL BASE DE DATOS
+  ============================================================= -->
+  <section class="panel" id="p-bd">
+
+    <div class="panel-head">
+      <h2>Base de datos de personal</h2>
+
+      <div class="acciones-bd">
+        <span class="count" id="contador">— registros</span>
+        <button class="btn-mini primary" id="btnNuevo" hidden>➕ Nuevo registro</button>
+      </div>
+    </div>
+
+    <div class="buscador no-print">
+      <input type="text" id="filtro" placeholder="Buscar por nombre, CUIL, categoría u oficina…" autocomplete="off">
+    </div>
+
+    <div class="tabla-scroll">
+      <table id="tabla-bd">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Apellido y Nombre</th>
+            <th>CUIL</th>
+            <th>Categoría</th>
+            <th>Oficina</th>
+            <th>Estado</th>
+            <th class="col-acciones">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-bd"></tbody>
+      </table>
+      <div class="sin-resultados" id="sinResultados">Sin resultados para la búsqueda.</div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ================= MODAL DE EDICIÓN ================= -->
+<div class="modal-overlay no-print" id="modal">
+  <div class="modal">
+    <h3 id="modalTitulo">Editar registro</h3>
+
+    <label>Apellido y Nombre
+      <input type="text" id="m-nombre" placeholder="APELLIDO, Nombre">
+    </label>
+    <label>CUIL
+      <input type="text" id="m-cuil" placeholder="27-00000000-0">
+    </label>
+    <label>Categoría
+      <input type="text" id="m-cat" placeholder="Operario Shop / Operario Playa">
+    </label>
+    <label>Oficina
+      <input type="text" id="m-ofi" placeholder="Autovía 19… / General Paz 7500">
+    </label>
+
+    <div class="modal-actions">
+      <button id="m-cancelar">Cancelar</button>
+      <button class="primary" id="m-guardar">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   1. DATOS INICIALES — BASE DE DATOS DE PERSONAL
+   ============================================================ */
+const PERSONAL_DEFAULT = [
+  { n:"Abarrategui Soledad Ayelen",         c:"27-43766021-8", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Baroni De Fillipi Sofia Dalma",      c:"27-41513545-4", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Bechi Valeria Angelica",             c:"27-27793967-9", cat:"Operario Shop", ofi:"General Paz 7500" },
+  { n:"De La Mata Sofia Ayelen",            c:"27-43126056-0", cat:"—",             ofi:"General Paz 7500" },
+  { n:"Demaria Ayelen Ebelyn",              c:"27-36684115-1", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Fritzler Joana Ainelen",             c:"27-37713777-4", cat:"Operario Shop", ofi:"—" },
+  { n:"Gomez Gisela Carolina",              c:"27-35652155-8", cat:"Operario Shop", ofi:"General Paz 7500" },
+  { n:"Gomez Yesica Aylen",                 c:"27-41792355-7", cat:"Operario Shop", ofi:"General Paz 7500" },
+  { n:"Guerra Anneris",                     c:"27-31196445-9", cat:"—",             ofi:"—" },
+  { n:"Mannarino Anabela",                  c:"27-42687585-9", cat:"Operario Shop", ofi:"General Paz 7500" },
+  { n:"Nieto Lucila Antonella",             c:"27-40959252-5", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Spinardi Lara Candelaria",           c:"27-37282895-7", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Yost Bianca Maria De Los Milagros",  c:"27-47208606-0", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Reible Sabrina Lorena",              c:"27-43124537-5", cat:"Operario Playa", ofi:"—" },
+  { n:"Bechi Valeria Angelica",             c:"27-27793967-9", cat:"—", ofi:"—" },
+  { n:"Paduan Soraya Rocio",                c:"27-30621205-8", cat:"—", ofi:"—" },
+  { n:"Maqueda Federico Gaston",            c:"20-33068266-4", cat:"—", ofi:"—" },
+  { n:"Cerrudo Guillermo Sebastian",        c:"20-34939468-6", cat:"—", ofi:"—" },
+  { n:"Rangel Elvis Jesus",                 c:"20-96067470-8", cat:"—", ofi:"—" },
+  { n:"Kremser Emmanuel",                   c:"20-33039758-7", cat:"—", ofi:"—" },
+  { n:"Biasoni Emanuel",                    c:"20-32744974-6", cat:"—", ofi:"—" },
+  { n:"Ortiz Gustavo",                      c:"20-25531702-5", cat:"—", ofi:"—" },
+  { n:"Moran Emiliano Jose",                c:"20-38982919-7", cat:"—", ofi:"—" },
+  { n:"Biasoni Martin",                     c:"20-36326069-2", cat:"—", ofi:"—" },
+  { n:"Odriozola Maria Jose",               c:"27-36877547-4", cat:"—", ofi:"—" },
+  { n:"Soriano Maria Elena",                c:"27-35250009-2", cat:"—", ofi:"—" },
+  { n:"Luque Horacio Lindor",               c:"20-13925293-5", cat:"—", ofi:"—" },
+  { n:"Goy Guillermo Omar",                 c:"20-35752335-5", cat:"—", ofi:"—" },
+  { n:"Soriano Diego Gustavo",              c:"20-28764610-1", cat:"—", ofi:"—" },
+  { n:"Francisco Raul Cussit",              c:"20-28036830-0", cat:"—", ofi:"—" },
+  { n:"Diaz Rodolfo Agustin",               c:"20-39630565-9", cat:"—", ofi:"—" },
+  { n:"Monzon Lautaro",                     c:"20-42561138-1", cat:"—", ofi:"—" },
+  { n:"Nicle Lisandro Hernando",            c:"20-27518759-4", cat:"—", ofi:"—" },
+  { n:"Galeano Maximiliano",                c:"20-44023017-3", cat:"—", ofi:"—" },
+  { n:"Da Silva Claudio Marcelo",           c:"20-29233613-7", cat:"—", ofi:"—" },
+  { n:"Solver Lucas Emmanuel Nicolas",      c:"20-40314490-9", cat:"—", ofi:"—" },
+  { n:"Fontana Paula Oriana",               c:"27-37282753-5", cat:"—", ofi:"—" },
+  { n:"Boutonnet Oriana Magali",            c:"27-37446737-4", cat:"—", ofi:"—" },
+  { n:"Dimarco Valentina",                  c:"27-44064601-3", cat:"—", ofi:"—" },
+  { n:"Orrego Maximiliano Sebastian",       c:"20-37970137-0", cat:"—", ofi:"—" },
+  { n:"Larralde Facundo Leonel",            c:"20-41050964-5", cat:"—", ofi:"—" },
+  { n:"Bogado Daniel Alberto",              c:"20-25303864-1", cat:"—", ofi:"—" },
+  { n:"Britch Antonella",                   c:"27-40790856-8", cat:"—", ofi:"—" },
+  { n:"Sosa Rodrigo Ezequiel",              c:"20-39681073-6", cat:"—", ofi:"—" },
+  { n:"Viglianco Candela",                  c:"27-42331304-3", cat:"—", ofi:"—" },
+  { n:"Martinez Nazareno Catriel",          c:"20-39127850-5", cat:"—", ofi:"—" },
+  { n:"Altamirano Jonatan Omar",            c:"20-39240732-5", cat:"—", ofi:"—" },
+  { n:"Gamarra Nicolas Nataniel",           c:"20-44427436-1", cat:"—", ofi:"—" },
+  { n:"Fernandez Mario Ivan",               c:"20-43770067-3", cat:"—", ofi:"—" },
+  { n:"Mesina Franco",                      c:"20-38401610-4", cat:"—", ofi:"—" },
+  { n:"Moyano Diego",                       c:"20-37137676-4", cat:"—", ofi:"—" },
+  { n:"Cruz Anibal Jonathan",               c:"23-38349259-9", cat:"—", ofi:"—" },
+  { n:"De Filippi Baroni Sofia Dalma",      c:"27-41513545-4", cat:"—", ofi:"—" },
+  { n:"Yost Bianca Ma De Los Milagros",     c:"27-47208606-0", cat:"—", ofi:"—" },
+  { n:"Nieto Lucila Antonella",             c:"27-40959252-5", cat:"—", ofi:"—" },
+  { n:"Volken Alejandro",                   c:"20-35033764-5", cat:"—", ofi:"—" },
+  { n:"Keller Oscar Ernesto",               c:"20-42332869-0", cat:"—", ofi:"—" },
+  { n:"Benitez David Ezequiel",             c:"20-33068435-7", cat:"—", ofi:"—" },
+  { n:"Bancho Leandro Agustin",             c:"20-45507429-1", cat:"—", ofi:"—" },
+  { n:"Heinen Luis Oscar",                  c:"20-36684012-6", cat:"—", ofi:"—" },
+  { n:"Monzon Victor Andrés",               c:"20-39370401-3", cat:"—", ofi:"—" },
+  { n:"Reible Sabrina Lorena",              c:"27-43124537-5", cat:"—", ofi:"—" },
+  { n:"Aguilar William Antonio",            c:"20-29490288-1", cat:"—", ofi:"—" },
+  { n:"Guerra Anneris Ludmila",             c:"27-31196445-9", cat:"—", ofi:"—" },
+  { n:"Fritzler Joana Ainelen",             c:"27-37713777-4", cat:"—", ofi:"—" },
+  { n:"Demaria Ayelen Ebelyn",              c:"27-36684115-1", cat:"—", ofi:"—" },
+  { n:"Lucero Fares Ezequiel Andres",       c:"20-36731897-0", cat:"—", ofi:"—" },
+  { n:"De La Mata Sofia Ayelen",            c:"27-43126056-0", cat:"—", ofi:"—" },
+  { n:"Gomez Gisela Carolina",              c:"27-35652155-8", cat:"—", ofi:"—" },
+  { n:"Venetz Fabio Nicolas",               c:"23-36758834-9", cat:"—", ofi:"—" },
+  { n:"Mannarino Anabela Rosario Sole",     c:"27-42687585-9", cat:"—", ofi:"—" },
+  { n:"Requena Leonardo Gabriel",           c:"20-37802342-5", cat:"—", ofi:"—" },
+  { n:"Emmert Natalia Carolina",            c:"27-26244656-0", cat:"—", ofi:"—" },
+  { n:"Eguiazu Maria De Los Milagros",      c:"27-39630521-1", cat:"—", ofi:"—" },
+  { n:"Sanchez Andres Guillermo",           c:"23-28834446-9", cat:"—", ofi:"—" },
+  { n:"Kieffer Lucila Noelia",              c:"23-42923241-4", cat:"—", ofi:"—" },
+  { n:"Robledo Mauricio Daniel",            c:"20-42510797-7", cat:"—", ofi:"—" },
+  { n:"Sosa Daiana Ayelen",                 c:"27-38289410-9", cat:"—", ofi:"—" },
+  { n:"Ramayo Juan Carlos Norberto",        c:"23-33296568-9", cat:"—", ofi:"—" },
+  { n:"Kummer Andrea Guadalupe",            c:"27-28882181-5", cat:"—", ofi:"—" },
+  { n:"Gile Stefani Elisabet",              c:"27-41732696-6", cat:"—", ofi:"—" },
+  { n:"Di Paolo Emanuel Antonio",           c:"20-31671262-3", cat:"—", ofi:"—" },
+  { n:"Rodriguez Luciana Carolina",         c:"27-28437970-0", cat:"—", ofi:"—" },
+  { n:"Ursprung Camila Stella Maris",       c:"27-37831237-5", cat:"—", ofi:"—" },
+  { n:"Regis Valentina Guadalupe",          c:"27-46371982-4", cat:"—", ofi:"—" },
+  { n:"Gomez Macarena Soledad",             c:"27-45344901-2", cat:"—", ofi:"—" }
+];
+
+/* CUILes con apercibimiento registrado por defecto (badge rojo) */
+const APERCIBIDOS_DEFAULT = ["27-45344901-2","27-37282895-7","27-47208606-0"];
+
+/* ============================================================
+   2. PERSISTENCIA
+   ============================================================ */
+const LS_BD   = "apercib_bd_v1";
+const LS_DOC  = "apercib_doc_v1";
+const LS_HIST = "apercib_hist_v1";
+
+function cargarLS(key, fallback){
+  try{
+    const raw = localStorage.getItem(key);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return fallback;
+}
+
+function guardarLS(key, valor){
+  try{
+    localStorage.setItem(key, JSON.stringify(valor));
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+let personal   = cargarLS(LS_BD, JSON.parse(JSON.stringify(PERSONAL_DEFAULT)));
+let historial  = cargarLS(LS_HIST, []);
+let apercibidos = new Set(APERCIBIDOS_DEFAULT);
+/* Sumar CUILes del historial */
+historial.forEach(h=>{
+  if(h.cuil && h.cuil !== "—") apercibidos.add(h.cuil);
+});
+
+/* ============================================================
+   3. REFERENCIAS DOM
+   ============================================================ */
+const tbody      = document.getElementById("cuerpo-bd");
+const contador   = document.getElementById("contador");
+const filtro     = document.getElementById("filtro");
+const sinRes     = document.getElementById("sinResultados");
+const selEmpleado= document.getElementById("selEmpleado");
+const toolbarHint= document.getElementById("toolbarHint");
+
+const btnEditar  = document.getElementById("btnEditar");
+const btnGuardar = document.getElementById("btnGuardar");
+const btnCancelar= document.getElementById("btnCancelar");
+const btnNuevo   = document.getElementById("btnNuevo");
+const btnRegistrar = document.getElementById("btnRegistrar");
+const statusMsg  = document.getElementById("statusMsg");
+
+const modal      = document.getElementById("modal");
+const modalTitulo= document.getElementById("modalTitulo");
+const mNombre    = document.getElementById("m-nombre");
+const mCuil      = document.getElementById("m-cuil");
+const mCat       = document.getElementById("m-cat");
+const mOfi       = document.getElementById("m-ofi");
+
+const firmaNombre= document.getElementById("firmaNombre");
+const firmaCuil  = document.getElementById("firmaCuil");
+const pieNombre  = document.getElementById("pieNombre");
+const pieFecha   = document.getElementById("pieFecha");
+
+const cuerpoHist = document.getElementById("cuerpo-hist");
+const histVacio  = document.getElementById("histVacio");
+const histSinRes = document.getElementById("histSinResultados");
+const contHist   = document.getElementById("contHist");
+const tabHistCount = document.getElementById("tabHistCount");
+const filtroHist = document.getElementById("filtroHist");
+const statTotal  = document.getElementById("statTotal");
+const statMes    = document.getElementById("statMes");
+const statEmpleados = document.getElementById("statEmpleados");
+
+/* ============================================================
+   4. UTILIDADES
+   ============================================================ */
+function normalizar(s){
+  return (s||"").toString().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+}
+
+function mostrarEstado(txt){
+  statusMsg.textContent = txt;
+  statusMsg.classList.add("show");
+  clearTimeout(mostrarEstado._t);
+  mostrarEstado._t = setTimeout(()=>statusMsg.classList.remove("show"), 2400);
+}
+
+function formatFechaHora(iso){
+  const d = new Date(iso);
+  if(isNaN(d)) return "—";
+  const f = d.toLocaleDateString("es-AR", {day:"2-digit", month:"2-digit", year:"numeric"});
+  const h = d.toLocaleTimeString("es-AR", {hour:"2-digit", minute:"2-digit"});
+  return f + " " + h;
+}
+
+function escaparHTML(s){
+  return (s||"").toString()
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* ============================================================
+   5. RENDER DE LA TABLA BD
+   ============================================================ */
+function renderTabla(lista){
+  tbody.innerHTML = lista.map((p, i)=>{
+    const idx = personal.indexOf(p);
+    const esApercibido = apercibidos.has(p.c);
+    return `<tr>
+      <td>${i+1}</td>
+      <td><strong>${escaparHTML(p.n)}</strong></td>
+      <td class="cuil">${escaparHTML(p.c || "—")}</td>
+      <td>${p.cat && p.cat !== "—" ? `<span class="badge">${escaparHTML(p.cat)}</span>` : "—"}</td>
+      <td>${p.ofi && p.ofi !== "—" ? escaparHTML(p.ofi) : "—"}</td>
+      <td>${esApercibido
+            ? '<span class="badge apercibido">Apercibido</span>'
+            : '<span style="color:#8b98ab">—</span>'}</td>
+      <td class="col-acciones">
+        <div class="row-actions">
+          <button class="icon-btn" title="Editar" data-edit="${idx}">✏️</button>
+          <button class="icon-btn danger" title="Eliminar" data-del="${idx}">🗑️</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+
+  contador.textContent = `${lista.length} registro${lista.length===1?"":"s"}`;
+  sinRes.style.display = lista.length ? "none" : "block";
+}
+
+function filtrarBD(){
+  const q = normalizar(filtro.value);
+  const res = q
+    ? personal.filter(p => normalizar(p.n + " " + p.c + " " + p.cat + " " + p.ofi).includes(q))
+    : personal.slice();
+  renderTabla(res);
+}
+
+/* Delegación de eventos en la tabla BD */
+tbody.addEventListener("click", e=>{
+  const btnEdit = e.target.closest("[data-edit]");
+  const btnDel  = e.target.closest("[data-del]");
+
+  if(btnEdit){
+    abrirModal(parseInt(btnEdit.dataset.edit, 10));
+  }
+  if(btnDel){
+    const i = parseInt(btnDel.dataset.del, 10);
+    const p = personal[i];
+    if(!p) return;
+    if(confirm(`¿Eliminar el registro de "${p.n}"?`)){
+      personal.splice(i, 1);
+      filtrarBD();
+      poblarSelect();
+    }
+  }
+});
+
+/* ============================================================
+   6. RENDER DEL HISTORIAL
+   ============================================================ */
+function renderHistorial(){
+  const q = normalizar(filtroHist.value);
+  const lista = q
+    ? historial.filter(h => normalizar(h.nombre + " " + h.cuil + " " + h.motivo + " " + h.fechaHecho).includes(q))
+    : historial.slice();
+
+  // Stats
+  actualizarStats();
+
+  // Contadores de pestaña
+  contHist.textContent = `${historial.length} registro${historial.length===1?"":"s"}`;
+  tabHistCount.textContent = historial.length;
+
+  if(historial.length === 0){
+    cuerpoHist.innerHTML = "";
+    histVacio.style.display = "block";
+    histSinRes.style.display = "none";
+    return;
+  }
+  histVacio.style.display = "none";
+
+  if(lista.length === 0){
+    cuerpoHist.innerHTML = "";
+    histSinRes.style.display = "block";
+    return;
+  }
+  histSinRes.style.display = "none";
+
+  cuerpoHist.innerHTML = lista.map((h, i)=>{
+    const idx = historial.indexOf(h);
+    return `<tr>
+      <td>${i+1}</td>
+      <td class="hist-fecha">${escaparHTML(formatFechaHora(h.fechaRegistro))}</td>
+      <td><strong>${escaparHTML(h.nombre)}</strong></td>
+      <td class="cuil">${escaparHTML(h.cuil)}</td>
+      <td>${escaparHTML(h.fechaHecho)}</td>
+      <td><div class="hist-motivo">${escaparHTML(h.motivo)}</div></td>
+      <td>
+        <div class="row-actions">
+          <button class="icon-btn" title="Cargar en documento" data-ver="${idx}">👁️</button>
+          <button class="icon-btn" title="Eliminar del historial" data-delhist="${idx}">🗑️</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function actualizarStats(){
+  statTotal.textContent = historial.length;
+
+  const ahora = new Date();
+  const mes = ahora.getMonth();
+  const anio = ahora.getFullYear();
+  const delMes = historial.filter(h=>{
+    const d = new Date(h.fechaRegistro);
+    return d.getMonth() === mes && d.getFullYear() === anio;
+  }).length;
+  statMes.textContent = delMes;
+
+  const unicos = new Set(historial.map(h=>h.cuil).filter(c=>c && c !== "—"));
+  statEmpleados.textContent = unicos.size;
+}
+
+/* Delegación de eventos en el historial */
+cuerpoHist.addEventListener("click", e=>{
+  const btnVer = e.target.closest("[data-ver]");
+  const btnDel = e.target.closest("[data-delhist]");
+
+  if(btnVer){
+    const i = parseInt(btnVer.dataset.ver, 10);
+    const h = historial[i];
+    if(!h) return;
+    aplicarDocumento(h.doc);
+    // Ir a la pestaña del documento
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+    document.querySelector('[data-target="p-apercibimiento"]').classList.add("active");
+    document.getElementById("p-apercibimiento").classList.add("active");
+    window.scrollTo({top:0, behavior:"smooth"});
+    mostrarEstado("✓ Apercibimiento cargado");
+  }
+
+  if(btnDel){
+    const i = parseInt(btnDel.dataset.delhist, 10);
+    const h = historial[i];
+    if(!h) return;
+    if(confirm(`¿Eliminar el registro de "${h.nombre}" del historial?`)){
+      historial.splice(i, 1);
+      guardarLS(LS_HIST, historial);
+      // Reconstruir set de apercibidos (por defecto + historial)
+      apercibidos = new Set(APERCIBIDOS_DEFAULT);
+      historial.forEach(x=>{
+        if(x.cuil && x.cuil !== "—") apercibidos.add(x.cuil);
+      });
+      renderHistorial();
+      filtrarBD();
+    }
+  }
+});
+
+/* ============================================================
+   7. SELECTOR DE EMPLEADOS
+   ============================================================ */
+function poblarSelect(){
+  const valorPrevio = selEmpleado.value;
+  selEmpleado.innerHTML = '<option value="">— Seleccionar empleado —</option>' +
+    personal.map((p, i)=>`<option value="${i}">${escaparHTML(p.n)} — ${escaparHTML(p.c)}</option>`).join("");
+  if(valorPrevio && personal[valorPrevio]) selEmpleado.value = valorPrevio;
+}
+
+selEmpleado.addEventListener("change", ()=>{
+  const idx = selEmpleado.value;
+  if(idx === "") return;
+  const p = personal[+idx];
+  if(!p) return;
+  setField("nombre", p.n);
+  setField("cuil",   p.c || "—");
+  sincronizarFirma();
+  mostrarEstado("Datos cargados ✓");
+});
+
+/* ============================================================
+   8. CAMPOS DEL DOCUMENTO
+   ============================================================ */
+function setField(name, value){
+  const el = document.querySelector(`[data-field="${name}"]`);
+  if(el) el.innerHTML = value;
+}
+
+function getField(name){
+  const el = document.querySelector(`[data-field="${name}"]`);
+  return el ? el.innerHTML.trim() : "";
+}
+
+function sincronizarFirma(){
+  const nombre = getField("nombre") || "—";
+  const cuil   = getField("cuil")   || "—";
+  firmaNombre.textContent = nombre;
+  firmaCuil.textContent   = "CUIL " + cuil;
+  pieNombre.textContent   = "Apercibimiento · " + nombre;
+
+  const lugar = getField("lugar");
+  const m = lugar.match(/(\d{1,2}\s+de\s+[a-zA-Záéíóú]+\s+de\s+\d{4})/);
+  pieFecha.textContent = m ? "Emitido el " + m[1] : "Emitido el —";
+}
+
+/* Re-sincronizar la firma mientras se edita */
+document.getElementById("hoja").addEventListener("input", e=>{
+  if(e.target.closest('[data-field="nombre"], [data-field="cuil"], [data-field="lugar"]')){
+    sincronizarFirma();
+  }
+});
+
+/* ============================================================
+   9. MODO EDICIÓN
+   ============================================================ */
+let editMode = false;
+let docBackup = null;
+let bdBackup  = null;
+
+function entrarEdicion(){
+  editMode = true;
+  docBackup = leerDocumento();
+  bdBackup  = JSON.parse(JSON.stringify(personal));
+
+  document.body.classList.add("edit-mode");
+  document.querySelectorAll("[data-field]").forEach(el=>{
+    el.setAttribute("contenteditable", "true");
+  });
+
+  btnEditar.hidden   = true;
+  btnGuardar.hidden  = false;
+  btnCancelar.hidden = false;
+  btnNuevo.hidden    = false;
+
+  toolbarHint.textContent = "Modo edición: los campos resaltados son editables.";
+  filtrarBD();
+}
+
+function salirEdicion(){
+  editMode = false;
+  document.body.classList.remove("edit-mode");
+  document.querySelectorAll("[data-field]").forEach(el=>{
+    el.removeAttribute("contenteditable");
+  });
+
+  btnEditar.hidden   = false;
+  btnGuardar.hidden  = true;
+  btnCancelar.hidden = true;
+  btnNuevo.hidden    = true;
+
+  toolbarHint.textContent = "Presioná “Editar” para modificar el texto.";
+  filtrarBD();
+}
+
+function leerDocumento(){
+  const obj = {};
+  document.querySelectorAll("[data-field]").forEach(el=>{
+    obj[el.dataset.field] = el.innerHTML.trim();
+  });
+  return obj;
+}
+
+function aplicarDocumento(obj){
+  if(!obj) return;
+  Object.keys(obj).forEach(k=>setField(k, obj[k]));
+  sincronizarFirma();
+}
+
+/* --- Botón Editar --- */
+btnEditar.addEventListener("click", entrarEdicion);
+
+/* --- Botón Guardar --- */
+btnGuardar.addEventListener("click", ()=>{
+  const doc = leerDocumento();
+  const okDoc = guardarLS(LS_DOC, doc);
+  const okBd  = guardarLS(LS_BD, personal);
+
+  if(okDoc && okBd){
+    mostrarEstado("✓ Cambios guardados");
+  }else{
+    mostrarEstado("⚠ No se pudo guardar");
+  }
+  sincronizarFirma();
+  salirEdicion();
+});
+
+/* --- Botón Cancelar --- */
+btnCancelar.addEventListener("click", ()=>{
+  if(!confirm("¿Descartar los cambios no guardados?")) return;
+  if(docBackup) aplicarDocumento(docBackup);
+  if(bdBackup)  personal = JSON.parse(JSON.stringify(bdBackup));
+  poblarSelect();
+  filtrarBD();
+  salirEdicion();
+});
+
+/* ============================================================
+   10. REGISTRAR EN HISTORIAL
+   ============================================================ */
+btnRegistrar.addEventListener("click", ()=>{
+  const doc = leerDocumento();
+
+  const nombre = (doc.nombre || "").replace(/<[^>]+>/g,"").trim();
+  const cuil   = (doc.cuil   || "").replace(/<[^>]+>/g,"").trim();
+
+  if(!nombre || nombre === "—"){
+    alert("El documento no tiene Apellido y Nombre. Cargá un empleado o completá el campo antes de registrar.");
+    return;
+  }
+
+  // Extraer motivo (texto plano del campo hecho)
+  const hechoDiv = document.querySelector('[data-field="hecho"]');
+  const hechoTxt = hechoDiv ? hechoDiv.textContent.replace(/\s+/g," ").trim() : "";
+  const motivo = hechoTxt.length > 180 ? hechoTxt.slice(0,180) + "…" : hechoTxt;
+
+  const fechaHecho = (doc.fechaHecho || "—").replace(/<[^>]+>/g,"").trim();
+
+  const entry = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+    fechaRegistro: new Date().toISOString(),
+    nombre,
+    cuil: cuil || "—",
+    fechaHecho,
+    motivo,
+    doc: JSON.parse(JSON.stringify(doc))
+  };
+
+  historial.unshift(entry);
+
+  if(!guardarLS(LS_HIST, historial)){
+    alert("No se pudo guardar el historial (localStorage lleno o no disponible).");
+  }
+
+  // Agregar a apercibidos para que se refleje el badge en BD
+  if(cuil && cuil !== "—") apercibidos.add(cuil);
+
+  renderHistorial();
+  filtrarBD();
+  mostrarEstado("✓ Apercibimiento registrado en historial");
+});
+
+/* ============================================================
+   11. ACCIONES DEL HISTORIAL
+   ============================================================ */
+document.getElementById("btnExportHist").addEventListener("click", ()=>{
+  if(historial.length === 0){
+    alert("No hay registros para exportar.");
+    return;
+  }
+  const headers = ["Registrado","Apellido y Nombre","CUIL","Fecha del hecho","Motivo"];
+  const filas = historial.map(h=>[
+    formatFechaHora(h.fechaRegistro),
+    h.nombre,
+    h.cuil,
+    h.fechaHecho,
+    h.motivo.replace(/\r?\n|\r/g," ")
+  ]);
+  const csv = [headers, ...filas]
+    .map(fila => fila.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(","))
+    .join("\n");
+
+  const blob = new Blob(["\uFEFF" + csv], {type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `historial_apercibimientos_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  mostrarEstado("✓ CSV exportado");
+});
+
+document.getElementById("btnLimpiarHist").addEventListener("click", ()=>{
+  if(historial.length === 0){
+    alert("El historial ya está vacío.");
+    return;
+  }
+  if(!confirm(`¿Vaciar todo el historial? Se eliminarán ${historial.length} registro(s). Esta acción no se puede deshacer.`)) return;
+
+  historial = [];
+  guardarLS(LS_HIST, historial);
+
+  apercibidos = new Set(APERCIBIDOS_DEFAULT);
+  renderHistorial();
+  filtrarBD();
+  mostrarEstado("Historial vaciado");
+});
+
+filtroHist.addEventListener("input", renderHistorial);
+
+/* ============================================================
+   12. MODAL DE EDICIÓN DE BD
+   ============================================================ */
+let modalIndex = -1;
+
+function abrirModal(i){
+  modalIndex = (typeof i === "number") ? i : -1;
+  const p = modalIndex >= 0
+    ? personal[modalIndex]
+    : { n:"", c:"", cat:"", ofi:"" };
+
+  mNombre.value = p.n   || "";
+  mCuil.value   = p.c   || "";
+  mCat.value    = (p.cat && p.cat !== "—") ? p.cat : "";
+  mOfi.value    = (p.ofi && p.ofi !== "—") ? p.ofi : "";
+
+  modalTitulo.textContent = modalIndex >= 0 ? "Editar registro" : "Nuevo registro";
+  modal.classList.add("open");
+  setTimeout(()=>mNombre.focus(), 50);
+}
+
+function cerrarModal(){
+  modal.classList.remove("open");
+  modalIndex = -1;
+}
+
+document.getElementById("m-cancelar").addEventListener("click", cerrarModal);
+
+modal.addEventListener("click", e=>{
+  if(e.target === modal) cerrarModal();
+});
+
+document.addEventListener("keydown", e=>{
+  if(e.key === "Escape" && modal.classList.contains("open")) cerrarModal();
+});
+
+document.getElementById("m-guardar").addEventListener("click", ()=>{
+  const nombre = mNombre.value.trim();
+  if(!nombre){
+    alert("Ingresá al menos el Apellido y Nombre.");
+    mNombre.focus();
+    return;
+  }
+
+  const registro = {
+    n:   nombre,
+    c:   mCuil.value.trim()  || "—",
+    cat: mCat.value.trim()   || "—",
+    ofi: mOfi.value.trim()   || "—"
+  };
+
+  if(modalIndex >= 0){
+    personal[modalIndex] = registro;
+  }else{
+    personal.push(registro);
+  }
+
+  filtrarBD();
+  poblarSelect();
+  cerrarModal();
+  mostrarEstado("✓ Base de datos actualizada");
+});
+
+/* --- Botón Nuevo registro --- */
+btnNuevo.addEventListener("click", ()=>abrirModal(-1));
+
+/* ============================================================
+   13. PESTAÑAS
+   ============================================================ */
+document.getElementById("tabs").addEventListener("click", e=>{
+  const tab = e.target.closest(".tab");
+  if(!tab) return;
+
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+
+  tab.classList.add("active");
+  document.getElementById(tab.dataset.target).classList.add("active");
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+/* ============================================================
+   14. BUSCADOR BD
+   ============================================================ */
+filtro.addEventListener("input", filtrarBD);
+
+/* ============================================================
+   15. INICIALIZACIÓN
+   ============================================================ */
+(function init(){
+  // Restaurar documento guardado
+  const docGuardado = cargarLS(LS_DOC, null);
+  if(docGuardado) aplicarDocumento(docGuardado);
+
+  poblarSelect();
+  filtrarBD();
+  sincronizarFirma();
+  renderHistorial();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#d4d4d8">
+<title>Turnos por Unidad de Negocio</title>
+
+<!-- ===== PWA ===== -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Turnos">
+<meta name="application-name" content="Turnos">
+<meta name="description" content="Calendario unificado de turnos por unidad de negocio">
+<link id="manifestLink" rel="manifest">
+<link id="appleIcon" rel="apple-touch-icon">
+
+<style>
+  :root{ --bg:#d4d4d8; --card:#fff; --tx:#0f172a; --tx2:#64748b; --bd:#e2e8f0; }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg); color:var(--tx); -webkit-font-smoothing:antialiased; overscroll-behavior-y:contain}
+  .topbar{position:sticky; top:0; z-index:20; background:rgba(255,255,255,.95);
+    -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--bd); padding-top:env(safe-area-inset-top)}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px 0}
+  .brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+  .logo-s{width:40px;height:40px;flex:0 0 auto;display:block}
+  .brand-info{display:flex;flex-direction:column;min-width:0;flex:1}
+  .brand-name{font-weight:800;font-size:14px;letter-spacing:-.01em;line-height:1.15;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand-clock{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--tx2);
+    font-weight:600;margin-top:1px;white-space:nowrap;overflow:hidden}
+  .reloj{font-variant-numeric:tabular-nums;color:#2563eb;font-weight:800;letter-spacing:.02em}
+  .sep-clock{color:#cbd5e1}
+  .hoy{border:1px solid var(--bd);background:#fff;color:var(--tx);
+    font:inherit;font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px;cursor:pointer;
+    flex:0 0 auto}
+  .hoy:active{background:#f1f5f9}
+  .nav{display:flex;align-items:center;gap:2px;padding:4px 8px 0}
+  .arrow{width:40px;height:40px;flex:0 0 auto;border:0;background:transparent;
+    font-size:26px;line-height:1;color:#94a3b8;border-radius:12px;cursor:pointer;
+    display:grid;place-items:center;padding:0 0 3px}
+  .arrow:active{background:#e2e8f0;color:#475569}
+  .titulo{flex:1;text-align:center;font-size:16px;font-weight:800;letter-spacing:-.01em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tabs{display:flex;gap:4px;margin:8px 14px 8px;background:#e2e8f0;padding:4px;border-radius:14px}
+  .tab{flex:1;border:0;background:transparent;font:inherit;font-size:12.5px;font-weight:700;
+    color:#64748b;padding:8px 0;border-radius:10px;cursor:pointer;transition:background .15s,color .15s}
+  .tab.activo{background:#fff;color:var(--tx);box-shadow:0 1px 3px rgba(15,23,42,.12)}
+  .chips-wrap{display:flex;flex-direction:column;gap:6px;padding-bottom:10px}
+  .chips{display:flex;gap:8px;overflow-x:auto;padding:0 14px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chips:empty{display:none}
+  .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;
+    border:1px solid var(--bd);background:#fff;color:#334155;
+    font:inherit;font-size:13px;font-weight:700;
+    padding:6px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .chip i{width:8px;height:8px;border-radius:50%;background:var(--c,#94a3b8);display:block}
+  .chip.on{background:var(--c,#0f172a);border-color:var(--c,#0f172a);color:#fff}
+  .chip.on i{background:rgba(255,255,255,.9)}
+  main{padding:14px;display:flex;flex-direction:column;gap:12px;
+    max-width:720px;margin:0 auto;width:100%;
+    padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+  .fecha-grande{font-size:20px;font-weight:800;letter-spacing:-.02em;text-transform:capitalize}
+  .sub{font-size:13px;color:var(--tx2);margin-top:3px;font-weight:600}
+  .unidad-bloque{background:#fff;border-radius:16px;border:1px solid var(--bd);
+    overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .unidad-head{display:flex;align-items:center;justify-content:space-between;
+    padding:11px 14px;background:#f8fafc;border-bottom:1px solid var(--bd);
+    border-left:4px solid var(--uc)}
+  .unidad-name{font-size:14px;font-weight:800;letter-spacing:-.01em}
+  .unidad-count{font-size:11px;font-weight:800;color:#fff;background:var(--uc);
+    padding:2px 9px;border-radius:999px}
+  .lugar-head{display:flex;align-items:center;gap:6px;padding:9px 14px 3px;
+    font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8}
+  .lugar-head::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--uc)}
+  .turno{display:flex;align-items:center;gap:12px;background:var(--card);
+    padding:11px 14px;border-left:5px solid var(--c);border-bottom:1px solid #f1f5f9}
+  .turno:last-child{border-bottom:0}
+  .avatar{width:38px;height:38px;flex:0 0 auto;border-radius:12px;
+    background:var(--c);color:#fff;display:grid;place-items:center;
+    font-size:13px;font-weight:800;letter-spacing:.02em}
+  .cuerpo{min-width:0;flex:1}
+  .fila1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .nombre{font-weight:700;font-size:15px}
+  .badge{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;
+    background:#eef2f7;color:#475569;text-transform:uppercase;letter-spacing:.05em}
+  .fila2{font-size:13px;color:var(--tx2);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .hora{font-variant-numeric:tabular-nums;font-weight:700;color:#334155}
+  .sep{color:#cbd5e1}
+  .vacio{text-align:center;padding:52px 20px;color:var(--tx2);font-size:15px;font-weight:600;
+    background:#fff;border-radius:16px;border:1px dashed var(--bd)}
+  .vacio-mini{padding:12px 14px;font-size:13px;color:#94a3b8;font-weight:600}
+  .bloque-dia{background:var(--card);border-radius:16px;border:1px solid var(--bd);overflow:hidden}
+  .bloque-dia.hoy{border-color:#93c5fd;box-shadow:0 0 0 3px #dbeafe}
+  .bloque-head{display:flex;justify-content:space-between;align-items:center;
+    padding:10px 14px;background:#f8fafc;border-bottom:1px solid var(--bd)}
+  .dname{font-weight:800;font-size:14px;text-transform:capitalize}
+  .dcount{font-size:12px;color:var(--tx2);font-weight:800}
+  .bloque-dia .turno{border-left:4px solid var(--c);border-bottom:1px solid #f1f5f9;padding:9px 12px}
+  .bloque-dia .turno:last-child{border-bottom:0}
+  .bloque-dia .avatar{width:30px;height:30px;border-radius:9px;font-size:11px}
+  .bloque-dia .nombre{font-size:13.5px}
+  .bloque-dia .badge{font-size:9px;padding:2px 6px}
+  .bloque-dia .fila2{font-size:11.5px;margin-top:2px}
+  .mes-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;
+    background:#fff;padding:8px;border-radius:16px;border:1px solid var(--bd)}
+  .dow{text-align:center;font-size:11px;font-weight:800;color:#94a3b8;padding:4px 0;text-transform:uppercase}
+  .celda{aspect-ratio:1/1.08;border:1px solid transparent;background:#f8fafc;border-radius:10px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    font:inherit;cursor:pointer;padding:2px;position:relative}
+  .celda.vacia{background:transparent;cursor:default}
+  .celda .num{font-size:13px;font-weight:700;color:#334155;line-height:1}
+  .celda.hoy{background:#eff6ff;border-color:#bfdbfe}
+  .celda.hoy .num{color:#2563eb}
+  .celda.sel{background:#0f172a;border-color:#0f172a}
+  .celda.sel .num{color:#fff}
+  .dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;max-width:100%}
+  .dots i{width:6px;height:6px;border-radius:50%;display:block}
+  .mas{position:absolute;bottom:2px;right:4px;font-size:9px;font-weight:800;color:#94a3b8}
+  .celda.sel .mas{color:#cbd5e1}
+
+  /* ====== TARJETA DESCANSANDO ====== */
+  .descanso-bloque{
+    background:#fff;border-radius:16px;border:1px solid #fde68a;
+    overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.04);
+  }
+  .descanso-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:11px 14px;background:#fffbeb;border-bottom:1px solid #fde68a;
+    border-left:4px solid #f59e0b;
+  }
+  .descanso-title{
+    display:flex;align-items:center;gap:7px;
+    font-size:14px;font-weight:800;letter-spacing:-.01em;color:#78350f;
+  }
+  .descanso-title .ico{font-size:15px;line-height:1}
+  .descanso-count{
+    font-size:11px;font-weight:800;color:#fff;background:#f59e0b;
+    padding:2px 9px;border-radius:999px;
+  }
+  .descanso-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+    gap:8px;padding:11px 14px;
+  }
+  .descanso-item{
+    display:flex;align-items:center;gap:8px;
+    background:#fffbeb;border:1px solid #fef3c7;border-radius:10px;
+    padding:7px 9px;min-width:0;
+  }
+  .descanso-av{
+    width:28px;height:28px;flex:0 0 auto;border-radius:8px;
+    background:var(--c);color:#fff;display:grid;place-items:center;
+    font-size:10.5px;font-weight:800;letter-spacing:.02em;
+  }
+  .descanso-info{min-width:0;flex:1}
+  .descanso-name{
+    font-weight:800;font-size:11.5px;line-height:1.2;color:#451a03;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .descanso-lugar{
+    font-size:9.5px;color:#92400e;font-weight:700;margin-top:1px;
+    text-transform:uppercase;letter-spacing:.03em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .descanso-vacio{padding:14px;font-size:12.5px;color:#92400e;font-weight:600;text-align:center}
+
+  /* ====== TABLAS DE PLANILLAS (SA / GP) ====== */
+  .tabla-wrap{
+    background:#fff;border-radius:16px;border:1px solid var(--bd);
+    overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.04);
+    display:flex;flex-direction:column;
+  }
+  .tabla-head{
+    display:flex;align-items:center;gap:8px;
+    padding:11px 14px;background:#f8fafc;border-bottom:1px solid var(--bd);
+    font-size:13px;font-weight:800;color:#0f172a;
+  }
+  .tabla-head::before{
+    content:"";width:6px;height:6px;border-radius:50%;
+    background:var(--tc,#2563eb);flex:0 0 auto;
+  }
+  .tabla-head .tc-sub{
+    font-size:10.5px;color:#94a3b8;font-weight:600;margin-left:auto;white-space:nowrap;
+  }
+  .tabla-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  .tabla-scroll::-webkit-scrollbar{height:7px}
+  .tabla-scroll::-webkit-scrollbar-track{background:#f1f5f9}
+  .tabla-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+
+  table.shift-grid{
+    border-collapse:separate;border-spacing:0;
+    font-size:10px;white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  table.shift-grid th,
+  table.shift-grid td{
+    border-right:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;
+    padding:5px 5px;text-align:center;
+    min-width:56px;max-width:56px;
+    overflow:hidden;text-overflow:ellipsis;
+    font-weight:700;line-height:1.2;
+  }
+  table.shift-grid thead th{
+    position:sticky;top:0;z-index:3;
+    background:#f1f5f9;color:#334155;
+    font-weight:800;font-size:9.5px;
+    letter-spacing:.02em;
+  }
+  table.shift-grid tbody tr:last-child td{border-bottom:0}
+  table.shift-grid td:last-child{border-right:0}
+  table.shift-grid th:last-child{border-right:0}
+  table.shift-grid .sticky-col{
+    position:sticky;left:0;z-index:2;
+    background:#fff;text-align:left;
+    min-width:120px;max-width:120px;
+    border-right:2px solid var(--bd);
+    font-weight:800;white-space:normal;line-height:1.25;
+    padding:6px 8px;
+  }
+  table.shift-grid thead .sticky-col{
+    z-index:4;background:#e2e8f0;font-size:10px;
+  }
+  table.shift-grid .sticky-col .sc-sub{
+    display:block;font-weight:500;color:#94a3b8;font-size:9.5px;margin-top:1px;
+  }
+  table.shift-grid td.cell-v{color:#334155}
+  table.shift-grid td.cell-empty{color:#cbd5e1;background:#f8fafc}
+
+  /* ====== BARRA DE INSTALACIÓN PWA ====== */
+  .install-bar{
+    position: fixed; left: 12px; right: 12px;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    background: #0f172a; color: #fff;
+    padding: 11px 14px; border-radius: 14px;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 10px 30px rgba(15,23,42,.4);
+    z-index: 999; font-size: 13px; font-weight: 700;
+    animation: slideUp .35s ease;
+  }
+  .install-bar[hidden]{display:none}
+  .install-emoji{font-size:18px;line-height:1}
+  .install-text{flex:1;min-width:0;line-height:1.25}
+  #btnInstall{
+    border:0; font:inherit; font-weight:800;
+    background:#3b82f6; color:#fff;
+    padding:8px 14px; border-radius:999px; cursor:pointer;
+    flex:0 0 auto;
+  }
+  #btnInstall:active{background:#2563eb}
+  #btnInstallClose{
+    border:0; background:transparent; color:#94a3b8;
+    font-size:18px; cursor:pointer; padding:0 4px;
+    flex:0 0 auto; line-height:1;
+  }
+  @keyframes slideUp{
+    from{transform:translateY(120%);opacity:0}
+    to{transform:translateY(0);opacity:1}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="bar">
+    <div class="brand">
+      <svg class="logo-s" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="Logo">
+        <defs>
+          <linearGradient id="lgBrand" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"  stop-color="#ec1e9b"/>
+            <stop offset="55%" stop-color="#7d2ce0"/>
+            <stop offset="100%" stop-color="#1f2cff"/>
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="url(#lgBrand)" stroke-width="8"/>
+        <path d="M 38 53 Q 34 41 47 33 L 68 25 Q 71 27 67 33 L 47 52 Q 42 56 38 53 Z"
+              fill="url(#lgBrand)"/>
+        <path d="M 62 47 Q 66 59 53 67 L 32 75 Q 29 73 33 67 L 53 48 Q 58 44 62 47 Z"
+              fill="url(#lgBrand)"/>
+      </svg>
+      <div class="brand-info">
+        <span class="brand-name">Turnos del Personal</span>
+        <span class="brand-clock">
+          <span id="fecha-hoy">—</span>
+          <span class="sep-clock">·</span>
+          <span id="reloj" class="reloj">--:--:--</span>
+        </span>
+      </div>
+    </div>
+    <button id="btnHoy" class="hoy">Hoy</button>
+  </div>
+
+  <div class="nav">
+    <button id="prev" class="arrow" aria-label="Anterior">‹</button>
+    <div id="titulo" class="titulo">—</div>
+    <button id="next" class="arrow" aria-label="Siguiente">›</button>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab activo" data-v="dia">Día</button>
+    <button class="tab" data-v="semana">Semana</button>
+    <button class="tab" data-v="mes">Mes</button>
+    <button class="tab" data-v="sa">SA</button>
+    <button class="tab" data-v="gp">GP</button>
+  </div>
+
+  <div class="chips-wrap">
+    <div class="chips" id="chipsUnidad"></div>
+  </div>
+</header>
+
+<main id="vista"></main>
+
+<!-- ===== PWA: Barra de instalación ===== -->
+<div id="installBar" class="install-bar" hidden>
+  <span class="install-emoji">📲</span>
+  <span class="install-text">Instalá esta app en tu celular</span>
+  <button id="btnInstall">Instalar</button>
+  <button id="btnInstallClose" aria-label="Cerrar">✕</button>
+</div>
+
+<script>
+/* ================================================================
+   PWA: MANIFEST + INSTALACIÓN  (v3 — sin aviso de HTTPS)
+   ================================================================ */
+(function setupPWA(){
+  /* ---------- 1. Generar íconos PNG en canvas ---------- */
+  function makeIcon(size){
+    const c = document.createElement('canvas');
+    c.width = c.height = size;
+    const ctx = c.getContext('2d');
+    const s = size / 100;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+
+    const grad = ctx.createLinearGradient(0, 0, size, size);
+    grad.addColorStop(0,    '#ec1e9b');
+    grad.addColorStop(0.55, '#7d2ce0');
+    grad.addColorStop(1,    '#1f2cff');
+
+    ctx.beginPath();
+    ctx.arc(50*s, 50*s, 42*s, 0, Math.PI*2);
+    ctx.lineWidth = 8*s;
+    ctx.strokeStyle = grad;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(38*s, 53*s);
+    ctx.quadraticCurveTo(34*s, 41*s, 47*s, 33*s);
+    ctx.lineTo(68*s, 25*s);
+    ctx.quadraticCurveTo(71*s, 27*s, 67*s, 33*s);
+    ctx.lineTo(47*s, 52*s);
+    ctx.quadraticCurveTo(42*s, 56*s, 38*s, 53*s);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(62*s, 47*s);
+    ctx.quadraticCurveTo(66*s, 59*s, 53*s, 67*s);
+    ctx.lineTo(32*s, 75*s);
+    ctx.quadraticCurveTo(29*s, 73*s, 33*s, 67*s);
+    ctx.lineTo(53*s, 48*s);
+    ctx.quadraticCurveTo(58*s, 44*s, 62*s, 47*s);
+    ctx.closePath();
+    ctx.fill();
+
+    return c.toDataURL('image/png');
+  }
+
+  const icon192 = makeIcon(192);
+  const icon512 = makeIcon(512);
+
+  /* ---------- 2. Manifest como data URL ---------- */
+  const startUrl = location.origin + location.pathname;
+  const manifest = {
+    name: 'Turnos del Personal',
+    short_name: 'Turnos',
+    description: 'Calendario unificado de turnos por unidad de negocio',
+    start_url: startUrl,
+    scope: location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) || '/',
+    display: 'standalone',
+    orientation: 'portrait',
+    background_color: '#d4d4d8',
+    theme_color: '#d4d4d8',
+    lang: 'es',
+    icons: [
+      { src: icon192, sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+    ]
+  };
+  const manifestData = 'data:application/manifest+json;charset=utf-8,' +
+                       encodeURIComponent(JSON.stringify(manifest));
+  document.getElementById('manifestLink').href = manifestData;
+  document.getElementById('appleIcon').href = icon192;
+
+  /* ---------- 3. Detección de entorno ---------- */
+  const isHTTPS   = location.protocol === 'https:'
+                 || location.hostname === 'localhost'
+                 || location.hostname === '127.0.0.1';
+  const isIOS     = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                    || window.navigator.standalone === true;
+
+  console.log('===== PWA =====');
+  console.log('Protocolo:', location.protocol);
+  console.log('HTTPS/localhost:', isHTTPS ? '✅' : '❌');
+  console.log('Ya instalada:', isStandalone ? '✅' : 'no');
+  console.log('===============');
+
+  /* ---------- 4. Barra de instalación ---------- */
+  const bar = document.getElementById('installBar');
+  const barText = bar.querySelector('.install-text');
+  const btnInstall = document.getElementById('btnInstall');
+  const btnClose = document.getElementById('btnInstallClose');
+
+  /* Si NO es HTTPS, no mostramos la barra (no tiene sentido) */
+  if (!isHTTPS || isStandalone) return;
+
+  let dismissed = 0;
+  try { dismissed = parseInt(localStorage.getItem('installBarDismissed') || '0', 10); } catch(_){}
+  const dismissActive = dismissed && (Date.now() - dismissed) < 7*24*60*60*1000;
+
+  let deferredPrompt = null;
+  let bipFired = false;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    bipFired = true;
+    console.log('✅ beforeinstallprompt listo');
+    if (!dismissActive){
+      barText.textContent = 'Instalá esta app en tu celular';
+      btnInstall.textContent = 'Instalar';
+      bar.hidden = false;
+    }
+  });
+
+  /* Si Chrome no dispara beforeinstallprompt tras 4s, mostramos instrucciones */
+  setTimeout(() => {
+    if (!bipFired && !dismissActive){
+      if (isIOS){
+        barText.textContent = 'Agregala a la pantalla de inicio desde Safari';
+        btnInstall.textContent = 'Cómo';
+      } else {
+        barText.textContent = 'Instalá la app desde el menú de Chrome';
+        btnInstall.textContent = 'Cómo';
+      }
+      bar.hidden = false;
+    }
+  }, 4000);
+
+  /* ---------- 5. Acciones ---------- */
+  btnInstall.addEventListener('click', async () => {
+    if (deferredPrompt){
+      deferredPrompt.prompt();
+      try { await deferredPrompt.userChoice; } catch(_){}
+      deferredPrompt = null;
+      bar.hidden = true;
+      return;
+    }
+
+    if (isIOS){
+      alert(
+        'Para instalar en iPhone/iPad:\n\n' +
+        '1. Tocá el botón Compartir (⬆️) abajo en Safari.\n' +
+        '2. Elegí "Añadir a pantalla de inicio".\n' +
+        '3. Confirmá con "Añadir".'
+      );
+    } else {
+      alert(
+        'Para instalar en Android:\n\n' +
+        '1. Tocá el menú de Chrome (⋮) arriba a la derecha.\n' +
+        '2. Elegí "Instalar aplicación" o "Añadir a pantalla de inicio".\n' +
+        '3. Confirmá.\n\n' +
+        'Si no aparece la opción, recargá la página una vez.'
+      );
+    }
+  });
+
+  btnClose.addEventListener('click', () => {
+    bar.hidden = true;
+    try { localStorage.setItem('installBarDismissed', String(Date.now())); } catch(_){}
+  });
+
+  window.addEventListener('appinstalled', () => {
+    bar.hidden = true;
+    try { localStorage.removeItem('installBarDismissed'); } catch(_){}
+    console.log('✅ App instalada');
+  });
+})();
+</script>
+
+<script>
+/* ================================================================
+   RELOJ EN TIEMPO REAL
+   ================================================================ */
+(function(){
+  const DIASC = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const MESESC = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const $f = document.getElementById('fecha-hoy');
+  const $r = document.getElementById('reloj');
+  function tick(){
+    const d = new Date();
+    $f.textContent = `${DIASC[d.getDay()]} ${d.getDate()} ${MESESC[d.getMonth()]} ${d.getFullYear()}`;
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mm = String(d.getMinutes()).padStart(2,'0');
+    const ss = String(d.getSeconds()).padStart(2,'0');
+    $r.textContent = `${hh}:${mm}:${ss}`;
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ================================================================
+   UNIDADES
+   ================================================================ */
+const UNIDADES = [
+  { id:'san-agustin', nombre:'San Agustín', color:'#2563eb', lugares:['Spot','Playa'] },
+  { id:'guadalupe',   nombre:'Guadalupe',   color:'#059669', lugares:['Shop','Playa'] },
+];
+
+/* ================================================================
+   CORRECCIONES DE NOMBRES  (centralizadas)
+   ================================================================ */
+const NAME_FIX = {
+  'Gile Stafini':   'Gile Stefani',
+  'Oscar Keler':    'Oscar Keller',
+  'MG (Medio Día)': 'Max Galeano (🛻)'
+};
+function fixName(n){
+  const fixed = NAME_FIX[n] || n;
+  return fixed.toUpperCase();
+}
+
+/* ================================================================
+   FUENTE 1: SPOT SAN AGUSTÍN
+   ================================================================ */
+const SPOT_FECHAS = [
+  "1-sep.","2-sep.","3-sep.","4-sep.","5-sep.","6-sep.","7-sep.","8-sep.","9-sep.","10-sep.",
+  "11-sep.","12-sep.","13-sep.","14-sep.","15-sep.","16-sep.","17-sep.","18-sep.","19-sep.","20-sep.",
+  "21-sep.","22-sep.","23-sep.","24-sep.","25-sep.","26-sep.","27-sep.","28-sep.","29-sep.","30-sep.",
+  "1-oct.","2-oct.","3-oct.","4-oct.","5-oct.","6-oct.","7-oct.","8-oct.","9-oct.","10-oct.",
+  "11-oct.","12-oct.","13-oct.","14-oct.","15-oct.","16-oct.","17-oct.","18-oct.","19-oct.","20-oct.",
+  "21-oct.","22-oct.","23-oct.","24-oct.","25-oct.","26-oct.","27-oct.","28-oct.","29-oct.","30-oct.",
+  "31-oct.","1-nov.","2-nov.","3-nov.","4-nov.","5-nov.","6-nov.","7-nov.","8-nov.","9-nov.",
+  "10-nov.","11-nov.","12-nov.","13-nov.","14-nov.","15-nov.","16-nov.","17-nov.","18-nov.","19-nov.",
+  "20-nov.","21-nov.","22-nov.","23-nov.","24-nov.","25-nov.","26-nov.","27-nov.","28-nov.","29-nov.",
+  "30-nov.","1-dic.","2-dic.","3-dic.","4-dic.","5-dic.","6-dic.","7-dic.","8-dic.","9-dic.",
+  "10-dic.","11-dic.","12-dic.","13-dic.","14-dic.","15-dic.","16-dic.","17-dic.","18-dic.","19-dic.",
+  "20-dic.","21-dic.","22-dic.","23-dic.","24-dic.","25-dic.","26-dic.","27-dic.","28-dic.","29-dic.",
+  "30-dic.","31-dic.","1-ene."
+];
+
+const SPOT_TURNOS = [
+  { horario:"23:00 a 06:00", puesto:"NOCHE", valores:[
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Anneris Guerra","Sofia de Filippi","Sofia de Filippi",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Gile Stafini","Gile Stafini","Gile Stafini","Gile Stafini",
+    "Andrea Kummer","Andrea Kummer","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Gomez Maca","Gomez Maca",
+    "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Gile Stafini","Gile Stafini","Gile Stafini","Gile Stafini",
+    "Ursprung Camila","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+    "Gomez Maca","Gomez Maca","Gomez Maca","Gomez Maca",
+    "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Gile Stafini","Gile Stafini","Gile Stafini","Gile Stafini",
+    "Ursprung Camila","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+    "Gomez Maca","Gomez Maca","Gomez Maca","Gomez Maca",
+    "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica","",""
+  ]},
+  { horario:"06:00 a 14:00", puesto:"CAJA", valores:[
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Ursprung Camila","Gomez Maca","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Gile Stafini","Ursprung Camila",
+    "Ursprung Camila","Ursprung Camila","Ursprung Camila","Gomez Maca",
+    "Gomez Maca","Gomez Maca","Gomez Maca","Beltran Veronica",
+    "Beltran Veronica","Beltran Veronica","Beltran Veronica","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Gile Stafini",
+    "Gile Stafini","Ursprung Camila","Ursprung Camila","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Gile Stafini","Ursprung Camila",
+    "Ursprung Camila","Ursprung Camila","Ursprung Camila","Gomez Maca",
+    "Gomez Maca","Gomez Maca","Gomez Maca","Beltran Veronica",
+    "Beltran Veronica","Beltran Veronica","Beltran Veronica","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Gile Stafini","Ursprung Camila",
+    "Ursprung Camila","Ursprung Camila","Ursprung Camila","Gomez Maca",
+    "Gomez Maca","Gomez Maca","Gomez Maca","Beltran Veronica",
+    "Beltran Veronica","Beltran Veronica","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria"
+  ]},
+  { horario:"06:00 a 14:00", puesto:"CAFETERA", valores:[
+    "Ursprung Camila","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Gomez Maca","Gile Stafini","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+    "Ursprung Camila","Ursprung Camila","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Gomez Maca","Beltran Veronica","Beltran Veronica",
+    "Beltran Veronica","Beltran Veronica","Joana Fritzler","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Gile Stafini","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Gile Stafini","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+    "Ursprung Camila","Ursprung Camila","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Gomez Maca","Beltran Veronica","Beltran Veronica",
+    "Beltran Veronica","Beltran Veronica","Joana Fritzler","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Gile Stafini","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+    "Ursprung Camila","Ursprung Camila","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Gomez Maca","Beltran Veronica","Beltran Veronica",
+    "Beltran Veronica","Beltran Veronica","Joana Fritzler","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi"
+  ]},
+  { horario:"08:00 a 16:00", puesto:"PS", valores:[
+    "Gomez Maca","","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Gomez Maca","Gomez Maca","Gomez Maca",
+    "","Beltran Veronica","Joana Fritzler","Joana Fritzler",
+    "Joana Fritzler","Gile Stafini","","Ursprung Camila",
+    "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+    "Beltran Veronica","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Gile Stafini","Anneris Guerra","Gile Stafini","Gile Stafini",
+    "Ursprung Camila","Ursprung Camila","Gile Stafini","Ursprung Camila",
+    "Gomez Maca","Gomez Maca","Gomez Maca","Ursprung Camila",
+    "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+    "Beltran Veronica","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Joana Fritzler","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Gile Stafini","Gile Stafini","Gile Stafini",
+    "Gile Stafini","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+    "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+    "Beltran Veronica","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Joana Fritzler","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Andrea Kummer","Andrea Kummer"
+  ]},
+  { horario:"10:00 a 18:00", puesto:"REFUERZO", valores:[
+    "","","","Gile Stafini",
+    "Gile Stafini","AG","","",
+    "Beltran Veronica","","Ursprung Camila/Beltran Veronica","Ursprung Camila",
+    "Ursprung Camila","Beltran Veronica","Beltran Veronica","",
+    "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+    "Anneris Guerra","Gile Stafini","Gile Stafini","Ursprung Camila",
+    "Ursprung Camila","Gile Stafini","Ursprung Camila","Gomez Maca",
+    "Gomez Maca","Gomez Maca","Ursprung Camila","Beltran Veronica",
+    "Beltran Veronica","Beltran Veronica","Beltran Veronica","Gomez Maca",
+    "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Gile Stafini","Gile Stafini","Gile Stafini","Gile Stafini",
+    "Ursprung Camila","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+    "Gomez Maca","Gomez Maca","Gomez Maca","Gomez Maca",
+    "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra"
+  ]},
+  { horario:"14:00 a 22:00", puesto:"CAJA", valores:[
+    "Andrea Kummer","Joana Fritzler","Joana Fritzler","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","","","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+    "Gile Stafini","Ursprung Camila","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Ursprung Camila","Beltran Veronica","Beltran Veronica",
+    "Beltran Veronica","Beltran Veronica","Gomez Maca","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Lucila Nieto","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Gile Stafini","Ursprung Camila",
+    "Ursprung Camila","Ursprung Camila","Ursprung Camila","Gomez Maca",
+    "Gomez Maca","Gomez Maca","Gomez Maca","Beltran Veronica",
+    "Beltran Veronica","Beltran Veronica","Beltran Veronica","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Gile Stafini"
+  ]},
+  { horario:"14:00 a 22:00", puesto:"CAFETERIA", valores:[
+    "Gile Stafini","","Ursprung Camila","Ursprung Camila",
+    "Ursprung Camila","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+    "Anneris Guerra","Gomez Maca","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Joana Fritzler","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Andrea Kummer","Andrea Kummer",
+    "Ursprung Camila","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+    "Gomez Maca","Gomez Maca","Gile Stafini","Gile Stafini",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Ursprung Camila","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Gomez Maca","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Joana Fritzler","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Andrea Kummer","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Gile Stafini","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+    "Ursprung Camila","Ursprung Camila","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Gomez Maca","Beltran Veronica","Beltran Veronica",
+    "Beltran Veronica","Beltran Veronica","Joana Fritzler","Joana Fritzler",
+    "Joana Fritzler","Joana Fritzler","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Sofia de Filippi","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Anneris Guerra","Gile Stafini","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+    "Ursprung Camila","Ursprung Camila","Gomez Maca"
+  ]},
+  { horario:"15:15 a 23:00", puesto:"PS", valores:[
+    "Anneris Guerra","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Gile Stafini","Gile Stafini","Gile Stafini",
+    "Gile Stafini","Gile Stafini","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Andrea Kummer","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Joana Fritzler","Gile Stafini","Gile Stafini","Gile Stafini",
+    "Gile Stafini","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+    "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+    "Beltran Veronica","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Joana Fritzler","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Gile Stafini","Gile Stafini","Gile Stafini",
+    "Gile Stafini","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+    "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+    "Gomez Maca","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+    "Beltran Veronica","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+    "Joana Fritzler","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+    "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+    "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+    "Sofia de Filippi","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+    "Andrea Kummer","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+    "Anneris Guerra","Gile Stafini","Gile Stafini","Gile Stafini",
+    "Gile Stafini","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+    "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+    "Gomez Maca","",""
+  ]}
+];
+
+/* ================================================================
+   FUENTE 2: PLANILLA PLAYA SA
+   ================================================================ */
+const PLAYA_CODES = {
+  LR:{ nombre:'Leonardo Requena' }, LB:{ nombre:'Leandro Bancho' },
+  LH:{ nombre:'Luis Heinen' },      NE:{ nombre:'Natalia Emmer' },
+  VM:{ nombre:'Victor Monzon' },    DB:{ nombre:'David Benitez' },
+  SR:{ nombre:'Sabrina Reible' },   OK:{ nombre:'Oscar Keller' },
+  AV:{ nombre:'Alejandro Volken' }
+};
+const PLAYA_ROWS = [
+  { turno:'T₁', horario:'23:00 a 06:00', code:'LR' },
+  { turno:'T₂', horario:'06:00 a 14:00', code:'LB' },
+  { turno:'T₂', horario:'06:00 a 14:00', code:'LH' },
+  { turno:'T₂', horario:'07:00 a 15:00', code:'NE' },
+  { turno:'T₂', horario:'07:00 a 15:00', code:'VM' },
+  { turno:'T₃', horario:'14:00 a 22:00', code:'DB' },
+  { turno:'T₃', horario:'14:00 a 22:00', code:'SR' },
+  { turno:'T₃', horario:'15:15 a 23:00', code:'OK' },
+  { turno:'T₃', horario:'15:15 a 23:00', code:'AV' }
+];
+function playaGetValue(code, idx){
+  switch(code){
+    case 'LR': if (idx<=33) return (idx%5===3)?'LH':'LR'; return ((idx-38)%5===0)?'LR':'AV';
+    case 'LB': if (idx<=32) return (idx%5===4)?'':'LB';   return ((idx-35)%5===0)?'':'DB';
+    case 'LH': if (idx<=31){const p=idx%5; return (p===2||p===3)?'':'LH';} return ((idx-35)%5>=3)?'':'LR';
+    case 'NE': if (idx<=32) return (idx>=5 && idx%5===0)?'':'NE'; return ((idx-36)%5===0)?'':'SR';
+    case 'VM': if (idx<=32) return (idx>=5 && idx%5===0)?'':'VM'; return ((idx-35)%5===0)?'':'LH';
+    case 'DB': if (idx<=32) return (idx>=5 && idx%5===0)?'':'DB'; return ((idx-34)%5===0)?'':'LB';
+    case 'SR': if (idx<=31) return (idx%5===2)?'':'SR';   return ((idx-38)%5===0)?'':'NE';
+    case 'OK': return (idx>=5 && idx%5===0)?'':'OK';
+    case 'AV': if (idx<=32) return (idx>=5 && idx%5===0)?'':'AV'; return ((idx-35)%5===0)?'':'VM';
+    default: return '';
+  }
+}
+
+/* ================================================================
+   FUENTE 3: SHOP GUADALUPE
+   ================================================================ */
+const SHOP_ROWS = [
+  ["MA","MA","MA","Bechi Valeria","Bechi Valeria","Bechi Valeria","Bechi Valeria","MA","MA","MA","Gomez Carolina","Gomez Carolina","Gomez Carolina","MA","MA","MA","MA","MA","MA","Gomez Carolina","Gomez Carolina","Gomez Carolina","Gomez Carolina","Gomez Carolina","Gomez Carolina","Bechi Valeria","Bechi Valeria","Bechi Valeria","Bechi Valeria","MA"],
+  ["","","Gomez Yesica","Gomez Yesica","MA","MA","","","","","MA","","","","","","","Bechi Valeria","Bechi Valeria","Bechi Valeria","Bechi Valeria","Bechi Valeria","Bechi Valeria","MA","MA","MA","MA","","",""],
+  ["","Bechi Valeria","Bechi Valeria","","","","","","","","","","","Gomez Carolina","Gomez Carolina","Gomez Carolina","Gomez Carolina","","","","","MA","MA","","","","","Gomez Carolina","Gomez Carolina","Gomez Carolina"],
+  ["","","DLM Sofia","DLM Sofia","DLM Sofia","DLM Sofia","DLM Sofia","DLM Sofia","","","DLM Sofia","DLM Sofia","DLM Sofia","DLM Sofia","DLM Sofia","DLM Sofia","","","","","","","","","","","","","",""],
+  ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
+  ["Gomez Yesica","Gomez Yesica","Gomez Carolina","Gomez Carolina","Gomez Carolina","Gomez Carolina","Gomez Carolina","Gomez Carolina","","Bechi Valeria","Bechi Valeria","Bechi Valeria","Bechi Valeria","Bechi Valeria","Bechi Valeria","","","","DLM Sofia","DLM Sofia","DLM Sofia","DLM Sofia","DLM Sofia","DLM Sofia","","","","","","Bechi Valeria"]
+];
+
+/* ================================================================
+   FUENTE 4: PLAYA GP
+   ================================================================ */
+const PLAYA_GP_CODES = { ER: 'ELVIS RANI', MG: 'Max Galeano (🛻)' };
+
+const PLAYA_GP_ROWS = [
+  { horario:'23:00 - 06:00', tipo:'Noche', valores:[
+    "MARIO FERNANDEZ","ER","ER","ER","ER","ER","ER",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "ER","ER","ER","ER","ER","ER",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "ER","ER","ER","ER","ER","ER",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "ER","ER","ER","ER","ER","ER",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ"
+  ]},
+  { horario:'06:00 - 14:00', tipo:'Mañana', valores:[
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "ER","ER","ER","ER","ER","ER",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "ER","ER","ER","ER","ER","ER",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "ER","ER","ER","ER","ER","ER",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ"
+  ]},
+  { horario:'07:00 - 15:00', tipo:'Mañana', valores:[
+    "LUCAS SOLVER","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "ER","ER","ER","ER","ER","ER",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "ER","ER","ER","ER","ER","ER",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "",
+    "LAUTARO MONZON","LAUTARO MONZON",
+    "ER","ER","ER","ER","ER","ER",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ"
+  ]},
+  { horario:'14:00 - 21:50', tipo:'Tarde', valores:[
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "ER","ER","ER","ER","ER","ER",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "ER","ER","ER","ER","ER","ER",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz","Nicolas Venetz",
+    "LUCAS SOLVER",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ"
+  ]},
+  { horario:'15:15 - 23:00', tipo:'Tarde', valores:[
+    "NAZARENO MARTINEZ","NAZARENO MARTINEZ","NAZARENO MARTINEZ",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA","NICOLAS GAMARRA",
+    "LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER","LUCAS SOLVER",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON",
+    "LUCAS SOLVER","LUCAS SOLVER",
+    "LAUTARO MONZON","LAUTARO MONZON",
+    "MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ","MARIO FERNANDEZ",
+    "ER","ER","ER","ER","ER","ER",
+    "LUCAS SOLVER",
+    "LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON","LAUTARO MONZON"
+  ]},
+  { horario:'08:00 - 12:00 / 16:00 - 20:00', tipo:'Medio Día', valores:[
+    "","","","","","NICOLAS GAMARRA","NICOLAS GAMARRA","","","","","","",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","","","","","","","","","","","","","",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","","","","","","","","","","","","","","",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","","","","","","","","","","","","","","",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","","","","","","","","","","","","","","",
+    "","","","","","","","",
+    "NICOLAS GAMARRA","NICOLAS GAMARRA","","","","","","","","",
+    "LUCAS SOLVER","LUCAS SOLVER","","","","","","",
+    "LAUTARO MONZON","","","",
+    "LUCAS SOLVER","LUCAS SOLVER","","",
+    "LUCAS SOLVER","","",
+    "LUCAS SOLVER","","","","","","","","","","","","","","","","","",""
+  ]},
+  { horario:'🛻 Lun - Sáb medio día', tipo:'Medio Día', valores:[
+    "MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
+    "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
+    "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
+    "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
+    "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
+    "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
+    "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
+    "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
+    "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
+    "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG","",
+    "MG","MG","MG","MG","MG","MG","","MG","MG","MG","MG","MG","MG"
+  ]}
+];
+
+/* ================================================================
+   CONSTRUCCIÓN DE EMPLEADOS Y TURNOS
+   ================================================================ */
+const PALETA = [
+  '#3b82f6','#10b981','#f59e0b','#8b5cf6','#ef4444',
+  '#06b6d4','#84cc16','#ec4899','#14b8a6','#f97316',
+  '#6366f1','#22c55e','#eab308','#a855f7','#f43f5e',
+  '#0ea5e9','#65a30d','#d946ef','#0d9488','#fb923c',
+  '#4f46e5','#16a34a','#ca8a04','#9333ea','#e11d48'
+];
+
+const EMPLEADOS = [];
+const TURNOS = [];
+const empMap = {};
+let colorIdx = 0;
+
+function slug(s){
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+function addEmp(nombre, unidad, lugar, puesto){
+  const fixed = fixName(nombre);
+  if (empMap[fixed]) return empMap[fixed];
+  const id = slug(fixed) + '-' + (EMPLEADOS.length);
+  EMPLEADOS.push({ id, nombre: fixed, unidad, lugar, puesto, color: PALETA[colorIdx++ % PALETA.length] });
+  empMap[fixed] = id;
+  return id;
+}
+function addTurno(fecha, empId, tipo, inicio, fin, nota){
+  TURNOS.push({ fecha, empleado: empId, tipo, inicio, fin, nota: nota || '' });
+}
+function pad2(n){ return String(n).padStart(2,'0'); }
+function fechaISO(y,m,d){ return `${y}-${pad2(m)}-${pad2(d)}`; }
+function horaHHMM(h, m){ return `${pad2(h)}:${pad2(m||0)}`; }
+
+/* --- SPOT --- */
+(function(){
+  const MESES = { sep:9, oct:10, nov:11, dic:12, ene:1 };
+  for (const t of SPOT_TURNOS){
+    const m = t.horario.match(/(\d{1,2}):?(\d{0,2})\s*a\s*(\d{1,2}):?(\d{0,2})/);
+    const ini = m ? horaHHMM(m[1], m[2]) : '';
+    const fin = m ? horaHHMM(m[3], m[4]) : '';
+    for (let i = 0; i < t.valores.length; i++){
+      const val = t.valores[i];
+      if (!val || val === 'AG') continue;
+      const fStr = SPOT_FECHAS[i]; if (!fStr) continue;
+      const fm = fStr.match(/^(\d+)-(\w+)\.?$/); if (!fm) continue;
+      const dia = parseInt(fm[1]);
+      const mes = MESES[fm[2]];
+      const year = (mes === 1) ? 2027 : 2026;
+      const fIso = fechaISO(year, mes, dia);
+      val.split('/').map(s => s.trim()).filter(Boolean).forEach(nombre => {
+        const empId = addEmp(nombre, 'san-agustin', 'Spot', t.puesto);
+        addTurno(fIso, empId, t.puesto, ini, fin);
+      });
+    }
+  }
+})();
+
+/* --- PLAYA SA --- */
+(function(){
+  const ORIGIN = new Date(2026, 7, 1);
+  const START  = new Date(2026, 8, 1);
+  const END    = new Date(2026, 11, 31);
+  function gIdx(d){
+    const a = Date.UTC(ORIGIN.getFullYear(), ORIGIN.getMonth(), ORIGIN.getDate());
+    const b = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+    return Math.round((b - a) / 86400000);
+  }
+  for (let d = new Date(START); d <= END; d.setDate(d.getDate() + 1)){
+    const g = gIdx(d);
+    const fIso = fechaISO(d.getFullYear(), d.getMonth() + 1, d.getDate());
+    for (const row of PLAYA_ROWS){
+      const val = playaGetValue(row.code, g);
+      if (!val) continue;
+      const m = row.horario.match(/(\d{1,2}):?(\d{0,2})\s*a\s*(\d{1,2}):?(\d{0,2})/);
+      const ini = m ? horaHHMM(m[1], m[2]) : '';
+      const fin = m ? horaHHMM(m[3], m[4]) : '';
+      const nombre = PLAYA_CODES[val].nombre;
+      const empId = addEmp(nombre, 'san-agustin', 'Playa', row.turno);
+      addTurno(fIso, empId, row.turno, ini, fin);
+    }
+  }
+})();
+
+/* --- SHOP GUADALUPE --- */
+(function(){
+  const year = 2026, mes = 9;
+  SHOP_ROWS.forEach((fila) => {
+    fila.forEach((val, i) => {
+      if (!val || val === 'MA') return;
+      const fIso = fechaISO(year, mes, i + 1);
+      const empId = addEmp(val, 'guadalupe', 'Shop', 'Shop');
+      addTurno(fIso, empId, 'Mañana', '09:00', '17:00');
+    });
+  });
+})();
+
+/* --- PLAYA GP --- */
+(function(){
+  const fechas = [];
+  for (let m of [9,10,11]){
+    const ultimo = (m === 9 || m === 11) ? 30 : 31;
+    for (let d = 1; d <= ultimo; d++) fechas.push({ y:2026, m, d });
+  }
+  fechas.push({ y:2026, m:12, d:1 });
+
+  function resolver(nombre){ return PLAYA_GP_CODES[nombre] || nombre; }
+  function parseHorario(h){
+    const m = h.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
+    if (!m) return { ini:'', fin:'' };
+    return { ini: horaHHMM(m[1], m[2]), fin: horaHHMM(m[3], m[4]) };
+  }
+
+  for (const row of PLAYA_GP_ROWS){
+    const { ini, fin } = parseHorario(row.horario);
+    for (let i = 0; i < row.valores.length && i < fechas.length; i++){
+      const val = row.valores[i];
+      if (!val) continue;
+      const nombre = resolver(val);
+      const f = fechas[i];
+      const fIso = fechaISO(f.y, f.m, f.d);
+      const empId = addEmp(nombre, 'guadalupe', 'Playa', row.tipo);
+      addTurno(fIso, empId, row.tipo, ini, fin);
+    }
+  }
+})();
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+const DIAS  = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const DIASC = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MESES_C = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+const pad = n => String(n).padStart(2,'0');
+const isoD = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseISO = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const iniciales = n => n.split(/\s+/).slice(0,2).map(p => p[0]||'').join('').toUpperCase();
+const fechaLarga = d => `${DIAS[d.getDay()]}, ${d.getDate()} de ${MESES[d.getMonth()]}`;
+const mismoDia = (a,b) => isoD(a) === isoD(b);
+const inicioSemana = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; };
+
+const empById = Object.fromEntries(EMPLEADOS.map(e => [e.id, e]));
+const empByNombre = Object.fromEntries(EMPLEADOS.map(e => [e.nombre, e]));
+const uniById = Object.fromEntries(UNIDADES.map(u => [u.id, u]));
+
+function lighten(hex, amount = 0.72){
+  if (!hex || hex[0] !== '#') return '#f1f5f9';
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  const nr = Math.round(r + (255-r)*amount);
+  const ng = Math.round(g + (255-g)*amount);
+  const nb = Math.round(b + (255-b)*amount);
+  return `rgb(${nr},${ng},${nb})`;
+}
+
+function cellInfo(val){
+  if (!val || val === 'AG') return { style:'', html:'·', cls:'cell-empty' };
+  const first = val.split('/')[0].trim();
+  const fixedFirst = fixName(first);
+  const emp = empByNombre[fixedFirst];
+  if (!emp) return { style:'', html: fixName(val), cls:'cell-v' };
+  return {
+    style: `background:${lighten(emp.color,0.72)};color:${emp.color}`,
+    html: val.split('/').map(n => fixName(n)).join(' / '),
+    cls: 'cell-v'
+  };
+}
+
+/* ================================================================
+   NUEVA: DESCANSANDO — colaboradores activos que hoy NO trabajan
+   Se considera "activo" si tiene al menos 1 turno en ±7 días.
+   ================================================================ */
+function personasDescansando(fechaActual){
+  const fIso = isoD(fechaActual);
+  const fMs  = fechaActual.getTime();
+  const VENTANA = 7 * 24 * 60 * 60 * 1000; /* ±7 días */
+
+  const out = [];
+  for (const emp of EMPLEADOS){
+    if (filtroUnidad && emp.unidad !== filtroUnidad) continue;
+
+    /* ¿Trabaja hoy? */
+    const trabajaHoy = TURNOS.some(t => t.fecha === fIso && t.empleado === emp.id);
+    if (trabajaHoy) continue;
+
+    /* ¿Está activo en la ventana? */
+    const activo = TURNOS.some(t => {
+      if (t.empleado !== emp.id) return false;
+      const tMs = parseISO(t.fecha).getTime();
+      return Math.abs(tMs - fMs) <= VENTANA;
+    });
+
+    if (activo) out.push(emp);
+  }
+
+  /* Ordenar por unidad / lugar / nombre */
+  out.sort((a, b) => {
+    if (a.unidad !== b.unidad) return a.unidad.localeCompare(b.unidad);
+    if (a.lugar  !== b.lugar)  return a.lugar.localeCompare(b.lugar);
+    return a.nombre.localeCompare(b.nombre);
+  });
+  return out;
+}
+
+function renderDescansando(fechaActual){
+  const personas = personasDescansando(fechaActual);
+  if (!personas.length) return '';
+
+  const items = personas.map(e => `
+    <div class="descanso-item">
+      <div class="descanso-av" style="--c:${e.color}">${esc(iniciales(e.nombre))}</div>
+      <div class="descanso-info">
+        <div class="descanso-name">${esc(e.nombre)}</div>
+        <div class="descanso-lugar">${esc(e.lugar)} · ${esc(uniById[e.unidad] ? uniById[e.unidad].nombre : e.unidad)}</div>
+      </div>
+    </div>`).join('');
+
+  return `<section class="descanso-bloque">
+    <header class="descanso-head">
+      <span class="descanso-title"><span class="ico">🌙</span> Descansando hoy</span>
+      <span class="descanso-count">${personas.length}</span>
+    </header>
+    <div class="descanso-grid">${items}</div>
+  </section>`;
+}
+
+/* ================================================================
+   TABLAS DE PLANILLAS
+   ================================================================ */
+function buildSpotSATable(){
+  let html = '<table class="shift-grid"><thead><tr>';
+  html += '<th class="sticky-col">Puesto</th>';
+  for (const f of SPOT_FECHAS) html += `<th>${f}</th>`;
+  html += '</tr></thead><tbody>';
+  for (const t of SPOT_TURNOS){
+    html += '<tr>';
+    html += `<td class="sticky-col">${esc(t.puesto)}<span class="sc-sub">${esc(t.horario)}</span></td>`;
+    for (let i = 0; i < SPOT_FECHAS.length; i++){
+      const val = t.valores[i] || '';
+      const c = cellInfo(val);
+      html += `<td class="${c.cls}" style="${c.style}">${esc(c.html)}</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+function buildPlayaSATable(){
+  const dates = [];
+  const start = new Date(2026, 8, 1);
+  const end   = new Date(2026, 11, 31);
+  const d = new Date(start);
+  while (d <= end){ dates.push(new Date(d)); d.setDate(d.getDate()+1); }
+
+  const ORIGIN = new Date(2026, 7, 1);
+  function gIdx(date){
+    const a = Date.UTC(ORIGIN.getFullYear(), ORIGIN.getMonth(), ORIGIN.getDate());
+    const b = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+    return Math.round((b - a) / 86400000);
+  }
+
+  let html = '<table class="shift-grid"><thead><tr>';
+  html += '<th class="sticky-col">Turno</th>';
+  let mesPrev = -1;
+  for (const f of dates){
+    const m = f.getMonth();
+    const firstOfMonth = (m !== mesPrev);
+    mesPrev = m;
+    const label = firstOfMonth ? `${f.getDate()} ${MESES_C[m]}` : String(f.getDate());
+    html += `<th>${label}</th>`;
+  }
+  html += '</tr></thead><tbody>';
+
+  for (const row of PLAYA_ROWS){
+    html += '<tr>';
+    html += `<td class="sticky-col">${esc(row.turno)}<span class="sc-sub">${esc(row.horario)}</span></td>`;
+    for (const f of dates){
+      const val = playaGetValue(row.code, gIdx(f));
+      const nombre = val ? PLAYA_CODES[val].nombre : '';
+      const c = cellInfo(nombre);
+      html += `<td class="${c.cls}" style="${c.style}">${esc(c.html)}</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+function buildPlayaGPTable(){
+  const fechas = [];
+  for (let m of [9,10,11]){
+    const ultimo = (m === 9 || m === 11) ? 30 : 31;
+    for (let d = 1; d <= ultimo; d++) fechas.push({ y:2026, m, d });
+  }
+  fechas.push({ y:2026, m:12, d:1 });
+
+  let html = '<table class="shift-grid"><thead><tr>';
+  html += '<th class="sticky-col">Horario</th>';
+  let mesPrev = -1;
+  for (const f of fechas){
+    const firstOfMonth = (f.m !== mesPrev);
+    mesPrev = f.m;
+    const label = firstOfMonth ? `${f.d} ${MESES_C[f.m-1]}` : String(f.d);
+    html += `<th>${label}</th>`;
+  }
+  html += '</tr></thead><tbody>';
+
+  for (const row of PLAYA_GP_ROWS){
+    html += '<tr>';
+    html += `<td class="sticky-col">${esc(row.horario)}<span class="sc-sub">${esc(row.tipo)}</span></td>`;
+    for (let i = 0; i < fechas.length; i++){
+      const raw = row.valores[i] || '';
+      const nombre = raw ? (PLAYA_GP_CODES[raw] || raw) : '';
+      const c = cellInfo(nombre);
+      html += `<td class="${c.cls}" style="${c.style}">${esc(c.html)}</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+/* ================================================================
+   VISTA SA / GP
+   ================================================================ */
+function renderSA(){
+  return `
+    <div class="tabla-wrap" style="--tc:#2563eb">
+      <div class="tabla-head">Spot San Agustín <span class="tc-sub">Sep 2026 – Ene 2027</span></div>
+      <div class="tabla-scroll">${buildSpotSATable()}</div>
+    </div>
+    <div class="tabla-wrap" style="--tc:#2563eb">
+      <div class="tabla-head">Playa San Agustín <span class="tc-sub">Sep – Dic 2026</span></div>
+      <div class="tabla-scroll">${buildPlayaSATable()}</div>
+    </div>
+  `;
+}
+
+function renderGP(){
+  return `
+    <div class="tabla-wrap" style="--tc:#059669">
+      <div class="tabla-head">Playa Guadalupe <span class="tc-sub">Sep – Dic 2026</span></div>
+      <div class="tabla-scroll">${buildPlayaGPTable()}</div>
+    </div>
+  `;
+}
+
+/* ================================================================
+   ESTADO Y RENDER PRINCIPAL
+   ================================================================ */
+let vista = 'dia';
+let fecha = new Date(2026, 8, 1);
+let filtroUnidad = null;
+
+function turnosDe(fechaIso){
+  return TURNOS
+    .filter(t => t.fecha === fechaIso)
+    .filter(t => {
+      const e = empById[t.empleado];
+      if (!e) return false;
+      if (filtroUnidad && e.unidad !== filtroUnidad) return false;
+      return true;
+    })
+    .sort((a,b) => (a.inicio||'').localeCompare(b.inicio||''));
+}
+
+const $titulo = document.getElementById('titulo');
+const $chipsUnidad = document.getElementById('chipsUnidad');
+const $vista = document.getElementById('vista');
+const $tabs = document.getElementById('tabs');
+
+function tituloActual(){
+  if (vista === 'sa') return 'San Agustín · Planillas';
+  if (vista === 'gp') return 'Guadalupe · Planillas';
+  if (vista === 'dia') return cap(fechaLarga(fecha));
+  if (vista === 'semana'){
+    const a = inicioSemana(fecha), b = new Date(a); b.setDate(b.getDate()+6);
+    if (a.getMonth() === b.getMonth())
+      return `${a.getDate()} – ${b.getDate()} de ${MESES[a.getMonth()]} ${a.getFullYear()}`;
+    return `${a.getDate()} ${MESES[a.getMonth()]} – ${b.getDate()} ${MESES[b.getMonth()]}`;
+  }
+  return cap(`${MESES[fecha.getMonth()]} ${fecha.getFullYear()}`);
+}
+
+function cardTurno(t, compacto){
+  const e = empById[t.empleado] || { nombre: t.empleado, color:'#94a3b8' };
+  const hora = t.inicio && t.fin ? `${t.inicio} – ${t.fin}` : '—';
+  const badge = compacto ? (e.lugar || '') : (t.tipo || 'Turno');
+  const sub   = compacto ? (t.tipo || '') : (t.nota || '');
+  return `<article class="turno" style="--c:${e.color}">
+    <div class="avatar">${esc(iniciales(e.nombre))}</div>
+    <div class="cuerpo">
+      <div class="fila1">
+        <span class="nombre">${esc(e.nombre)}</span>
+        <span class="badge">${esc(badge)}</span>
+      </div>
+      <div class="fila2">
+        <span class="hora">${esc(hora)}</span>
+        ${sub ? `<span class="sep">·</span><span>${esc(sub)}</span>` : ''}
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderDia(){
+  const lista = turnosDe(isoD(fecha));
+  let html = `<div>
+      <div class="fecha-grande">${cap(fechaLarga(fecha))}</div>
+      <div class="sub">${lista.length} turno${lista.length === 1 ? '' : 's'}</div>
+    </div>`;
+
+  if (!lista.length){
+    html += `<div class="vacio">Sin turnos este día</div>`;
+  } else {
+    const visibles = UNIDADES.filter(u => !filtroUnidad || u.id === filtroUnidad);
+    for (const u of visibles){
+      const deUnidad = lista.filter(t => (empById[t.empleado]||{}).unidad === u.id);
+      if (!deUnidad.length) continue;
+      let lugaresHtml = '';
+      for (const lugar of u.lugares){
+        const deLugar = deUnidad.filter(t => (empById[t.empleado]||{}).lugar === lugar);
+        if (!deLugar.length) continue;
+        lugaresHtml += `<div class="lugar-head">${esc(lugar)}</div>`
+                     + deLugar.map(t => cardTurno(t,false)).join('');
+      }
+      html += `<section class="unidad-bloque" style="--uc:${u.color}">
+        <header class="unidad-head">
+          <span class="unidad-name">${esc(u.nombre)}</span>
+          <span class="unidad-count">${deUnidad.length}</span>
+        </header>
+        ${lugaresHtml}
+      </section>`;
+    }
+  }
+
+  /* NUEVA TARJETA: descansando hoy */
+  html += renderDescansando(fecha);
+
+  return html;
+}
+
+function renderSemana(){
+  const ini = inicioSemana(fecha);
+  let html = '';
+  for (let i = 0; i < 7; i++){
+    const d = new Date(ini); d.setDate(d.getDate()+i);
+    const lista = turnosDe(isoD(d));
+    const esHoy = mismoDia(d, new Date());
+    html += `<section class="bloque-dia ${esHoy ? 'hoy' : ''}">
+      <header class="bloque-head">
+        <span class="dname">${DIASC[d.getDay()]} ${d.getDate()}</span>
+        <span class="dcount">${lista.length}</span>
+      </header>
+      ${lista.length ? lista.map(t => cardTurno(t,true)).join('') : '<div class="vacio-mini">Sin turnos</div>'}
+    </section>`;
+  }
+  return html;
+}
+
+function renderMes(){
+  const y = fecha.getFullYear(), m = fecha.getMonth();
+  const offset = (new Date(y, m, 1).getDay() + 6) % 7;
+  const total = new Date(y, m+1, 0).getDate();
+  let celdas = '';
+  for (let i = 0; i < offset; i++) celdas += '<div class="celda vacia"></div>';
+  for (let d = 1; d <= total; d++){
+    const f = new Date(y, m, d);
+    const fIso = isoD(f);
+    const lista = turnosDe(fIso);
+    const esHoy = mismoDia(f, new Date());
+    const sel = fIso === isoD(fecha);
+    const unidades = [...new Set(lista.map(t => (empById[t.empleado]||{}).unidad).filter(Boolean))];
+    const dots = unidades.map(uid => `<i style="background:${(uniById[uid]||{}).color || '#94a3b8'}"></i>`).join('');
+    celdas += `<button class="celda ${esHoy ? 'hoy' : ''} ${sel ? 'sel' : ''}" data-fecha="${fIso}">
+      <span class="num">${d}</span>
+      <span class="dots">${dots}</span>
+      ${lista.length > 4 ? `<span class="mas">+${lista.length - 4}</span>` : ''}
+    </button>`;
+  }
+  return `<div class="mes-grid">
+    ${['L','M','M','J','V','S','D'].map(l => `<div class="dow">${l}</div>`).join('')}
+    ${celdas}
+  </div>`;
+}
+
+function renderChips(){
+  $chipsUnidad.innerHTML = UNIDADES.map(u =>
+    `<button class="chip ${filtroUnidad === u.id ? 'on' : ''}" data-id="${u.id}" style="--c:${u.color}">
+       <i></i>${esc(u.nombre)}
+     </button>`).join('');
+}
+
+function render(){
+  const esTabla = (vista === 'sa' || vista === 'gp');
+
+  document.querySelector('.chips-wrap').style.display = esTabla ? 'none' : 'flex';
+  document.getElementById('prev').style.display = esTabla ? 'none' : 'grid';
+  document.getElementById('next').style.display = esTabla ? 'none' : 'grid';
+  document.getElementById('btnHoy').style.display = esTabla ? 'none' : 'block';
+
+  $titulo.textContent = tituloActual();
+  renderChips();
+
+  if (vista === 'dia')         $vista.innerHTML = renderDia();
+  else if (vista === 'semana') $vista.innerHTML = renderSemana();
+  else if (vista === 'mes')    $vista.innerHTML = renderMes();
+  else if (vista === 'sa')     $vista.innerHTML = renderSA();
+  else if (vista === 'gp')     $vista.innerHTML = renderGP();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function mover(dir){
+  if (vista === 'dia') fecha.setDate(fecha.getDate() + dir);
+  else if (vista === 'semana') fecha.setDate(fecha.getDate() + 7*dir);
+  else if (vista === 'mes'){
+    const y = fecha.getFullYear(), m = fecha.getMonth() + dir;
+    const dia = Math.min(fecha.getDate(), new Date(y, m+1, 0).getDate());
+    fecha = new Date(y, m, dia);
+  }
+  render();
+}
+
+document.getElementById('prev').onclick = () => mover(-1);
+document.getElementById('next').onclick = () => mover(1);
+document.getElementById('btnHoy').onclick = () => { fecha = new Date(); render(); };
+
+$tabs.addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if (!b) return;
+  vista = b.dataset.v;
+  [...$tabs.children].forEach(t => t.classList.toggle('activo', t === b));
+  render();
+});
+
+$chipsUnidad.addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  const id = c.dataset.id;
+  filtroUnidad = (filtroUnidad === id) ? null : id;
+  render();
+});
+
+$vista.addEventListener('click', e => {
+  const c = e.target.closest('.celda[data-fecha]'); if (!c) return;
+  fecha = parseISO(c.dataset.fecha);
+  vista = 'dia';
+  [...$tabs.children].forEach(t => t.classList.toggle('activo', t.dataset.v === 'dia'));
+  render();
+});
+
+let tx = 0, ty = 0;
+$vista.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+$vista.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  const dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) mover(dx < 0 ? 1 : -1);
+}, { passive: true });
+
+/* Init */
+render();
+console.log('✅ Cargados:', EMPLEADOS.length, 'colaboradores y', TURNOS.length, 'turnos');
+</script>
+</body>
+</html>

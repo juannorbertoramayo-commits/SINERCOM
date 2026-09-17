@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SINERCOM HR — People & HR Management</title>
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
+  </script>
+  <!-- SheetJS para Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+  </script>
+  <style>
+    /* =========================
+       PALETA SOBRIA DARK
+       ========================= */
+    :root {
+      --bg-body:#08111f; --bg-header:#0d1728; --bg-card:#111d2e; --bg-card-hover:#17263b; --bg-input:#0c1728;
+      --border-subtle:#22334b; --border-accent:#36506f; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b;
+      --accent-blue:#38bdf8; --accent-violet:#818cf8; --accent-magenta:#c084fc; --accent-orange:#f59e0b; --accent-red:#f87171; --accent-cyan:#22d3ee; --accent-green:#34d399;
+      --gradient-header:linear-gradient(135deg,#0d1728,#12233a); --gradient-card-title:linear-gradient(90deg,#152238,#1a2b44);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:radial-gradient(circle at 80% -10%,rgba(56,189,248,.08),transparent 30%),var(--bg-body);color:var(--text-primary);font-family:Inter,Segoe UI,-apple-system,BlinkMacSystemFont,Arial,sans-serif;min-height:100vh}
+    .overlay{min-height:100vh;padding-bottom:36px}
+    .header{width:100%;background:rgba(13,23,40,.94);backdrop-filter:blur(16px);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-subtle);gap:18px;position:sticky;top:0;z-index:20;box-shadow:0 8px 30px rgba(0,0,0,.18)}
+    .header-left{display:flex;align-items:center;gap:16px}.header-logo{height:46px;padding:0 17px;border-radius:12px;display:flex;align-items:center;font-weight:900;font-size:20px;color:#fff;letter-spacing:1.5px;border:1px solid #2c4865;background:linear-gradient(135deg,#14263d,#0d192b);box-shadow:inset 0 1px rgba(255,255,255,.05)}.header-logo span{color:var(--accent-blue)}
+    .header-title{font-size:17px;font-weight:700;letter-spacing:.2px}.header-title small{font-weight:500;font-size:10px;color:var(--text-secondary);display:block;letter-spacing:1.8px;text-transform:uppercase;margin-top:3px}
+    .tabs{display:flex;gap:5px;background:#091423;padding:5px;border-radius:12px;border:1px solid var(--border-subtle)}
+    .tab-btn{background:transparent;border:0;color:var(--text-secondary);padding:9px 17px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}.tab-btn:hover{color:#fff;background:#142238}.tab-btn.active{background:linear-gradient(135deg,#1e5b7c,#16435f);color:#fff;box-shadow:0 4px 15px rgba(34,211,238,.12)}
+    .tab-content{display:none;padding:22px 0}.tab-content.active{display:block}
+    .selector-bar{max-width:1320px;margin:0 auto 14px;background:rgba(17,29,46,.88);border:1px solid var(--border-subtle);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 8px 25px rgba(0,0,0,.12)}.selector-bar label{color:var(--text-secondary);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.3px}.selector-bar select{background:var(--bg-input);color:#fff;border:1px solid var(--border-subtle);border-radius:9px;padding:9px 13px;font-size:13px;font-family:inherit;min-width:360px;cursor:pointer;outline:none}.selector-bar select:focus{border-color:var(--accent-blue);box-shadow:0 0 0 3px rgba(56,189,248,.08)}
+    .dashboard{display:grid;grid-template-columns:350px 1fr;gap:14px;padding:0 14px;max-width:1348px;margin:0 auto}.panel-left{grid-row:1/3;background:linear-gradient(180deg,#111e30,#0e1929);border-radius:16px;padding:16px;display:flex;flex-direction:column;border:1px solid var(--border-subtle);box-shadow:0 15px 40px rgba(0,0,0,.16)}.panel-left h3{color:#cbd5e1;font-size:11px;text-transform:uppercase;letter-spacing:1.3px;margin-bottom:12px;border-bottom:1px solid var(--border-subtle);padding-bottom:11px}.bar-chart-wrap{flex:1;position:relative;min-height:500px}.right-panels{display:flex;flex-direction:column;gap:12px}
+    .cards-identity,.cards-liquid{display:grid;grid-template-columns:1.25fr .65fr 1fr .85fr 1fr;gap:12px}.cards-indicators{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.card{background:linear-gradient(145deg,#142238,#101b2b);border-radius:13px;overflow:hidden;min-height:88px;display:flex;flex-direction:column;border:1px solid var(--border-subtle);transition:.2s;box-shadow:0 8px 22px rgba(0,0,0,.12)}.card:hover{transform:translateY(-2px);border-color:#385775;background:var(--bg-card-hover)}.card-title{background:rgba(255,255,255,.025);color:#7f93aa;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:7px 11px;line-height:1.3}.card-value{flex:1;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#e2e8f0;padding:10px;text-align:center;word-break:break-word;line-height:1.2}.card-value.large{font-size:22px;color:var(--accent-blue)}.card-value.small{font-size:12px}.card-value.danger{color:var(--accent-orange)}.card-value.zero{color:#52657d}.card-value.money{color:var(--accent-green);font-size:14px}.card-value.fondo{color:var(--accent-cyan);font-size:14px}.card-value.fondo-no{color:#52657d;font-size:12px}.card-value.badge{color:var(--accent-violet);font-size:19px}.card-value.badge-success{color:var(--accent-green);font-size:19px}.card-value.op-pos{color:var(--accent-green);font-size:14px}.card-value.op-neg{color:var(--accent-red);font-size:14px}.card-value.ventas{color:var(--accent-blue);font-size:18px}
+    .bottom-section{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:0}.pie-wrap{background:linear-gradient(145deg,#142238,#101b2b);border-radius:14px;padding:15px;display:flex;flex-direction:column;border:1px solid var(--border-subtle);box-shadow:0 8px 22px rgba(0,0,0,.12)}.pie-wrap h4{background:transparent;color:#cbd5e1;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:0 0 10px;border-bottom:1px solid var(--border-subtle);margin:0 0 10px}.pie-canvas-wrap{flex:1;position:relative;min-height:210px}.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}.legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-secondary)}.legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}.absence-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;align-content:start}.absence-stats .card{min-height:78px}.absence-stats .card:last-child{grid-column:span 2}
+    .edit-container{max-width:1348px;margin:0 auto;background:linear-gradient(145deg,#111e30,#0d1929);border-radius:16px;padding:20px;border:1px solid var(--border-subtle);overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,.16)}.edit-container h3{color:#e2e8f0;font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;border-bottom:1px solid var(--border-subtle);padding-bottom:12px}.edit-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;min-width:1200px}.edit-table th{background:#17263b;color:#9fb0c5;padding:10px 9px;text-align:left;font-weight:800;text-transform:uppercase;font-size:9px;letter-spacing:.6px;white-space:nowrap;border-bottom:1px solid #29405b}.edit-table td{padding:6px 8px;border-bottom:1px solid rgba(148,163,184,.07);vertical-align:middle}.edit-table tr:hover td{background:rgba(56,189,248,.035)}.edit-table input{background:#0b1627;border:1px solid #20334b;border-radius:7px;color:#e2e8f0;padding:7px 8px;font-size:12px;font-family:inherit;width:100%;outline:none;transition:.2s}.edit-table input:focus{border-color:var(--accent-blue);box-shadow:0 0 0 3px rgba(56,189,248,.07)}.edit-table input[type=number]{width:70px}.edit-table .col-actions{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}.btn{border:1px solid var(--border-subtle);color:#e2e8f0;padding:8px 13px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:700;font-family:inherit;transition:.2s;display:inline-flex;align-items:center;gap:5px;background:#122137}.btn:hover{background:#1a2c45;border-color:#3a5675;transform:translateY(-1px)}.btn-primary{background:#1675a5;border-color:#1688bd;color:#fff}.btn-success{background:#087f68;border-color:#0aa17f;color:#fff}.btn-danger{background:#8f3040;border-color:#ad4052;color:#fff}.btn-excel{background:#126b73;border-color:#188c97;color:#fff}.btn-save-all{background:#4f46a5;border-color:#665fd0;color:#fff;padding:8px 20px}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px;align-items:center}.toolbar span{color:var(--text-muted)!important}
+    #toast{position:fixed;bottom:25px;right:25px;background:#122137;color:#f8fafc;padding:13px 20px;border-radius:11px;border:1px solid #31506e;border-left:3px solid var(--accent-blue);font-family:inherit;font-size:13px;z-index:9999;box-shadow:0 12px 35px rgba(0,0,0,.45);transition:.4s;opacity:0;transform:translateY(20px)}
+    @media(max-width:1000px){.dashboard{grid-template-columns:1fr}.panel-left{grid-row:auto}.cards-identity,.cards-liquid{grid-template-columns:repeat(3,1fr)}.cards-indicators{grid-template-columns:repeat(3,1fr)}.bottom-section{grid-template-columns:1fr}.header{flex-wrap:wrap}.tabs{margin-left:auto}}
+    @media(max-width:650px){.header{padding:12px 15px}.header-left{width:100%}.tabs{width:100%;justify-content:center}.tab-btn{flex:1;padding:8px 8px}.selector-bar{margin:0 10px 12px}.selector-bar select{min-width:0;width:100%}.dashboard{padding:0 10px}.cards-identity,.cards-liquid,.cards-indicators{grid-template-columns:1fr 1fr}.absence-stats{grid-template-columns:1fr 1fr}.edit-container{margin:0 10px;padding:14px}.toolbar{align-items:stretch}.btn{justify-content:center}.bar-chart-wrap{min-height:350px}}
+  </style>
+</head>
+<body>
+  <div class="overlay">
+
+    <!-- ===== HEADER CON LOGO ===== -->
+    <div class="header">
+      <div class="header-left">
+        <div class="header-logo">SINER<span>COM</span></div>
+        <div class="header-title">People & HR Management<small>Dashboard de Recursos Humanos · Gestión de Personas</small></div>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-dashboard" onclick="switchTab('tab-dashboard')">▦ Dashboard</button>
+        <button class="tab-btn" data-tab="tab-editar" onclick="switchTab('tab-editar')">♙ Empleados</button>
+      </div>
+    </div>
+
+    <!-- ===== TAB: DASHBOARD ===== -->
+    <div id="tab-dashboard" class="tab-content active">
+      <div class="selector-bar">
+        <label for="empSelect">Empleado seleccionado</label>
+        <select id="empSelect" onchange="selectEmployee(this.value)"></select>
+      </div>
+
+      <div class="dashboard">
+        <div class="panel-left">
+          <h3>Ausentismo por empleado</h3>
+          <div class="bar-chart-wrap">
+            <canvas id="barChart"></canvas>
+          </div>
+          <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#4A6CF7"></div>Accidente</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#C026D3"></div>Médico</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#7C3AED"></div>Otras Lic.</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div>Faltas</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#EF4444"></div>Suspensiones</div>
+          </div>
+        </div>
+
+        <div class="right-panels">
+          <!-- ROW 1: Identidad -->
+          <div class="cards-identity">
+            <div class="card"><div class="card-title">Personal</div><div class="card-value small" id="c-personal">—</div></div>
+            <div class="card"><div class="card-title">Legajo</div><div class="card-value" id="c-legajo">—</div></div>
+            <div class="card"><div class="card-title">CUIL</div><div class="card-value small" id="c-cuil">—</div></div>
+            <div class="card"><div class="card-title">Fecha Ingreso</div><div class="card-value small" id="c-fechaIngreso">—</div></div>
+            <div class="card"><div class="card-title">Categoría</div><div class="card-value small" id="c-categoria">—</div></div>
+          </div>
+
+          <!-- ROW 2: Liquidación + Combustibles -->
+          <div class="cards-liquid">
+            <div class="card"><div class="card-title">Sueldo / Jornal</div><div class="card-value money" id="c-sueldo">—</div></div>
+            <div class="card"><div class="card-title">Años de Ant</div><div class="card-value large" id="c-ant">—</div></div>
+            <div class="card"><div class="card-title">Manejo de Fondo</div><div class="card-value fondo" id="c-fondo">—</div></div>
+            <div class="card"><div class="card-title">0222 Manejo Fondo</div><div class="card-value fondo" id="c-fondo0222">—</div></div>
+            <div class="card"><div class="card-title">⛽ Venta Combustibles</div><div class="card-value ventas" id="c-ventas">$0</div></div>
+          </div>
+
+          <!-- ROW 3: Indicadores -->
+          <div class="cards-indicators">
+            <div class="card">
+              <div class="card-title">💰 Descuentos</div>
+              <div class="card-value badge" id="c-descuentos">0</div>
+            </div>
+            <div class="card">
+              <div class="card-title">🔄 Cambios de Turno</div>
+              <div class="card-value badge" id="c-cambiosTurno">0</div>
+            </div>
+            <div class="card">
+              <div class="card-title">🎓 Cursos / Capacitaciones</div>
+              <div class="card-value badge-success" id="c-cursos">0%</div>
+            </div>
+            <div class="card">
+              <div class="card-title">⏰ Llegadas Tardes</div>
+              <div class="card-value danger" id="c-llegadasTarde">0</div>
+            </div>
+            <div class="card">
+              <div class="card-title">👍 Opiniones Positivas</div>
+              <div class="card-value op-pos" id="c-op-pos">0</div>
+            </div>
+            <div class="card">
+              <div class="card-title">👎 Opiniones Negativas</div>
+              <div class="card-value op-neg" id="c-op-neg">0</div>
+            </div>
+          </div>
+
+          <!-- BOTTOM: Gráfico Ausentismo + Stats -->
+          <div class="bottom-section">
+            <div class="pie-wrap">
+              <h4>Distribución de ausentismo</h4>
+              <div class="pie-canvas-wrap"><canvas id="pieChart"></canvas></div>
+            </div>
+            <div class="absence-stats">
+              <div class="card"><div class="card-title">Médico</div><div class="card-value danger" id="c-medico">—</div></div>
+              <div class="card"><div class="card-title">Faltas</div><div class="card-value danger" id="c-faltas">—</div></div>
+              <div class="card"><div class="card-title">Suspensiones</div><div class="card-value danger" id="c-suspensiones">—</div></div>
+              <div class="card"><div class="card-title">Accidente</div><div class="card-value" id="c-accidente">—</div></div>
+              <div class="card" style="grid-column: span 2;"><div class="card-title">Otras Licencias</div><div class="card-value" id="c-otras">—</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: EDITAR PERFILES ===== -->
+    <div id="tab-editar" class="tab-content">
+      <div class="edit-container">
+        <h3>Gestión de perfiles de empleados</h3>
+
+        <div class="toolbar">
+          <button class="btn btn-primary" onclick="addEmployee()">➕ Agregar</button>
+          <button class="btn btn-success btn-save-all" onclick="saveAllChanges()">💾 Guardar Cambios</button>
+          <button class="btn btn-excel" onclick="exportToExcel()">📊 Exportar Excel</button>
+          <button class="btn btn-excel" onclick="document.getElementById('fileInput').click()">📂 Importar Excel</button>
+          <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none;" onchange="importFromExcel(event)" />
+          <span style="color:var(--text-muted); font-size:11px; margin-left:auto;">Guardar para actualizar el dashboard</span>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="edit-table" id="editTable">
+            <thead>
+              <tr>
+                <th>Personal</th>
+                <th>Legajo</th>
+                <th>CUIL</th>
+                <th>Fecha Ingreso</th>
+                <th>Categoría</th>
+                <th>Sueldo / Jornal</th>
+                <th>Años Ant</th>
+                <th>0222 Manejo Fondo</th>
+                <th>Venta Combustibles</th>
+                <th>Médico</th>
+                <th>Faltas</th>
+                <th>Suspensiones</th>
+                <th>Accidente</th>
+                <th>Otras Lic</th>
+                <th>Descuentos</th>
+                <th>Cambios Turno</th>
+                <th>Cursos %</th>
+                <th>Llegadas Tarde</th>
+                <th>Op. Positivas</th>
+                <th>Op. Negativas</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="editTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    // ============================================================
+    //  DATOS COMPLETOS CON OPINIONES
+    // ============================================================
+    let employees = [];
+
+    // Opiniones extraídas del documento
+    const opinionesData = {
+      "Keller Oscar": { positivas: 12, negativas: 0 },
+      "Sabrina": { positivas: 4, negativas: 0 },
+      "Alejandro": { positivas: 2, negativas: 0 },
+      "Oscar": { positivas: 8, negativas: 0 },
+      "Lara": { positivas: 5, negativas: 0 },
+      "Joana": { positivas: 2, negativas: 0 },
+      "Natalia": { positivas: 4, negativas: 0 },
+      "Sole": { positivas: 2, negativas: 0 },
+      "Sofía": { positivas: 5, negativas: 0 },
+      "Lucila": { positivas: 5, negativas: 0 },
+      "Ayelen": { positivas: 3, negativas: 0 },
+      "Bianca": { positivas: 3, negativas: 0 },
+      "Celina": { positivas: 2, negativas: 0 },
+      "Luci": { positivas: 2, negativas: 0 },
+      "David": { positivas: 1, negativas: 0 },
+      "Victor": { positivas: 3, negativas: 0 },
+      "Leandro": { positivas: 6, negativas: 0 },
+      "Anne": { positivas: 1, negativas: 0 },
+      "Ane": { positivas: 1, negativas: 0 },
+      "Anneris": { positivas: 1, negativas: 0 },
+      "Isabel": { positivas: 1, negativas: 0 },
+      "Leonardo": { positivas: 1, negativas: 0 }
+    };
+
+    function generateSampleData() {
+      const baseEmployees = [
+        { PERSONAL: "Bechi, Valeria Angelica", LEG: 2, CUIL: "27-27793967-9", FECHA_INGRESO: "04/06/2016", CATEGORIA: "SHOP OPERARIO SHOP", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 10, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 125000 },
+        { PERSONAL: "Paduan, Soraya Rocio", LEG: 3, CUIL: "27-30621205-8", FECHA_INGRESO: "04/06/2016", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 10, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 98000 },
+        { PERSONAL: "Maqueda, Federico Gaston", LEG: 5, CUIL: "20-33068266-4", FECHA_INGRESO: "01/03/2017", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 9, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 87000 },
+        { PERSONAL: "Spinardi, Lara Candelaria", LEG: 6, CUIL: "27-37282895-7", FECHA_INGRESO: "01/09/2017", CATEGORIA: "SHOP OPERARIO SHOP", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 8, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 112000 },
+        { PERSONAL: "Cerrudo, Guillermo Sebastian", LEG: 7, CUIL: "20-34939468-6", FECHA_INGRESO: "01/12/2017", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 8, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 76000 },
+        { PERSONAL: "Rangel, Elvis Jesus", LEG: 10, CUIL: "20-96067470-8", FECHA_INGRESO: "01/11/2019", CATEGORIA: "ENC ENCARGADO TURNO", SUELDO: "$ 1.571.404,00", AÑOS_ANT: 6, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 145000 },
+        { PERSONAL: "Kremser, Emmanuel", LEG: 11, CUIL: "20-33039758-7", FECHA_INGRESO: "20/11/2020", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 5, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 92000 },
+        { PERSONAL: "Biasoni, Emanuel", LEG: 12, CUIL: "20-32744974-6", FECHA_INGRESO: "16/12/2020", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 5, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 68000 },
+        { PERSONAL: "Ortiz, Gustavo", LEG: 13, CUIL: "20-25531702-5", FECHA_INGRESO: "01/02/2021", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 5, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 54000 },
+        { PERSONAL: "Moran, Emiliano Jose", LEG: 14, CUIL: "20-38982919-7", FECHA_INGRESO: "05/04/2021", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 5, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 61000 },
+        { PERSONAL: "Biasoni, Martin", LEG: 15, CUIL: "20-36326069-2", FECHA_INGRESO: "10/04/2021", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 5, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 59000 },
+        { PERSONAL: "Odriozola, Maria Jose", LEG: 16, CUIL: "27-36877547-4", FECHA_INGRESO: "01/09/2021", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 4, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 83000 },
+        { PERSONAL: "Soriano, Maria Elena", LEG: 22, CUIL: "27-35250009-2", FECHA_INGRESO: "01/06/2022", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 4, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 77000 },
+        { PERSONAL: "Luque, Horacio Lindor", LEG: 23, CUIL: "20-13925293-5", FECHA_INGRESO: "01/06/2022", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 4, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 52000 },
+        { PERSONAL: "Goy, Guillermo Omar", LEG: 25, CUIL: "20-35752335-5", FECHA_INGRESO: "19/04/2022", CATEGORIA: "CHO TRANSP COMBUSTIBLE", SUELDO: "$ 1.272.012,35", AÑOS_ANT: 4, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 156000 }
+      ];
+
+      return baseEmployees.map(e => {
+        const nombreBase = e.PERSONAL.split(',')[0].trim();
+        let opPos = 0;
+        let opNeg = 0;
+
+        for (const [key, value] of Object.entries(opinionesData)) {
+          if (nombreBase.includes(key) || key.includes(nombreBase) || e.PERSONAL.includes(key)) {
+            opPos += value.positivas || 0;
+            opNeg += value.negativas || 0;
+          }
+        }
+
+        if (opPos === 0 && opNeg === 0) {
+          if (e.PERSONAL.includes("Bechi")) { opPos = 1;
+            opNeg = 0; }
+          if (e.PERSONAL.includes("Paduan")) { opPos = 2;
+            opNeg = 0; }
+          if (e.PERSONAL.includes("Spinardi")) { opPos = 3;
+            opNeg = 0; }
+          if (e.PERSONAL.includes("Rangel")) { opPos = 1;
+            opNeg = 0; }
+        }
+
+        return {
+          ...e,
+          DESCUENTOS: Math.floor(Math.random() * 5),
+          CAMBIOS_TURNO: Math.floor(Math.random() * 3),
+          CURSOS: Math.floor(Math.random() * 80) + 20,
+          LLEGADAS_TARDE: Math.floor(Math.random() * 6),
+          OP_POSITIVAS: opPos,
+          OP_NEGATIVAS: opNeg
+        };
+      });
+    }
+
+    employees = generateSampleData();
+
+    let selectedIdx = 0;
+    let barChart, pieChart;
+
+    // ============================================================
+    //  FUNCIONES DEL DASHBOARD
+    // ============================================================
+    function hasNovedades(emp) {
+      return (emp.MEDICO || 0) > 0 || (emp.FALTAS || 0) > 0 || (emp.SUSPENSIONES || 0) > 0 || (emp.ACCIDENTE || 0) > 0 || (
+        emp.OTRAS_LIC || 0) > 0;
+    }
+
+    function getFilteredEmployees() {
+      return employees.filter(e => hasNovedades(e));
+    }
+
+    function populateSelect() {
+      const sel = document.getElementById('empSelect');
+      sel.innerHTML = '';
+      employees.forEach((e, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        const displayName = e.PERSONAL + ' (' + e.LEG + ')';
+        opt.textContent = displayName;
+        sel.appendChild(opt);
+      });
+      if (selectedIdx >= employees.length) selectedIdx = employees.length - 1;
+      if (selectedIdx < 0) selectedIdx = 0;
+      sel.value = selectedIdx;
+    }
+
+    function updateCards(idx) {
+      if (idx >= employees.length) idx = employees.length - 1;
+      if (idx < 0) idx = 0;
+      selectedIdx = idx;
+      const e = employees[idx];
+      if (!e) return;
+
+      document.getElementById('c-personal').textContent = e.PERSONAL;
+      document.getElementById('c-legajo').textContent = e.LEG;
+      document.getElementById('c-cuil').textContent = e.CUIL || '—';
+      document.getElementById('c-fechaIngreso').textContent = e.FECHA_INGRESO || '—';
+      document.getElementById('c-categoria').textContent = e.CATEGORIA || '—';
+      document.getElementById('c-sueldo').textContent = e.SUELDO || '—';
+      document.getElementById('c-ant').textContent = e.AÑOS_ANT + ' años';
+
+      const fondoEl = document.getElementById('c-fondo');
+      if (e.FONDO_0222 && e.FONDO_0222 !== 'No figura' && e.FONDO_0222 !== '') {
+        fondoEl.textContent = '✅ Sí';
+        fondoEl.className = 'card-value fondo';
+      } else {
+        fondoEl.textContent = '❌ No';
+        fondoEl.className = 'card-value fondo-no';
+      }
+
+      document.getElementById('c-fondo0222').textContent = e.FONDO_0222 || '—';
+      document.getElementById('c-fondo0222').className = 'card-value fondo' + (e.FONDO_0222 === 'No figura' || e
+        .FONDO_0222 === '' ? '-no' : '');
+
+      // Ventas
+      document.getElementById('c-ventas').textContent = '$' + (e.VENTAS || 0).toLocaleString();
+
+      // Indicadores
+      document.getElementById('c-descuentos').textContent = e.DESCUENTOS || 0;
+      document.getElementById('c-cambiosTurno').textContent = e.CAMBIOS_TURNO || 0;
+      document.getElementById('c-cursos').textContent = (e.CURSOS || 0) + '%';
+      document.getElementById('c-llegadasTarde').textContent = e.LLEGADAS_TARDE || 0;
+
+      // Opiniones
+      document.getElementById('c-op-pos').textContent = e.OP_POSITIVAS || 0;
+      document.getElementById('c-op-neg').textContent = e.OP_NEGATIVAS || 0;
+
+      // Ausentismo
+      const med = e.MEDICO || 0;
+      const fal = e.FALTAS || 0;
+      const sus = e.SUSPENSIONES || 0;
+      const acc = e.ACCIDENTE || 0;
+      const otr = e.OTRAS_LIC || 0;
+
+      document.getElementById('c-medico').textContent = med + ' días';
+      document.getElementById('c-medico').className = 'card-value ' + (med > 0 ? 'danger' : 'zero');
+      document.getElementById('c-faltas').textContent = fal + ' días';
+      document.getElementById('c-faltas').className = 'card-value ' + (fal > 0 ? 'danger' : 'zero');
+      document.getElementById('c-suspensiones').textContent = sus + ' días';
+      document.getElementById('c-suspensiones').className = 'card-value ' + (sus > 0 ? 'danger' : 'zero');
+      document.getElementById('c-accidente').textContent = acc + ' días';
+      document.getElementById('c-accidente').className = 'card-value ' + (acc > 0 ? 'danger' : 'zero');
+      document.getElementById('c-otras').textContent = otr + ' días';
+      document.getElementById('c-otras').className = 'card-value ' + (otr > 0 ? '' : 'zero');
+
+      // Pie chart: solo Faltas, Suspensiones, Accidente, Otras Lic
+      pieChart.data.datasets[0].data = [acc, fal, sus, otr];
+      pieChart.update();
+
+      updateBarChart();
+
+      document.getElementById('empSelect').value = idx;
+    }
+
+    function updateBarChart() {
+      const filtered = getFilteredEmployees();
+      const names = filtered.map(e => e.PERSONAL.split(' ')[0]);
+
+      barChart.data.labels = names;
+      barChart.data.datasets[0].data = filtered.map(e => e.ACCIDENTE || 0);
+      barChart.data.datasets[0].backgroundColor = filtered.map((_, i) => {
+        const originalIdx = employees.indexOf(filtered[i]);
+        return originalIdx === selectedIdx ? '#4A6CF7' : 'rgba(74,108,247,0.2)';
+      });
+      barChart.data.datasets[1].data = filtered.map(e => e.MEDICO || 0);
+      barChart.data.datasets[1].backgroundColor = filtered.map((_, i) => {
+        const originalIdx = employees.indexOf(filtered[i]);
+        return originalIdx === selectedIdx ? '#C026D3' : 'rgba(192,38,211,0.2)';
+      });
+      barChart.data.datasets[2].data = filtered.map(e => e.OTRAS_LIC || 0);
+      barChart.data.datasets[2].backgroundColor = filtered.map((_, i) => {
+        const originalIdx = employees.indexOf(filtered[i]);
+        return originalIdx === selectedIdx ? '#7C3AED' : 'rgba(124,58,237,0.2)';
+      });
+      barChart.data.datasets[3].data = filtered.map(e => e.FALTAS || 0);
+      barChart.data.datasets[3].backgroundColor = filtered.map((_, i) => {
+        const originalIdx = employees.indexOf(filtered[i]);
+        return originalIdx === selectedIdx ? '#F59E0B' : 'rgba(245,158,11,0.2)';
+      });
+      barChart.data.datasets[4].data = filtered.map(e => e.SUSPENSIONES || 0);
+      barChart.data.datasets[4].backgroundColor = filtered.map((_, i) => {
+        const originalIdx = employees.indexOf(filtered[i]);
+        return originalIdx === selectedIdx ? '#EF4444' : 'rgba(239,68,68,0.2)';
+      });
+      barChart.update();
+    }
+
+    function selectEmployee(val) {
+      selectedIdx = parseInt(val);
+      updateCards(selectedIdx);
+    }
+
+    // ============================================================
+    //  FUNCIONES DE EDICIÓN
+    // ============================================================
+    function renderEditTable() {
+      const tbody = document.getElementById('editTableBody');
+      tbody.innerHTML = '';
+      employees.forEach((e, i) => {
+        const tr = document.createElement('tr');
+        tr.dataset.index = i;
+        tr.innerHTML = `
+              <td><input type="text" class="edit-input" data-field="PERSONAL" value="${e.PERSONAL}" /></td>
+              <td><input type="number" class="edit-input" data-field="LEG" value="${e.LEG}" /></td>
+              <td><input type="text" class="edit-input" data-field="CUIL" value="${e.CUIL || ''}" /></td>
+              <td><input type="text" class="edit-input" data-field="FECHA_INGRESO" value="${e.FECHA_INGRESO || ''}" /></td>
+              <td><input type="text" class="edit-input" data-field="CATEGORIA" value="${e.CATEGORIA || ''}" /></td>
+              <td><input type="text" class="edit-input" data-field="SUELDO" value="${e.SUELDO || ''}" /></td>
+              <td><input type="number" class="edit-input" data-field="AÑOS_ANT" value="${e.AÑOS_ANT || 0}" /></td>
+              <td><input type="text" class="edit-input" data-field="FONDO_0222" value="${e.FONDO_0222 || ''}" /></td>
+              <td><input type="number" class="edit-input" data-field="VENTAS" value="${e.VENTAS || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="MEDICO" value="${e.MEDICO || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="FALTAS" value="${e.FALTAS || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="SUSPENSIONES" value="${e.SUSPENSIONES || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="ACCIDENTE" value="${e.ACCIDENTE || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="OTRAS_LIC" value="${e.OTRAS_LIC || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="DESCUENTOS" value="${e.DESCUENTOS || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="CAMBIOS_TURNO" value="${e.CAMBIOS_TURNO || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="CURSOS" value="${e.CURSOS || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="LLEGADAS_TARDE" value="${e.LLEGADAS_TARDE || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="OP_POSITIVAS" value="${e.OP_POSITIVAS || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="OP_NEGATIVAS" value="${e.OP_NEGATIVAS || 0}" /></td>
+              <td class="col-actions">
+                <button class="btn btn-danger" onclick="deleteRow(${i})">🗑️</button>
+              </td>
+            `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function saveAllChanges() {
+      const rows = document.querySelectorAll('#editTableBody tr');
+      rows.forEach(tr => {
+        const index = parseInt(tr.dataset.index);
+        const inputs = tr.querySelectorAll('.edit-input');
+        inputs.forEach(inp => {
+          const field = inp.dataset.field;
+          let val = inp.value;
+          if (['LEG', 'AÑOS_ANT', 'VENTAS', 'MEDICO', 'FALTAS', 'SUSPENSIONES', 'ACCIDENTE', 'OTRAS_LIC', 'DESCUENTOS',
+              'CAMBIOS_TURNO', 'CURSOS', 'LLEGADAS_TARDE', 'OP_POSITIVAS', 'OP_NEGATIVAS'
+            ].includes(field)) {
+            val = parseFloat(val) || 0;
+          }
+          employees[index][field] = val;
+        });
+      });
+      populateSelect();
+      updateCards(selectedIdx);
+      renderEditTable();
+      showToast('✅ Todos los cambios guardados exitosamente');
+    }
+
+    function deleteRow(index) {
+      if (employees.length <= 1) {
+        showToast('⚠️ Debe haber al menos un empleado');
+        return;
+      }
+      if (confirm(`¿Eliminar a "${employees[index].PERSONAL}"?`)) {
+        employees.splice(index, 1);
+        if (selectedIdx >= employees.length) selectedIdx = employees.length - 1;
+        populateSelect();
+        updateCards(selectedIdx);
+        renderEditTable();
+        showToast('🗑️ Empleado eliminado');
+      }
+    }
+
+    function addEmployee() {
+      const newEmp = {
+        PERSONAL: "NUEVO EMPLEADO",
+        LEG: 999,
+        CUIL: "00-00000000-0",
+        FECHA_INGRESO: "01/01/2020",
+        CATEGORIA: "OF. 1RA.",
+        SUELDO: "$ 0,00",
+        AÑOS_ANT: 0,
+        FONDO_0222: "No figura",
+        VENTAS: 0,
+        MEDICO: 0,
+        FALTAS: 0,
+        SUSPENSIONES: 0,
+        ACCIDENTE: 0,
+        OTRAS_LIC: 0,
+        DESCUENTOS: 0,
+        CAMBIOS_TURNO: 0,
+        CURSOS: 0,
+        LLEGADAS_TARDE: 0,
+        OP_POSITIVAS: 0,
+        OP_NEGATIVAS: 0
+      };
+      employees.push(newEmp);
+      selectedIdx = employees.length - 1;
+      populateSelect();
+      updateCards(selectedIdx);
+      renderEditTable();
+      showToast('➕ Empleado agregado. Edita los datos y presiona "Guardar Cambios".');
+    }
+
+    // ============================================================
+    //  EXCEL
+    // ============================================================
+    function exportToExcel() {
+      const data = employees.map(e => ({
+        'Personal': e.PERSONAL,
+        'Legajo': e.LEG,
+        'CUIL': e.CUIL || '',
+        'Fecha Ingreso': e.FECHA_INGRESO || '',
+        'Categoría': e.CATEGORIA || '',
+        'Sueldo / Jornal': e.SUELDO || '',
+        'Años Ant': e.AÑOS_ANT || 0,
+        '0222 Manejo Fondo': e.FONDO_0222 || '',
+        'Venta Combustibles': e.VENTAS || 0,
+        'Médico': e.MEDICO || 0,
+        'Faltas': e.FALTAS || 0,
+        'Suspensiones': e.SUSPENSIONES || 0,
+        'Accidente': e.ACCIDENTE || 0,
+        'Otras Lic': e.OTRAS_LIC || 0,
+        'Descuentos': e.DESCUENTOS || 0,
+        'Cambios de Turno': e.CAMBIOS_TURNO || 0,
+        'Cursos %': e.CURSOS || 0,
+        'Llegadas Tardes': e.LLEGADAS_TARDE || 0,
+        'Opiniones Positivas': e.OP_POSITIVAS || 0,
+        'Opiniones Negativas': e.OP_NEGATIVAS || 0
+      }));
+
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(wb, ws, 'Empleados');
+      XLSX.writeFile(wb, 'empleados_sinercom.xlsx');
+      showToast('📊 Archivo Excel exportado correctamente');
+    }
+
+    function importFromExcel(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+          const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+          if (jsonData.length === 0) {
+            showToast('⚠️ El archivo está vacío');
+            return;
+          }
+
+          const newEmployees = jsonData.map(row => ({
+            PERSONAL: row['Personal'] || row['PERSONAL'] || 'SIN NOMBRE',
+            LEG: parseInt(row['Legajo'] || row['LEG'] || 0),
+            CUIL: row['CUIL'] || row['Cuil'] || '',
+            FECHA_INGRESO: row['Fecha Ingreso'] || row['FECHA_INGRESO'] || '',
+            CATEGORIA: row['Categoría'] || row['CATEGORIA'] || '',
+            SUELDO: row['Sueldo / Jornal'] || row['SUELDO'] || '$ 0,00',
+            AÑOS_ANT: parseInt(row['Años Ant'] || row['AÑOS_ANT'] || 0),
+            FONDO_0222: row['0222 Manejo Fondo'] || row['FONDO_0222'] || 'No figura',
+            VENTAS: parseFloat(row['Venta Combustibles'] || row['VENTAS'] || 0),
+            MEDICO: parseInt(row['Médico'] || row['MEDICO'] || 0),
+            FALTAS: parseInt(row['Faltas'] || row['FALTAS'] || 0),
+            SUSPENSIONES: parseInt(row['Suspensiones'] || row['SUSPENSIONES'] || 0),
+            ACCIDENTE: parseInt(row['Accidente'] || row['ACCIDENTE'] || 0),
+            OTRAS_LIC: parseInt(row['Otras Lic'] || row['OTRAS_LIC'] || 0),
+            DESCUENTOS: parseInt(row['Descuentos'] || row['DESCUENTOS'] || 0),
+            CAMBIOS_TURNO: parseInt(row['Cambios de Turno'] || row['CAMBIOS_TURNO'] || 0),
+            CURSOS: parseFloat(row['Cursos %'] || row['CURSOS'] || 0),
+            LLEGADAS_TARDE: parseInt(row['Llegadas Tardes'] || row['LLEGADAS_TARDE'] || 0),
+            OP_POSITIVAS: parseInt(row['Opiniones Positivas'] || row['OP_POSITIVAS'] || 0),
+            OP_NEGATIVAS: parseInt(row['Opiniones Negativas'] || row['OP_NEGATIVAS'] || 0)
+          }));
+
+          if (newEmployees.length > 0) {
+            employees = newEmployees;
+            selectedIdx = 0;
+            populateSelect();
+            updateCards(selectedIdx);
+            renderEditTable();
+            showToast(`📂 ${employees.length} empleados importados correctamente`);
+          }
+        } catch (err) {
+          showToast('❌ Error al leer el archivo: ' + err.message);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+      event.target.value = '';
+    }
+
+    // ============================================================
+    //  TOAST
+    // ============================================================
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+      }, 3500);
+    }
+
+    // ============================================================
+    //  SWITCH TABS
+    // ============================================================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+      if (tabId === 'tab-editar') {
+        renderEditTable();
+      }
+      setTimeout(() => {
+        if (barChart) barChart.resize();
+        if (pieChart) pieChart.resize();
+      }, 100);
+    }
+
+    // ============================================================
+    //  INICIALIZAR GRÁFICOS
+    // ============================================================
+    function initCharts() {
+      const filtered = getFilteredEmployees();
+      const names = filtered.map(e => e.PERSONAL.split(' ')[0]);
+
+      const barCtx = document.getElementById('barChart').getContext('2d');
+      barChart = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+          labels: names,
+          datasets: [{
+            label: 'Accidente',
+            data: filtered.map(e => e.ACCIDENTE || 0),
+            backgroundColor: filtered.map((_, i) => i === 0 ? '#4A6CF7' : 'rgba(74,108,247,0.2)'),
+            borderRadius: 3
+          }, {
+            label: 'Médico',
+            data: filtered.map(e => e.MEDICO || 0),
+            backgroundColor: filtered.map((_, i) => i === 0 ? '#C026D3' : 'rgba(192,38,211,0.2)'),
+            borderRadius: 3
+          }, {
+            label: 'Otras Lic',
+            data: filtered.map(e => e.OTRAS_LIC || 0),
+            backgroundColor: filtered.map((_, i) => i === 0 ? '#7C3AED' : 'rgba(124,58,237,0.2)'),
+            borderRadius: 3
+          }, {
+            label: 'Faltas',
+            data: filtered.map(e => e.FALTAS || 0),
+            backgroundColor: filtered.map((_, i) => i === 0 ? '#F59E0B' : 'rgba(245,158,11,0.2)'),
+            borderRadius: 3
+          }, {
+            label: 'Suspensiones',
+            data: filtered.map(e => e.SUSPENSIONES || 0),
+            backgroundColor: filtered.map((_, i) => i === 0 ? '#EF4444' : 'rgba(239,68,68,0.2)'),
+            borderRadius: 3
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          onClick: (evt, elements) => {
+            if (elements.length > 0) {
+              const filtered = getFilteredEmployees();
+              const idx = elements[0].index;
+              const emp = filtered[idx];
+              const originalIdx = employees.indexOf(emp);
+              if (originalIdx !== -1) {
+                selectedIdx = originalIdx;
+                document.getElementById('empSelect').value = originalIdx;
+                updateCards(originalIdx);
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1E1E1E',
+              titleColor: '#E8E8E8',
+              bodyColor: '#A0A0A0',
+              borderColor: '#2A2A2A',
+              borderWidth: 1,
+              cornerRadius: 6,
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: { color: '#707070', font: { size: 10 } }
+            },
+            y: {
+              stacked: true,
+              grid: { display: false },
+              ticks: { color: '#A0A0A0', font: { size: 11, weight: '600' } }
+            }
+          }
+        }
+      });
+
+      const pieCtx = document.getElementById('pieChart').getContext('2d');
+      const e0 = employees[0];
+      pieChart = new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Accidente', 'Faltas', 'Suspensiones', 'Otras Lic'],
+          datasets: [{
+            data: [e0.ACCIDENTE || 0, e0.FALTAS || 0, e0.SUSPENSIONES || 0, e0.OTRAS_LIC || 0],
+            backgroundColor: ['#4A6CF7', '#F59E0B', '#EF4444', '#7C3AED'],
+            borderColor: '#1E1E1E',
+            borderWidth: 3,
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '55%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: '#A0A0A0',
+                font: { size: 9, weight: '500' },
+                padding: 8,
+                boxWidth: 12,
+                usePointStyle: true,
+                pointStyle: 'circle'
+              }
+            },
+            tooltip: {
+              backgroundColor: '#1E1E1E',
+              titleColor: '#E8E8E8',
+              bodyColor: '#A0A0A0',
+              borderColor: '#2A2A2A',
+              borderWidth: 1,
+              cornerRadius: 6,
+            }
+          }
+        }
+      });
+    }
+
+    // ============================================================
+    //  INICIO
+    // ============================================================
+    populateSelect();
+    initCharts();
+    updateCards(0);
+  </script>
+</body>
+</html>

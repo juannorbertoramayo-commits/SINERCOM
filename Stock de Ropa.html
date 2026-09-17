@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SINERCOM · Control de Stock de Ropa</title>
+<style>
+:root{
+  --brand:#1d4ed8; --brand2:#0ea5e9; --ink:#0f172a; --muted:#64748b;
+  --line:#e2e8f0; --bg:#eef2f7; --card:#fff;
+  --ok:#059669; --warn:#d97706; --bad:#dc2626;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ---------- HEADER ---------- */
+header{background:linear-gradient(120deg,#0b1e46,#132f6b 55%,#0e5c8a);color:#fff;
+  padding:14px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:60;box-shadow:0 4px 20px rgba(10,30,70,.28)}
+.logo{display:flex;align-items:center;gap:13px}
+.logo svg{width:48px;height:48px;flex:none;filter:drop-shadow(0 3px 7px rgba(0,0,0,.4))}
+.brand-name{font-size:1.34rem;font-weight:800;letter-spacing:.16em;line-height:1}
+.brand-sub{font-size:.71rem;opacity:.75;letter-spacing:.09em;margin-top:4px;text-transform:uppercase}
+header .spacer{flex:1}
+.hbtn{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.3);color:#fff;
+  padding:9px 15px;border-radius:10px;font-size:.82rem;cursor:pointer;font-weight:700;
+  transition:.18s;font-family:inherit;white-space:nowrap}
+.hbtn:hover{background:rgba(255,255,255,.26)}
+.hbtn.primary{background:#22c55e;border-color:#22c55e}
+.hbtn.primary:hover{background:#16a34a}
+.hbtn.danger:hover{background:rgba(220,38,38,.55);border-color:#fca5a5}
+
+/* ---------- TABS ---------- */
+.tabs{display:flex;gap:10px;padding:20px 22px 4px;flex-wrap:wrap;max-width:1420px;margin:0 auto}
+.tab{background:#fff;border:1px solid var(--line);padding:11px 20px;border-radius:999px;
+  font-weight:700;font-size:.88rem;color:#475569;cursor:pointer;transition:.18s;
+  display:flex;align-items:center;gap:9px;font-family:inherit}
+.tab:hover{border-color:#94a3b8;transform:translateY(-1px)}
+.tab.active{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;
+  border-color:transparent;box-shadow:0 7px 18px rgba(29,78,216,.32)}
+.tab .count{background:rgba(0,0,0,.08);padding:2px 9px;border-radius:999px;font-size:.73rem}
+.tab.active .count{background:rgba(255,255,255,.28)}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:1420px;margin:0 auto;padding:16px 22px 70px}
+
+/* ---------- STATS ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;margin-bottom:22px}
+.stat{background:var(--card);border-radius:14px;padding:16px 18px;border:1px solid var(--line);
+  box-shadow:0 2px 9px rgba(15,23,42,.05)}
+.stat .lbl{font-size:.71rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}
+.stat .val{font-size:1.72rem;font-weight:800;margin-top:7px;line-height:1}
+.stat .sub{font-size:.72rem;color:var(--muted);margin-top:4px}
+.stat.blue .val{color:#1d4ed8}.stat.green .val{color:var(--ok)}
+.stat.amber .val{color:var(--warn)}.stat.red .val{color:var(--bad)}
+
+/* ---------- CATEGORÍAS ---------- */
+.cat{background:var(--card);border-radius:16px;border:1px solid var(--line);
+  margin-bottom:20px;overflow:hidden;box-shadow:0 2px 11px rgba(15,23,42,.06)}
+.cat-head{display:flex;align-items:center;gap:11px;padding:14px 18px;
+  background:linear-gradient(90deg,#f8fafc,#eef4ff);border-bottom:1px solid var(--line)}
+.cat-head h3{margin:0;font-size:.99rem;font-weight:800}
+.cat-head .dot{width:10px;height:10px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));flex:none}
+.cat-head .total{margin-left:auto;font-size:.79rem;color:var(--muted);font-weight:800;
+  background:#fff;border:1px solid var(--line);padding:4px 12px;border-radius:999px}
+.tbl-scroll{overflow-x:auto}
+
+table.grid{width:100%;border-collapse:collapse;min-width:540px}
+table.grid th,table.grid td{padding:9px 10px;text-align:center;
+  border-bottom:1px solid #eef2f7;font-size:.86rem}
+table.grid thead th{background:#f8fafc;font-size:.72rem;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--muted);font-weight:800;white-space:nowrap}
+table.grid td.prod,table.grid th.prod{text-align:left;font-weight:700;color:#1e293b;
+  min-width:200px;position:sticky;left:0;background:#fff;z-index:2;
+  box-shadow:1px 0 0 var(--line)}
+table.grid thead th.prod{background:#f8fafc;z-index:3}
+table.grid tbody tr:hover td{background:#f8fbff}
+table.grid tbody tr:hover td.prod{background:#f1f7ff}
+table.grid tfoot td{background:#f8fafc;font-weight:800;border-top:2px solid var(--line)}
+table.grid tfoot td.prod{background:#f8fafc}
+td.tot{font-weight:800;color:var(--brand);background:#f8fafc}
+td.na{color:#cbd5e1}
+.cell button{width:46px;height:31px;border-radius:9px;border:1px solid var(--line);
+  background:#fff;font-weight:800;cursor:pointer;font-size:.86rem;color:var(--ink);
+  transition:.15s;font-family:inherit}
+.cell button:hover{background:var(--brand);color:#fff;border-color:var(--brand);transform:scale(1.06)}
+.cell.zero button{color:var(--bad);border-color:#fecaca;background:#fef2f2}
+.cell.low button{color:#b45309;border-color:#fde68a;background:#fffbeb}
+
+/* ---------- MOVIMIENTOS ---------- */
+.filters{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.chip{background:#fff;border:1px solid var(--line);padding:8px 16px;border-radius:999px;
+  font-weight:700;font-size:.82rem;color:#475569;cursor:pointer;transition:.15s;font-family:inherit}
+.chip:hover{border-color:#94a3b8}
+.chip.on{background:#0f172a;color:#fff;border-color:#0f172a}
+.filters select{padding:8px 12px;border-radius:999px;border:1px solid var(--line);
+  background:#fff;font-family:inherit;font-size:.82rem;font-weight:700;color:#475569;cursor:pointer}
+table.mov{width:100%;border-collapse:collapse;min-width:720px}
+table.mov th,table.mov td{padding:11px 13px;text-align:left;
+  border-bottom:1px solid #eef2f7;font-size:.85rem}
+table.mov thead th{background:#f8fafc;font-size:.71rem;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--muted);font-weight:800}
+table.mov tbody tr:hover{background:#f8fbff}
+table.mov td.num{text-align:center;font-weight:800}
+.badge{display:inline-block;padding:4px 11px;border-radius:999px;
+  font-size:.71rem;font-weight:800;letter-spacing:.03em}
+.badge.entrega{background:#fee2e2;color:#b91c1c}
+.badge.compra{background:#d1fae5;color:#047857}
+.unit-tag{display:inline-block;padding:3px 10px;border-radius:7px;font-size:.71rem;
+  font-weight:800;background:#e0e7ff;color:#3730a3}
+.unit-tag.sa{background:#cffafe;color:#155e75}
+.del{background:none;border:none;cursor:pointer;font-size:1rem;opacity:.45;
+  padding:4px 7px;border-radius:7px;transition:.15s}
+.del:hover{opacity:1;background:#fee2e2}
+.empty{padding:52px 20px;text-align:center;color:var(--muted)}
+.empty .big{font-size:2.4rem;margin-bottom:10px;opacity:.55}
+.nota{color:var(--muted);font-size:.8rem}
+
+/* ---------- MODAL ---------- */
+.backdrop{position:fixed;inset:0;background:rgba(15,23,42,.58);backdrop-filter:blur(3px);
+  display:none;align-items:center;justify-content:center;padding:16px;z-index:120}
+.backdrop.show{display:flex}
+.modal{background:#fff;border-radius:18px;width:100%;max-width:530px;max-height:93vh;
+  overflow:auto;box-shadow:0 26px 70px rgba(2,6,23,.45);animation:pop .18s ease}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-head{padding:17px 22px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:11px}
+.modal-head h3{margin:0;font-size:1.04rem;font-weight:800}
+.modal-head .dot{width:11px;height:11px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand),var(--brand2))}
+.x{margin-left:auto;background:none;border:none;font-size:1.1rem;cursor:pointer;
+  color:var(--muted);padding:4px 9px;border-radius:8px;transition:.15s;font-family:inherit}
+.x:hover{background:#f1f5f9;color:var(--ink)}
+.modal-body{padding:20px 22px}
+.modal-foot{padding:16px 22px;border-top:1px solid var(--line);
+  display:flex;gap:10px;justify-content:flex-end;background:#f8fafc}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--muted);margin-bottom:6px}
+.field select,.field input{width:100%;padding:11px 13px;border:1px solid var(--line);
+  border-radius:10px;font-size:.92rem;font-family:inherit;background:#fff;color:var(--ink)}
+.field select:focus,.field input:focus{outline:2px solid #bfdbfe;border-color:var(--brand)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.seg button{padding:13px;border-radius:12px;border:2px solid var(--line);background:#fff;
+  font-weight:800;cursor:pointer;font-size:.9rem;color:#475569;transition:.15s;font-family:inherit}
+.seg button:hover{border-color:#94a3b8}
+.seg button.on[data-tipo="entrega"]{background:#fff1f2;border-color:var(--bad);color:#b91c1c}
+.seg button.on[data-tipo="compra"]{background:#ecfdf5;border-color:var(--ok);color:#047857}
+.btn{padding:11px 21px;border-radius:11px;border:none;font-weight:800;cursor:pointer;
+  font-size:.89rem;font-family:inherit;transition:.15s}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:#475569}
+.btn.ghost:hover{background:#f1f5f9}
+.btn.save{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;
+  box-shadow:0 5px 15px rgba(29,78,216,.32)}
+.btn.save:hover{filter:brightness(1.08)}
+
+/* ---------- TOAST ---------- */
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,90px);
+  background:#0f172a;color:#fff;padding:13px 24px;border-radius:12px;font-weight:700;
+  font-size:.87rem;opacity:0;transition:.32s;z-index:200;pointer-events:none;
+  box-shadow:0 10px 30px rgba(2,6,23,.4)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:640px){
+  header{padding:12px 14px}
+  .brand-name{font-size:1.05rem}
+  .brand-sub{font-size:.63rem}
+  .logo svg{width:40px;height:40px}
+  .wrap{padding:12px 12px 60px}
+  .tabs{padding:14px 12px 2px}
+  .tab{padding:9px 15px;font-size:.8rem}
+  .grid2{grid-template-columns:1fr}
+  .stat .val{font-size:1.45rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER CON LOGO SINERCOM ================= -->
+<header>
+  <div class="logo">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="SINERCOM">
+      <defs>
+        <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#38bdf8"/>
+          <stop offset="1" stop-color="#1d4ed8"/>
+        </linearGradient>
+      </defs>
+      <rect x="2" y="2" width="44" height="44" rx="13" fill="url(#lg)"/>
+      <path d="M32.5 15.5c-2-2.4-4.9-3.6-8.1-3.6-4.7 0-8.2 2.4-8.2 6.1 0 3.3 2.5 4.9 7.7 6.1 4.3 1 5.6 1.8 5.6 3.6 0 1.9-2.2 3.2-5.3 3.2-3.1 0-5.8-1.2-7.9-3.6"
+            stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="34" cy="31.5" r="2.6" fill="#7dd3fc"/>
+    </svg>
+    <div>
+      <div class="brand-name">SINERCOM</div>
+      <div class="brand-sub">Stock de Ropa · Septiembre 2026</div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <button class="hbtn primary" data-action="nuevo">＋ Nuevo movimiento</button>
+  <button class="hbtn" data-action="export">⬇ Exportar CSV</button>
+  <button class="hbtn danger" data-action="reset">↺ Restablecer</button>
+</header>
+
+<!-- ================= TABS ================= -->
+<div class="tabs">
+  <button class="tab" data-action="tab" data-vista="gp">🏬 General Paz <span class="count" id="cnt-gp">0</span></button>
+  <button class="tab" data-action="tab" data-vista="sa">🏬 San Agustín <span class="count" id="cnt-sa">0</span></button>
+  <button class="tab" data-action="tab" data-vista="mov">📋 Entregas y Compras <span class="count" id="cnt-mov">0</span></button>
+</div>
+
+<main class="wrap" id="contenido"></main>
+
+<!-- ================= MODAL ================= -->
+<div class="backdrop" id="backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="dot"></span>
+      <h3>Registrar movimiento</h3>
+      <button class="x" data-action="cerrar" title="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Tipo de movimiento</label>
+        <div class="seg">
+          <button type="button" data-action="tipo" data-tipo="entrega">↓ Entrega</button>
+          <button type="button" data-action="tipo" data-tipo="compra">↑ Compra</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Unidad de negocio</label>
+        <select id="movUnidad">
+          <option value="gp">General Paz</option>
+          <option value="sa">San Agustín</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Producto</label>
+        <select id="movProducto"></select>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Talle</label>
+          <select id="movTalle"></select>
+        </div>
+        <div class="field">
+          <label>Cantidad</label>
+          <input type="number" id="movCantidad" min="1" step="1" value="1">
+        </div>
+      </div>
+      <div class="field">
+        <label>Fecha</label>
+        <input type="date" id="movFecha">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>Nota / Detalle (opcional)</label>
+        <input type="text" id="movNota" placeholder="Ej: cliente, proveedor, N° de remito...">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" data-action="cerrar">Cancelar</button>
+      <button class="btn save" data-action="guardar">Guardar movimiento</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   DATOS INICIALES (extraídos del archivo "Stock de Ropa Septiembre 2026")
+   ===================================================================== */
+const STOCK_INICIAL = {
+  gp: {
+    nombre: 'General Paz',
+    categorias: [
+      { id:'gp-playas', nombre:'Playas Gral Paz', items:[
+        { id:'gp-p1', nombre:'Camisas Lilas Mangas Cortas Mujer', talles:{'38':2,'40':3,'42':3,'44':2,'46':0} },
+        { id:'gp-p2', nombre:'Camisas Lilas Mangas Largas Mujer', talles:{'38':2,'40':3,'42':4,'44':1,'46':0} },
+        { id:'gp-p3', nombre:'Camisas Lilas Mangas Cortas Hombre', talles:{'40':3,'42':4,'46':5,'52':2,'54':0} },
+        { id:'gp-p4', nombre:'Camisas Lilas Mangas Largas Hombre', talles:{'42':1,'44':6,'46':9,'52':0,'54':0} }
+      ]},
+      { id:'gp-shop', nombre:'SHOP · Gral Paz', items:[
+        { id:'gp-s1', nombre:'Chaquetas Verdes', talles:{'38':1,'40':2,'42':6} },
+        { id:'gp-s2', nombre:'Pantalones Cargo', talles:{'38':4,'40':5,'42':1} }
+      ]},
+      { id:'gp-acc', nombre:'Accesorios', items:[
+        { id:'gp-b1', nombre:'Billeteras Largas', talles:{'Único':13} }
+      ]}
+    ]
+  },
+  sa: {
+    nombre: 'San Agustín',
+    categorias: [
+      { id:'sa-playas', nombre:'Playas San Agustín', items:[
+        { id:'sa-p1', nombre:'Mangas Cortas Mujer', talles:{'38':2,'40':2,'42':12,'44':0,'46':0} },
+        { id:'sa-p2', nombre:'Mangas Largas Mujer', talles:{'38':0,'40':0,'42':0,'44':0,'46':0} },
+        { id:'sa-p3', nombre:'Mangas Cortas Hombre', talles:{'38':0,'40':3,'42':0,'44':1,'46':0} },
+        { id:'sa-p4', nombre:'Mangas Largas Hombre', talles:{'38':0,'40':0,'42':2,'44':1,'46':0} }
+      ]},
+      { id:'sa-shop', nombre:'SHOP · San Agustín', items:[
+        { id:'sa-s1', nombre:'Chaquetas Verdes', talles:{'38':2,'40':8} }
+      ]},
+      { id:'sa-chom', nombre:'Chombas Grises', items:[
+        { id:'sa-c1', nombre:'Chombas Grises', talles:{'L':2,'XL':3,'XXL':2,'3XL':1} }
+      ]},
+      { id:'sa-buz', nombre:'Buzos SA', items:[
+        { id:'sa-b1', nombre:'Buzos SA', talles:{'L':2} }
+      ]},
+      { id:'sa-pant', nombre:'Pantalones S-A', items:[
+        { id:'sa-pt1', nombre:'Pantalones S-A', talles:{'38':4,'40':6,'42':4,'44':3,'46':3,'48':1} }
+      ]}
+    ]
+  }
+};
+
+/* ===================== ESTADO Y PERSISTENCIA ===================== */
+const LS_KEY = 'sinercrom_stock_v1';
+const clone = o => JSON.parse(JSON.stringify(o));
+
+let state = cargar();
+let vista = 'gp';
+let filtroTipo = 'todos';
+let filtroUnidad = 'todas';
+
+function cargar(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){
+      const p = JSON.parse(raw);
+      if(p && p.stock && Array.isArray(p.movimientos)) return p;
+    }
+  }catch(e){}
+  return { stock: clone(STOCK_INICIAL), movimientos: [] };
+}
+function guardar(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} }
+
+/* ===================== UTILIDADES ===================== */
+const ORDEN_TALLES = ['38','40','42','44','46','48','50','52','54','L','XL','XXL','3XL','Único'];
+const idxTalle = t => { const i = ORDEN_TALLES.indexOf(t); return i < 0 ? 999 : i; };
+const ordenarTalles = arr => [...arr].sort((a,b)=> idxTalle(a)-idxTalle(b) || String(a).localeCompare(String(b)));
+const hoy = () => new Date().toLocaleDateString('sv-SE');
+const fmtFecha = f => f ? f.split('-').reverse().join('/') : '';
+
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 2600);
+}
+
+function totalItem(it){ return Object.values(it.talles).reduce((a,v)=> a + (+v||0), 0); }
+
+function buscarItem(u, itemId){
+  let res = null;
+  state.stock[u].categorias.forEach(c => c.items.forEach(it => { if(it.id === itemId) res = {cat:c, item:it}; }));
+  return res;
+}
+
+/* ===================== RENDER PRINCIPAL ===================== */
+function render(){
+  document.querySelectorAll('.tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.vista === vista));
+
+  const cont = document.getElementById('contenido');
+  cont.innerHTML = (vista === 'mov') ? vistaMovimientos() : vistaUnidad(vista);
+
+  // contadores de tabs
+  let g = 0, s = 0;
+  state.stock.gp.categorias.forEach(c=>c.items.forEach(it=> g += totalItem(it)));
+  state.stock.sa.categorias.forEach(c=>c.items.forEach(it=> s += totalItem(it)));
+  document.getElementById('cnt-gp').textContent = g;
+  document.getElementById('cnt-sa').textContent = s;
+  document.getElementById('cnt-mov').textContent = state.movimientos.length;
+}
+
+/* ===================== VISTA DE UNIDAD ===================== */
+function vistaUnidad(u){
+  const d = state.stock[u];
+  let totalU = 0, sinStock = 0, items = 0;
+
+  d.categorias.forEach(c => c.items.forEach(it => {
+    items++;
+    const t = totalItem(it);
+    totalU += t;
+    if(t === 0) sinStock++;
+  }));
+
+  const movsU = state.movimientos.filter(m => m.unidad === u);
+  const entregas = movsU.filter(m=>m.tipo==='entrega').reduce((a,b)=> a + b.cantidad, 0);
+  const compras  = movsU.filter(m=>m.tipo==='compra').reduce((a,b)=> a + b.cantidad, 0);
+
+  const categoriasHTML = d.categorias.map(c => renderCategoria(u, c)).join('');
+
+  const ultimos = movsU.slice(0, 6);
+  const panelUltimos = ultimos.length ? `
+    <section class="cat">
+      <div class="cat-head">
+        <span class="dot"></span>
+        <h3>Últimos movimientos · ${d.nombre}</h3>
+        <span class="total">${movsU.length} en total</span>
+      </div>
+      <div class="tbl-scroll">
+        <table class="mov">
+          <thead><tr><th>Fecha</th><th>Tipo</th><th>Producto</th><th style="text-align:center">Talle</th>
+          <th style="text-align:center">Cant.</th><th>Nota</th></tr></thead>
+          <tbody>
+            ${ultimos.map(m => `
+              <tr>
+                <td>${fmtFecha(m.fecha)}</td>
+                <td><span class="badge ${m.tipo}">${m.tipo === 'entrega' ? '↓ Entrega' : '↑ Compra'}</span></td>
+                <td>${m.itemNombre}</td>
+                <td class="num">${m.talle}</td>
+                <td class="num" style="color:${m.tipo==='entrega'?'#b91c1c':'#047857'}">${m.tipo==='entrega'?'−':'+'}${m.cantidad}</td>
+                <td class="nota">${m.nota || '—'}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </section>` : '';
+
+  return `
+    <div class="stats">
+      <div class="stat blue">
+        <div class="lbl">Unidades en stock</div>
+        <div class="val">${totalU}</div>
+        <div class="sub">${items} productos cargados</div>
+      </div>
+      <div class="stat green">
+        <div class="lbl">Compras ingresadas</div>
+        <div class="val">+${compras}</div>
+        <div class="sub">${movsU.filter(m=>m.tipo==='compra').length} movimientos</div>
+      </div>
+      <div class="stat amber">
+        <div class="lbl">Entregas realizadas</div>
+        <div class="val">−${entregas}</div>
+        <div class="sub">${movsU.filter(m=>m.tipo==='entrega').length} movimientos</div>
+      </div>
+      <div class="stat red">
+        <div class="lbl">Productos sin stock</div>
+        <div class="val">${sinStock}</div>
+        <div class="sub">de ${items} productos</div>
+      </div>
+    </div>
+    ${categoriasHTML}
+    ${panelUltimos}
+  `;
+}
+
+function renderCategoria(u, cat){
+  const setT = new Set();
+  cat.items.forEach(it => Object.keys(it.talles).forEach(t => setT.add(t)));
+  const talles = setT.size ? ordenarTalles([...setT]) : ['Único'];
+
+  let catTotal = 0;
+  const filas = cat.items.map(it => {
+    let rowTotal = 0;
+    const celdas = talles.map(t => {
+      if(!(t in it.talles)) return '<td class="na">–</td>';
+      const v = +(it.talles[t] || 0);
+      rowTotal += v;
+      const cls = v === 0 ? 'zero' : (v <= 2 ? 'low' : '');
+      return `<td class="cell ${cls}">
+        <button data-action="celda" data-u="${u}" data-c="${cat.id}" data-i="${it.id}" data-t="${t}"
+          title="Registrar entrega o compra">${v}</button></td>`;
+    }).join('');
+    catTotal += rowTotal;
+    return `<tr>
+      <td class="prod">${it.nombre}</td>
+      ${celdas}
+      <td class="tot">${rowTotal}</td>
+    </tr>`;
+  }).join('');
+
+  const totalesCol = talles.map(t =>
+    `<td class="tot">${cat.items.reduce((a,it)=> a + (+(it.talles[t]||0)), 0)}</td>`).join('');
+
+  return `
+    <section class="cat">
+      <div class="cat-head">
+        <span class="dot"></span>
+        <h3>${cat.nombre}</h3>
+        <span class="total">${catTotal} unidades</span>
+      </div>
+      <div class="tbl-scroll">
+        <table class="grid">
+          <thead>
+            <tr>
+              <th class="prod">Producto</th>
+              ${talles.map(t => `<th>${t === 'Único' ? 'Único' : 'Talle ' + t}</th>`).join('')}
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>${filas}</tbody>
+          <tfoot>
+            <tr><td class="prod">Total</td>${totalesCol}<td class="tot">${catTotal}</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>`;
+}
+
+/* ===================== VISTA MOVIMIENTOS ===================== */
+function vistaMovimientos(){
+  let movs = state.movimientos;
+  if(filtroTipo !== 'todos') movs = movs.filter(m => m.tipo === filtroTipo);
+  if(filtroUnidad !== 'todas') movs = movs.filter(m => m.unidad === filtroUnidad);
+
+  const ent = movs.filter(m=>m.tipo==='entrega').reduce((a,b)=>a+b.cantidad,0);
+  const com = movs.filter(m=>m.tipo==='compra').reduce((a,b)=>a+b.cantidad,0);
+
+  const filas = movs.map(m => `
+    <tr>
+      <td>${fmtFecha(m.fecha)}</td>
+      <td><span class="badge ${m.tipo}">${m.tipo === 'entrega' ? '↓ Entrega' : '↑ Compra'}</span></td>
+      <td><span class="unit-tag ${m.unidad === 'sa' ? 'sa' : ''}">${state.stock[m.unidad].nombre}</span></td>
+      <td>${m.itemNombre}<div class="nota">${m.catNombre}</div></td>
+      <td class="num">${m.talle}</td>
+      <td class="num" style="color:${m.tipo==='entrega'?'#b91c1c':'#047857'}">${m.tipo==='entrega'?'−':'+'}${m.cantidad}</td>
+      <td class="nota">${m.nota || '—'}</td>
+      <td><button class="del" data-action="del-mov" data-id="${m.id}" title="Eliminar (ajusta el stock)">🗑</button></td>
+    </tr>`).join('');
+
+  const cuerpo = movs.length
+    ? `<div class="tbl-scroll"><table class="mov">
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Unidad</th><th>Producto</th>
+        <th style="text-align:center">Talle</th><th style="text-align:center">Cant.</th>
+        <th>Nota</th><th></th></tr></thead>
+        <tbody>${filas}</tbody>
+       </table></div>`
+    : `<div class="empty"><div class="big">📋</div>
+        <strong>Sin movimientos registrados</strong>
+        <p>Tocá cualquier celda de stock o el botón <b>＋ Nuevo movimiento</b> para registrar una entrega o una compra.</p>
+       </div>`;
+
+  return `
+    <div class="stats">
+      <div class="stat blue"><div class="lbl">Movimientos</div><div class="val">${movs.length}</div>
+        <div class="sub">según filtros activos</div></div>
+      <div class="stat green"><div class="lbl">Total compras</div><div class="val">+${com}</div>
+        <div class="sub">unidades ingresadas</div></div>
+      <div class="stat amber"><div class="lbl">Total entregas</div><div class="val">−${ent}</div>
+        <div class="sub">unidades entregadas</div></div>
+      <div class="stat red"><div class="lbl">Balance</div><div class="val">${com - ent >= 0 ? '+' : ''}${com - ent}</div>
+        <div class="sub">compras − entregas</div></div>
+    </div>
+
+    <div class="filters">
+      <button class="chip ${filtroTipo==='todos'?'on':''}" data-action="filtro" data-f="todos">Todos</button>
+      <button class="chip ${filtroTipo==='compra'?'on':''}" data-action="filtro" data-f="compra">↑ Compras</button>
+      <button class="chip ${filtroTipo==='entrega'?'on':''}" data-action="filtro" data-f="entrega">↓ Entregas</button>
+      <select id="filtroUnidad">
+        <option value="todas" ${filtroUnidad==='todas'?'selected':''}>Todas las unidades</option>
+        <option value="gp" ${filtroUnidad==='gp'?'selected':''}>General Paz</option>
+        <option value="sa" ${filtroUnidad==='sa'?'selected':''}>San Agustín</option>
+      </select>
+    </div>
+
+    <section class="cat">${cuerpo}</section>
+  `;
+}
+
+/* ===================== MODAL ===================== */
+let ctx = { u:'gp', itemId:null, talle:null };
+
+function poblarProductos(){
+  const u = document.getElementById('movUnidad').value;
+  const sel = document.getElementById('movProducto');
+  let html = '';
+  state.stock[u].categorias.forEach(c => {
+    html += `<optgroup label="${c.nombre}">`;
+    c.items.forEach(it => { html += `<option value="${it.id}">${it.nombre}</option>`; });
+    html += `</optgroup>`;
+  });
+  sel.innerHTML = html;
+}
+
+function poblarTalles(){
+  const u = document.getElementById('movUnidad').value;
+  const id = document.getElementById('movProducto').value;
+  const sel = document.getElementById('movTalle');
+  const found = buscarItem(u, id);
+  if(!found){ sel.innerHTML = ''; return; }
+  const talles = ordenarTalles(Object.keys(found.item.talles));
+  sel.innerHTML = talles.map(t =>
+    `<option value="${t}">${t === 'Único' ? 'Único' : 'Talle ' + t} · ${found.item.talles[t]} u. en stock</option>`
+  ).join('');
+}
+
+function setTipo(t){
+  document.querySelectorAll('.seg button').forEach(b =>
+    b.classList.toggle('on', b.dataset.tipo === t));
+}
+
+function abrirModal(pre){
+  ctx = Object.assign({ u:'gp', itemId:null, talle:null }, pre || {});
+  setTipo('entrega');
+  document.getElementById('movUnidad').value = ctx.u;
+  poblarProductos();
+  if(ctx.itemId){
+    const sel = document.getElementById('movProducto');
+    if([...sel.options].some(o => o.value === ctx.itemId)) sel.value = ctx.itemId;
+  }
+  poblarTalles();
+  if(ctx.talle){
+    const st = document.getElementById('movTalle');
+    if([...st.options].some(o => o.value === ctx.talle)) st.value = ctx.talle;
+  }
+  document.getElementById('movCantidad').value = 1;
+  document.getElementById('movFecha').value = hoy();
+  document.getElementById('movNota').value = '';
+  document.getElementById('backdrop').classList.add('show');
+  setTimeout(()=> document.getElementById('movCantidad').select(), 120);
+}
+
+function cerrarModal(){
+  document.getElementById('backdrop').classList.remove('show');
+}
+
+function guardarMov(){
+  const tipo    = document.querySelector('.seg button.on').dataset.tipo;
+  const u       = document.getElementById('movUnidad').value;
+  const itemId  = document.getElementById('movProducto').value;
+  const talle   = document.getElementById('movTalle').value;
+  const cant    = parseInt(document.getElementById('movCantidad').value, 10);
+  const fecha   = document.getElementById('movFecha').value || hoy();
+  const nota    = document.getElementById('movNota').value.trim();
+
+  if(!itemId || !talle){ toast('Seleccioná producto y talle'); return; }
+  if(!cant || cant <= 0){ toast('Ingresá una cantidad válida'); return; }
+
+  const found = buscarItem(u, itemId);
+  if(!found) return;
+
+  const actual = +(found.item.talles[talle] || 0);
+  if(tipo === 'entrega' && cant > actual){
+    if(!confirm(`Solo hay ${actual} unidad(es) de "${found.item.nombre}" talle ${talle}.\n¿Registrar la entrega igual?`)) return;
+  }
+
+  found.item.talles[talle] = (tipo === 'entrega') ? actual - cant : actual + cant;
+
+  state.movimientos.unshift({
+    id: 'm' + Date.now() + Math.random().toString(36).slice(2,7),
+    fecha, tipo, unidad: u,
+    catNombre: found.cat.nombre,
+    itemNombre: found.item.nombre,
+    itemId: found.item.id,
+    talle, cantidad: cant, nota,
+    ts: Date.now()
+  });
+
+  guardar(); cerrarModal(); render();
+  toast(tipo === 'entrega' ? '✔ Entrega registrada' : '✔ Compra registrada');
+}
+
+function eliminarMov(id){
+  const m = state.movimientos.find(x => x.id === id);
+  if(!m) return;
+  if(!confirm(`¿Eliminar este movimiento?\n\n${m.tipo === 'entrega' ? 'Entrega' : 'Compra'} de ${m.cantidad} u. — ${m.itemNombre} (Talle ${m.talle})\n\nEl stock se ajustará automáticamente.`)) return;
+
+  const found = buscarItem(m.unidad, m.itemId);
+  if(found){
+    const a = +(found.item.talles[m.talle] || 0);
+    found.item.talles[m.talle] = (m.tipo === 'entrega') ? a + m.cantidad : Math.max(0, a - m.cantidad);
+  }
+  state.movimientos = state.movimientos.filter(x => x.id !== id);
+  guardar(); render();
+  toast('Movimiento eliminado y stock ajustado');
+}
+
+/* ===================== EXPORTAR CSV ===================== */
+function exportarCSV(){
+  if(!state.movimientos.length){ toast('No hay movimientos para exportar'); return; }
+  const rows = [['Fecha','Tipo','Unidad','Categoria','Producto','Talle','Cantidad','Nota']];
+  state.movimientos.slice().reverse().forEach(m => {
+    rows.push([fmtFecha(m.fecha), m.tipo === 'entrega' ? 'Entrega' : 'Compra',
+      state.stock[m.unidad].nombre, m.catNombre, m.itemNombre, m.talle, m.cantidad, m.nota || '']);
+  });
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type:'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Movimientos_SINERCOM_' + hoy() + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('CSV exportado');
+}
+
+/* ===================== RESET ===================== */
+function resetear(){
+  if(!confirm('Esto borrará TODOS los movimientos y devolverá el stock a los valores iniciales del archivo.\n\n¿Continuar?')) return;
+  if(!confirm('¿Estás completamente seguro? Esta acción no se puede deshacer.')) return;
+  state = { stock: clone(STOCK_INICIAL), movimientos: [] };
+  guardar(); render();
+  toast('Datos restablecidos al stock inicial');
+}
+
+/* ===================== EVENTOS ===================== */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]');
+  if(!el) return;
+  const a = el.dataset.action;
+
+  if(a === 'tab'){ vista = el.dataset.vista; render(); }
+  else if(a === 'celda'){
+    abrirModal({ u: el.dataset.u, itemId: el.dataset.i, talle: el.dataset.t });
+  }
+  else if(a === 'nuevo'){
+    abrirModal({ u: (vista === 'sa' ? 'sa' : 'gp') });
+  }
+  else if(a === 'cerrar'){ cerrarModal(); }
+  else if(a === 'guardar'){ guardarMov(); }
+  else if(a === 'tipo'){ setTipo(el.dataset.tipo); }
+  else if(a === 'del-mov'){ eliminarMov(el.dataset.id); }
+  else if(a === 'filtro'){ filtroTipo = el.dataset.f; render(); }
+  else if(a === 'export'){ exportarCSV(); }
+  else if(a === 'reset'){ resetear(); }
+});
+
+document.getElementById('backdrop').addEventListener('click', e => {
+  if(e.target.id === 'backdrop') cerrarModal();
+});
+
+document.getElementById('movUnidad').addEventListener('change', () => {
+  poblarProductos(); poblarTalles();
+});
+document.getElementById('movProducto').addEventListener('change', poblarTalles);
+
+document.addEventListener('change', e => {
+  if(e.target.id === 'filtroUnidad'){
+    filtroUnidad = e.target.value;
+    render();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') cerrarModal();
+  if(e.key === 'Enter' && document.getElementById('backdrop').classList.contains('show')){
+    const tag = (e.target.tagName || '').toLowerCase();
+    if(tag !== 'select' && tag !== 'button') guardarMov();
+  }
+});
+
+/* ===================== INICIO ===================== */
+render();
+</script>
+</body>
+</html>

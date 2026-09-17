@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planilla Control Descarga Camión</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1450px;
+            width: 100%;
+            background: white;
+            padding: 25px 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            overflow-x: auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #1e3a5f;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #1e3a5f;
+            text-transform: uppercase;
+        }
+
+        /* Pestañas */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #d0d7de;
+            padding-bottom: 6px;
+        }
+
+        .tab-btn {
+            background: #e9ecf0;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px 30px 0 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            border-bottom: none;
+        }
+
+        .tab-btn:hover {
+            background: #d5dee8;
+        }
+
+        .tab-btn.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+
+        .tab-content {
+            display: none;
+            padding-top: 10px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Botones de acción */
+        .acciones {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 28px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-guardar {
+            background: #1e7e34;
+            color: white;
+        }
+        .btn-guardar:hover {
+            background: #146b2a;
+        }
+
+        .btn-limpiar {
+            background: #b02a37;
+            color: white;
+        }
+        .btn-limpiar:hover {
+            background: #9a232e;
+        }
+
+        .btn-descargar {
+            background: #0d6efd;
+            color: white;
+        }
+        .btn-descargar:hover {
+            background: #0b5ed7;
+        }
+
+        /* Tablas */
+        .tabla-wrapper {
+            overflow-x: auto;
+            margin-top: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 1200px;
+        }
+
+        th,
+        td {
+            border: 1px solid #333;
+            padding: 6px 8px;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        thead th {
+            background-color: #1e3a5f;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.3px;
+        }
+
+        /* Estilos para celdas editables */
+        td[contenteditable="true"] {
+            background-color: #fafbfc;
+            min-width: 60px;
+            cursor: text;
+            transition: background 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        td[contenteditable="true"]:hover {
+            background-color: #e6f0fa;
+        }
+
+        td[contenteditable="true"]:focus {
+            background-color: #ffffff;
+            outline: 2px solid #1e3a5f;
+            outline-offset: -1px;
+            box-shadow: inset 0 0 0 1px #1e3a5f;
+        }
+
+        /* Celdas fijas (TK, Producto, diferencias) */
+        td[contenteditable="false"] {
+            background-color: #e9ecef;
+            color: #0a2a44;
+            font-weight: 600;
+            cursor: default;
+        }
+
+        .fusion-diferencia,
+        .varilla-diferencia {
+            background-color: #f0f3f7 !important;
+            color: #003366;
+            font-weight: 700;
+        }
+
+        /* Estilos para el historial */
+        .historial-tabla td {
+            background-color: #f8f9fa;
+        }
+
+        .historial-tabla tr:nth-child(even) td {
+            background-color: #edf2f7;
+        }
+
+        .vacio {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .observacion {
+            font-size: 11px;
+            color: #555;
+            margin-top: 15px;
+            text-align: right;
+            border-top: 1px solid #ccc;
+            padding-top: 12px;
+        }
+
+        .acciones-historial {
+            margin-top: 15px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            .container {
+                box-shadow: none;
+                padding: 10px;
+                border-radius: 0;
+            }
+            .tabs,
+            .acciones,
+            .acciones-historial {
+                display: none !important;
+            }
+            .tab-content {
+                display: block !important;
+            }
+            td[contenteditable="true"] {
+                background-color: white !important;
+            }
+            td[contenteditable="true"]:focus {
+                outline: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Planilla Control de Descarga Camión San Agustín</h1>
+
+        <!-- Pestañas -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tab-editar">📝 Planilla</button>
+            <button class="tab-btn" data-tab="tab-historial">📋 Historial Guardado</button>
+        </div>
+
+        <!-- Contenido de pestañas -->
+        <div id="tab-editar" class="tab-content active">
+            <div class="acciones">
+                <button class="btn btn-guardar" id="btn-guardar">💾 Guardar</button>
+                <button class="btn btn-limpiar" id="btn-limpiar">🧹 Limpiar</button>
+            </div>
+
+            <div class="tabla-wrapper">
+                <table id="tabla-planilla">
+                    <thead>
+                        <tr>
+                            <th>FECHA</th>
+                            <th>HORARIO</th>
+                            <th>TK</th>
+                            <th>TEMPERATURA TK (°C)</th>
+                            <th>Producto</th>
+                            <th>PATENTE CAMION</th>
+                            <th>NOMBRE CHOFER</th>
+                            <th>LITROS CONVERTIDOS (Según Remito)</th>
+                            <th>LITROS FUSION (Antes)</th>
+                            <th>LITROS VARILLA (Antes)</th>
+                            <th>LITROS DESCARGADOS</th>
+                            <th>LITROS FUSION (Despues)</th>
+                            <th>LITROS VARILLA (Despues)</th>
+                            <th>DIFERENCIA FUSION</th>
+                            <th>DIFERENCIA VARILLA</th>
+                            <th>RECEPCIONA DESCARGA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Fila 1: TK=1 / SUPER -->
+                        <tr data-fila="1">
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">SUPER</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-antes">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-antes">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-despues">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-despues">&nbsp;</td>
+                            <td contenteditable="false" class="fusion-diferencia">&nbsp;</td>
+                            <td contenteditable="false" class="varilla-diferencia">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                        </tr>
+                        <!-- Fila 2: TK=2 / QUANTIUM NAFTA -->
+                        <tr data-fila="2">
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">2</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">QUANTIUM NAFTA</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-antes">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-antes">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-despues">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-despues">&nbsp;</td>
+                            <td contenteditable="false" class="fusion-diferencia">&nbsp;</td>
+                            <td contenteditable="false" class="varilla-diferencia">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                        </tr>
+                        <!-- Fila 3: TK=3 / QUANTIUM DIESEL X10 -->
+                        <tr data-fila="3">
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">3</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">QUANTIUM DIESEL X10</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-antes">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-antes">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-despues">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-despues">&nbsp;</td>
+                            <td contenteditable="false" class="fusion-diferencia">&nbsp;</td>
+                            <td contenteditable="false" class="varilla-diferencia">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                        </tr>
+                        <!-- Fila 4: TK=4 / DIESEL X10 -->
+                        <tr data-fila="4">
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">4</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">DIESEL X10</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-antes">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-antes">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-despues">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-despues">&nbsp;</td>
+                            <td contenteditable="false" class="fusion-diferencia">&nbsp;</td>
+                            <td contenteditable="false" class="varilla-diferencia">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                        </tr>
+                        <!-- Fila 5: TK=5 / DIESEL X10 -->
+                        <tr data-fila="5">
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">5</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">DIESEL X10</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-antes">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-antes">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-despues">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-despues">&nbsp;</td>
+                            <td contenteditable="false" class="fusion-diferencia">&nbsp;</td>
+                            <td contenteditable="false" class="varilla-diferencia">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                        </tr>
+                        <!-- Fila 6: TK=6 / DIESEL X10 -->
+                        <tr data-fila="6">
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">6</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="false">DIESEL X10</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-antes">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-antes">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                            <td contenteditable="true" class="fusion-despues">&nbsp;</td>
+                            <td contenteditable="true" class="varilla-despues">&nbsp;</td>
+                            <td contenteditable="false" class="fusion-diferencia">&nbsp;</td>
+                            <td contenteditable="false" class="varilla-diferencia">&nbsp;</td>
+                            <td contenteditable="true">&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="observacion">
+                * Las diferencias (FUSION y VARILLA) se calculan automáticamente.
+            </div>
+        </div>
+
+        <!-- Pestaña Historial -->
+        <div id="tab-historial" class="tab-content">
+            <h2 style="font-size:18px; margin-bottom:12px; color:#1e3a5f;">📋 Registros Guardados</h2>
+            <div id="historial-contenedor">
+                <div class="vacio">No hay registros guardados todavía.</div>
+            </div>
+            <div class="acciones-historial">
+                <button class="btn btn-descargar" id="btn-descargar-txt">⬇️ Descargar historial en TXT</button>
+                <button class="btn btn-limpiar" id="btn-borrar-historial" style="background:#6c757d;">🗑️ Borrar todo el historial</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- FUNCIONES COMUNES ----------
+            function getNumericValue(cell) {
+                if (!cell) return 0;
+                const text = cell.innerText.trim();
+                if (text === '' || text === '\u00A0') return 0;
+                const num = parseFloat(text.replace(',', '.'));
+                return isNaN(num) ? 0 : num;
+            }
+
+            function updateDifferences(row) {
+                // FUSION
+                const fusionAntes = row.querySelector('.fusion-antes');
+                const fusionDespues = row.querySelector('.fusion-despues');
+                const fusionDiff = row.querySelector('.fusion-diferencia');
+                if (fusionAntes && fusionDespues && fusionDiff) {
+                    const antes = getNumericValue(fusionAntes);
+                    const despues = getNumericValue(fusionDespues);
+                    const diff = despues - antes;
+                    fusionDiff.innerText = Number.isInteger(diff) ? diff.toString() : diff.toFixed(2).replace('.', ',');
+                }
+                // VARILLA
+                const varillaAntes = row.querySelector('.varilla-antes');
+                const varillaDespues = row.querySelector('.varilla-despues');
+                const varillaDiff = row.querySelector('.varilla-diferencia');
+                if (varillaAntes && varillaDespues && varillaDiff) {
+                    const antes = getNumericValue(varillaAntes);
+                    const despues = getNumericValue(varillaDespues);
+                    const diff = despues - antes;
+                    varillaDiff.innerText = Number.isInteger(diff) ? diff.toString() : diff.toFixed(2).replace('.', ',');
+                }
+            }
+
+            // Obtener datos de todas las filas de la planilla (incluyendo diferencias)
+            function obtenerDatosPlanilla() {
+                const filas = document.querySelectorAll('#tabla-planilla tbody tr');
+                const datos = [];
+                filas.forEach(row => {
+                    const celdas = row.querySelectorAll('td');
+                    const filaData = {
+                        tk: celdas[2]?.innerText.trim() || '',
+                        producto: celdas[4]?.innerText.trim() || '',
+                        fecha: celdas[0]?.innerText.trim() || '',
+                        horario: celdas[1]?.innerText.trim() || '',
+                        temperatura: celdas[3]?.innerText.trim() || '',
+                        patente: celdas[5]?.innerText.trim() || '',
+                        chofer: celdas[6]?.innerText.trim() || '',
+                        litrosConvertidos: celdas[7]?.innerText.trim() || '',
+                        fusionAntes: celdas[8]?.innerText.trim() || '',
+                        varillaAntes: celdas[9]?.innerText.trim() || '',
+                        litrosDescargados: celdas[10]?.innerText.trim() || '',
+                        fusionDespues: celdas[11]?.innerText.trim() || '',
+                        varillaDespues: celdas[12]?.innerText.trim() || '',
+                        diferenciaFusion: celdas[13]?.innerText.trim() || '',
+                        diferenciaVarilla: celdas[14]?.innerText.trim() || '',
+                        recepciona: celdas[15]?.innerText.trim() || '',
+                    };
+                    datos.push(filaData);
+                });
+                return datos;
+            }
+
+            // ---------- GESTIÓN DE HISTORIAL (localStorage) ----------
+            function cargarHistorial() {
+                const stored = localStorage.getItem('historialDescargas');
+                if (!stored) return [];
+                try {
+                    return JSON.parse(stored);
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function guardarHistorial(registros) {
+                localStorage.setItem('historialDescargas', JSON.stringify(registros));
+            }
+
+            // Agregar un nuevo registro (array de filas) al historial
+            function agregarRegistro() {
+                const datos = obtenerDatosPlanilla();
+                const hayDatos = datos.some(fila => {
+                    return fila.fecha || fila.horario || fila.temperatura || fila.patente ||
+                        fila.chofer || fila.litrosConvertidos || fila.fusionAntes ||
+                        fila.varillaAntes || fila.litrosDescargados || fila.fusionDespues ||
+                        fila.varillaDespues || fila.recepciona;
+                });
+                if (!hayDatos) {
+                    alert('No hay datos para guardar. Complete al menos un campo.');
+                    return;
+                }
+
+                const registros = cargarHistorial();
+                const nuevoRegistro = {
+                    timestamp: new Date().toLocaleString(),
+                    filas: datos
+                };
+                registros.push(nuevoRegistro);
+                guardarHistorial(registros);
+                renderizarHistorial();
+                mostrarPestana('tab-historial');
+            }
+
+            // Renderizar la tabla de historial
+            function renderizarHistorial() {
+                const contenedor = document.getElementById('historial-contenedor');
+                const registros = cargarHistorial();
+                if (registros.length === 0) {
+                    contenedor.innerHTML = '<div class="vacio">No hay registros guardados todavía.</div>';
+                    return;
+                }
+
+                let html = '';
+                registros.forEach((registro, idx) => {
+                    html += `<div style="margin-bottom: 30px; border-bottom: 2px dashed #ccc; padding-bottom: 15px;">`;
+                    html += `<div style="font-weight:600; font-size:15px; color:#1e3a5f; margin-bottom:8px;">📌 Registro #${idx+1} — ${registro.timestamp}</div>`;
+                    html += `<div class="tabla-wrapper"><table class="historial-tabla" style="min-width:1100px;">`;
+                    html += `<thead><tr>
+                                <th>TK</th><th>Producto</th><th>FECHA</th><th>HORARIO</th>
+                                <th>TEMP (°C)</th><th>PATENTE</th><th>CHOFER</th>
+                                <th>LITROS CONV.</th><th>FUSION (A)</th><th>VARILLA (A)</th>
+                                <th>DESCARGADOS</th><th>FUSION (D)</th><th>VARILLA (D)</th>
+                                <th>DIF. FUSION</th><th>DIF. VARILLA</th><th>RECEPCIONA</th>
+                            </tr></thead><tbody>`;
+                    registro.filas.forEach(fila => {
+                        html += `<tr>
+                                    <td>${fila.tk}</td>
+                                    <td>${fila.producto}</td>
+                                    <td>${fila.fecha}</td>
+                                    <td>${fila.horario}</td>
+                                    <td>${fila.temperatura}</td>
+                                    <td>${fila.patente}</td>
+                                    <td>${fila.chofer}</td>
+                                    <td>${fila.litrosConvertidos}</td>
+                                    <td>${fila.fusionAntes}</td>
+                                    <td>${fila.varillaAntes}</td>
+                                    <td>${fila.litrosDescargados}</td>
+                                    <td>${fila.fusionDespues}</td>
+                                    <td>${fila.varillaDespues}</td>
+                                    <td>${fila.diferenciaFusion}</td>
+                                    <td>${fila.diferenciaVarilla}</td>
+                                    <td>${fila.recepciona}</td>
+                                </tr>`;
+                    });
+                    html += `</tbody></table></div>`;
+                    html += `<div style="margin-top:6px; display:flex; gap:12px;">
+                                <button class="btn btn-limpiar" data-borrar-idx="${idx}" style="background:#b02a37; padding:4px 16px; font-size:12px;">Eliminar este registro</button>
+                             </div>`;
+                    html += `</div>`;
+                });
+
+                contenedor.innerHTML = html;
+
+                document.querySelectorAll('[data-borrar-idx]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idx = parseInt(this.getAttribute('data-borrar-idx'));
+                        if (confirm(`¿Eliminar el registro #${idx+1}?`)) {
+                            let registros = cargarHistorial();
+                            registros.splice(idx, 1);
+                            guardarHistorial(registros);
+                            renderizarHistorial();
+                        }
+                    });
+                });
+            }
+
+            // ---------- DESCARGAR HISTORIAL EN TXT ----------
+            function descargarHistorialTXT() {
+                const registros = cargarHistorial();
+                if (registros.length === 0) {
+                    alert('No hay registros para descargar.');
+                    return;
+                }
+
+                const header = ['TK', 'Producto', 'Fecha', 'Horario', 'Temp(°C)', 'Patente', 'Chofer',
+                    'Litros Conv.', 'Fusion(A)', 'Varilla(A)', 'Descargados', 'Fusion(D)',
+                    'Varilla(D)', 'Dif Fus', 'Dif Var', 'Recepciona'
+                ];
+
+                let contenido = '============================================================\n';
+                contenido += '   REGISTROS DE DESCARGA DE CAMIÓN - SAN AGUSTÍN\n';
+                contenido += '============================================================\n\n';
+
+                registros.forEach((reg, idx) => {
+                    contenido += `📌 REGISTRO #${idx+1}  (${reg.timestamp})\n`;
+                    contenido += '------------------------------------------------------------\n';
+                    // Línea de encabezados
+                    contenido += header.join(' | ') + '\n';
+                    contenido += header.map(() => '------').join(' | ') + '\n';
+
+                    reg.filas.forEach(fila => {
+                        const row = [
+                            fila.tk || '', fila.producto || '', fila.fecha || '',
+                            fila.horario || '', fila.temperatura || '', fila.patente || '',
+                            fila.chofer || '', fila.litrosConvertidos || '',
+                            fila.fusionAntes || '', fila.varillaAntes || '',
+                            fila.litrosDescargados || '', fila.fusionDespues || '',
+                            fila.varillaDespues || '', fila.diferenciaFusion || '',
+                            fila.diferenciaVarilla || '', fila.recepciona || ''
+                        ];
+                        contenido += row.join(' | ') + '\n';
+                    });
+                    contenido += '\n\n';
+                });
+
+                const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                const fechaStr = new Date().toISOString().slice(0, 10);
+                link.download = `historial_descargas_${fechaStr}.txt`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+            }
+
+            // ---------- LIMPIAR PLANILLA ----------
+            function limpiarPlanilla() {
+                const celdasEditables = document.querySelectorAll('#tabla-planilla td[contenteditable="true"]');
+                celdasEditables.forEach(cell => {
+                    cell.innerText = '\u00A0';
+                });
+                const filas = document.querySelectorAll('#tabla-planilla tbody tr');
+                filas.forEach(row => updateDifferences(row));
+            }
+
+            // ---------- MANEJO DE PESTAÑAS ----------
+            function mostrarPestana(id) {
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+                document.querySelector(`.tab-btn[data-tab="${id}"]`).classList.add('active');
+            }
+
+            // ---------- INICIALIZACIÓN ----------
+            function init() {
+                // Pestañas
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const tabId = this.getAttribute('data-tab');
+                        mostrarPestana(tabId);
+                        if (tabId === 'tab-historial') {
+                            renderizarHistorial();
+                        }
+                    });
+                });
+
+                // Guardar
+                document.getElementById('btn-guardar').addEventListener('click', agregarRegistro);
+
+                // Limpiar planilla
+                document.getElementById('btn-limpiar').addEventListener('click', function() {
+                    if (confirm('¿Limpiar todos los datos de la planilla?')) {
+                        limpiarPlanilla();
+                    }
+                });
+
+                // Borrar historial
+                document.getElementById('btn-borrar-historial').addEventListener('click', function() {
+                    if (confirm('¿Eliminar todo el historial de registros?')) {
+                        guardarHistorial([]);
+                        renderizarHistorial();
+                    }
+                });
+
+                // DESCARGAR TXT
+                document.getElementById('btn-descargar-txt').addEventListener('click', descargarHistorialTXT);
+
+                // Inicializar diferencias
+                const filas = document.querySelectorAll('#tabla-planilla tbody tr');
+                filas.forEach(row => updateDifferences(row));
+
+                // Eventos de entrada para diferencias
+                document.querySelectorAll('.fusion-antes, .fusion-despues, .varilla-antes, .varilla-despues').forEach(cell => {
+                    const row = cell.closest('tr');
+                    cell.addEventListener('input', function() { updateDifferences(row); });
+                    cell.addEventListener('blur', function() { updateDifferences(row); });
+                });
+
+                // Observer para cambios de pegado
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        const target = mutation.target;
+                        let cell = target.closest ? target.closest('td') : null;
+                        if (cell) {
+                            const row = cell.closest('tr');
+                            if (row && (cell.classList.contains('fusion-antes') ||
+                                    cell.classList.contains('fusion-despues') ||
+                                    cell.classList.contains('varilla-antes') ||
+                                    cell.classList.contains('varilla-despues'))) {
+                                updateDifferences(row);
+                            }
+                        }
+                    });
+                });
+                document.querySelectorAll('.fusion-antes, .fusion-despues, .varilla-antes, .varilla-despues').forEach(cell => {
+                    observer.observe(cell, { characterData: true, childList: true, subtree: true });
+                });
+
+                renderizarHistorial();
+            }
+
+            init();
+        })();
+    </script>
+</body>
+</html>
