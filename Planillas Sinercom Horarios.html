@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planillas Sinercom · Sep–Dic 2026</title>
+<!-- Librería para generar PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0; padding: 16px;
+    background: #eef1f7;
+    color: #1a237e;
+  }
+  h1 { font-size: 1.4rem; margin: 0 0 12px; }
+  h2 { font-size: 1.05rem; margin: 18px 0 8px; color: #1a237e; }
+  .sub { font-size: .82rem; color: #555; margin-bottom: 12px; }
+
+  /* ---------- Pestañas ---------- */
+  .tabs {
+    display: flex; gap: 6px; margin-bottom: 14px;
+    border-bottom: 2px solid #c5cae9;
+    flex-wrap: wrap;
+  }
+  .tabs button {
+    background: transparent; border: none;
+    padding: 10px 22px; font-size: .92rem; font-weight: 700;
+    color: #5c6bc0; cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    transition: background .15s, color .15s;
+    font-family: inherit;
+  }
+  .tabs button:hover { background: #e8eaf6; }
+  .tabs button.active { background: #1a237e; color: #fff; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .btn-edit, .btn-zazu, .btn-pdf {
+    border: none; border-radius: 6px;
+    padding: 8px 18px; font-size: .85rem;
+    font-weight: 600; cursor: pointer;
+    transition: background .15s, transform .1s;
+    font-family: inherit;
+  }
+  .btn-edit {
+    background: #1a237e; color: #fff;
+    box-shadow: 0 2px 5px rgba(26,35,126,.3);
+  }
+  .btn-edit:hover { background: #283593; }
+  .btn-edit:active { transform: translateY(1px); }
+  .btn-edit.active { background: #c62828; }
+  .btn-edit.active:hover { background: #d32f2f; }
+
+  .btn-zazu {
+    background: #e67e22; color: #fff;
+    box-shadow: 0 2px 5px rgba(230,126,34,.3);
+  }
+  .btn-zazu:hover { background: #d35400; }
+  .btn-zazu:active { transform: translateY(1px); }
+  .btn-zazu.active { background: #c62828; }
+  .btn-zazu.active:hover { background: #d32f2f; }
+
+  .btn-pdf {
+    background: #c62828; color: #fff;
+    box-shadow: 0 2px 5px rgba(198,40,40,.3);
+  }
+  .btn-pdf:hover { background: #d32f2f; }
+  .btn-pdf:active { transform: translateY(1px); }
+  .btn-pdf:disabled { opacity: .6; cursor: wait; }
+
+  .hint { font-size: .78rem; color: #666; font-style: italic; }
+
+  /* ---------- Tablas ---------- */
+  .table-wrap {
+    overflow: auto; max-height: 62vh;
+    border: 1px solid #c5cae9; border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    margin-bottom: 6px;
+  }
+
+  table { border-collapse: collapse; font-size: .72rem; }
+
+  th, td {
+    border: 1px solid #e0e0e0;
+    padding: 2px 4px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  thead th {
+    position: sticky;
+    background: #1a237e; color: #fff;
+    font-weight: 600;
+    z-index: 10;
+  }
+  thead tr:nth-child(1) th { top: 0;    height: 26px; font-size: .72rem; }
+  thead tr:nth-child(2) th { top: 26px; height: 22px; background: #283593; font-size: .72rem; }
+  thead tr:nth-child(3) th { top: 48px; height: 20px; background: #3949ab; font-size: .62rem; }
+
+  .col-info {
+    position: sticky; left: 0; top: 0;
+    background: #e8eaf6;
+    z-index: 5;
+    min-width: 165px; max-width: 165px;
+    text-align: left;
+    font-size: .68rem;
+    line-height: 1.15;
+    white-space: normal;
+  }
+  thead .col-info {
+    z-index: 20;
+    background: #1a237e; color: #fff;
+    text-align: center; font-size: .75rem;
+  }
+
+  .row-head td {
+    background: #c5cae9;
+    font-weight: 700; font-size: .68rem;
+    letter-spacing: .4px;
+    color: #1a237e;
+    text-align: left;
+    padding: 6px 8px;
+  }
+
+  td.cell {
+    min-width: 78px; max-width: 78px;
+    white-space: normal;
+    font-size: .62rem;
+    line-height: 1.1;
+    padding: 3px 2px;
+    vertical-align: middle;
+    font-weight: 600;
+    color: #1a237e;
+    transition: filter .15s;
+  }
+  td.cell.empty { color: #bbb; font-weight: 400; background: #fafafa; }
+
+  select.cell-select {
+    font-size: .62rem; padding: 2px 1px;
+    border: 1px solid #1a237e; border-radius: 3px;
+    background: #fff; color: #1a237e;
+    font-weight: 600; width: 100%;
+    max-width: 78px;
+    font-family: inherit;
+  }
+
+  /* ---------- Spot SA (tabla específica) ---------- */
+  #spotTableWrap table { min-width: 900px; }
+  #spotTableWrap th.col-info { left: 0;   min-width: 95px; max-width: 95px; }
+  #spotTableWrap th.col-info-2 { left: 95px; min-width: 80px; max-width: 80px; }
+  #spotTableWrap td.row-header,
+  #spotTableWrap td.row-header-puesto {
+    position: sticky; z-index: 5;
+    background: #e8eaf6; color: #1a237e;
+    font-weight: 700; font-size: .68rem;
+    text-align: left; padding: 6px 6px;
+    white-space: normal; line-height: 1.15;
+  }
+  #spotTableWrap td.row-header { left: 0;   min-width: 95px; max-width: 95px; }
+  #spotTableWrap td.row-header-puesto { left: 95px; min-width: 80px; max-width: 80px; }
+  #spotTableWrap td.cell { min-width: 70px; max-width: 70px; }
+
+  /* ---------- Leyenda ---------- */
+  .leyenda {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    margin-bottom: 18px;
+  }
+  .leyenda h2 { margin: 0 0 8px; font-size: .9rem; }
+  .leyenda-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 6px 18px;
+  }
+  .leyenda-grid div {
+    font-size: .78rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .swatch {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,.15);
+    flex: 0 0 14px;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 18px; right: 18px;
+    background: #1a237e; color: #fff;
+    padding: 9px 18px; border-radius: 6px;
+    font-size: .82rem; opacity: 0;
+    transition: opacity .25s; z-index: 2000;
+    pointer-events: none;
+    max-width: 300px;
+  }
+  .toast.show { opacity: 1; }
+  .toast.err  { background: #c62828; }
+  .toast.ok   { background: #2e7d32; }
+
+  @media (max-width: 640px) {
+    body { padding: 10px; }
+    h1 { font-size: 1.15rem; }
+    .tabs button { padding: 8px 14px; font-size: .82rem; }
+    .btn-edit, .btn-zazu, .btn-pdf { padding: 8px 12px; font-size: .78rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Planillas Sinercom</h1>
+<div class="sub">Septiembre – Diciembre 2026</div>
+
+<div class="tabs">
+  <button data-tab="sa" class="active">SA</button>
+  <button data-tab="guadalupe">Guadalupe</button>
+</div>
+
+<!-- =========================== TAB SA =========================== -->
+<section id="tab-sa" class="tab-panel active">
+
+  <div class="toolbar">
+    <button class="btn-edit" id="btnEditSA">🔐 Editar planillas</button>
+    <button class="btn-zazu" id="btnEditSA2">🔏Editar</button>
+    <button class="btn-pdf"  id="btnPdfSA">📄 PDF SA</button>
+    <button class="btn-pdf"  id="btnPdfSpot">📄 PDF Spot</button>
+    <span class="hint" id="hintSA">Vista de solo lectura</span>
+  </div>
+
+  <h2>Planilla SA</h2>
+  <div class="table-wrap" id="saTableWrap"></div>
+  <div class="leyenda">
+    <h2>Colaboradores</h2>
+    <div class="leyenda-grid" id="leyendaSA"></div>
+  </div>
+
+  <h2>Spot SA</h2>
+  <div class="table-wrap" id="spotTableWrap"></div>
+  <div class="leyenda">
+    <h2>Colaboradores Spot</h2>
+    <div class="leyenda-grid" id="leyendaSpot"></div>
+  </div>
+
+</section>
+
+<!-- ======================= TAB GUADALUPE ======================= -->
+<section id="tab-guadalupe" class="tab-panel">
+
+  <div class="toolbar">
+    <button class="btn-edit" id="btnEditGP">🔐 Editar planilla</button>
+    <button class="btn-zazu" id="btnEditGP2">🔏Editar</button>
+    <button class="btn-pdf"  id="btnPdfGP">📄 PDF Guadalupe</button>
+    <span class="hint" id="hintGP">Vista de solo lectura</span>
+  </div>
+
+  <h2>Planilla Guadalupe</h2>
+  <div class="table-wrap" id="gpTableWrap"></div>
+  <div class="leyenda">
+    <h2>Colaboradores</h2>
+    <div class="leyenda-grid" id="leyendaGP"></div>
+  </div>
+
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   COMÚN
+   ============================================================ */
+const PWD_ADMIN = 'admin123';
+const PWD_ZAZU  = 'zazu2026';
+const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const DIAS  = ['Do','Lu','Ma','Mi','Ju','Vi','Sá'];
+
+let toastTimer = null;
+function showToast(msg, err, ok) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' err' : (ok ? ' ok' : ''));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 2200);
+}
+
+function promptPassword(expected) {
+  const pwd = prompt('Ingresá la clave de administrador:');
+  if (pwd === null) return false;
+  if (pwd !== expected) { showToast('Clave incorrecta', true); return false; }
+  return true;
+}
+
+/* ---------- Pestañas ---------- */
+(function () {
+  const btns = document.querySelectorAll('.tabs button');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+})();
+
+/* ---------- Encabezado con meses / días / día-semana ---------- */
+function buildDateHeader(table, dates, infoLabel) {
+  const thead = document.createElement('thead');
+
+  const trMes = document.createElement('tr');
+  const thInfo = document.createElement('th');
+  thInfo.className = 'col-info';
+  thInfo.rowSpan = 3;
+  thInfo.textContent = infoLabel;
+  trMes.appendChild(thInfo);
+
+  let mesActual = -1, span = 0;
+  for (let i = 0; i < dates.length; i++) {
+    const m = dates[i].getMonth();
+    if (m !== mesActual) {
+      if (mesActual !== -1) {
+        const th = document.createElement('th');
+        th.colSpan = span;
+        th.textContent = MESES[mesActual] + ' 2026';
+        trMes.appendChild(th);
+      }
+      mesActual = m; span = 1;
+    } else span++;
+  }
+  if (mesActual !== -1) {
+    const th = document.createElement('th');
+    th.colSpan = span;
+    th.textContent = MESES[mesActual] + ' 2026';
+    trMes.appendChild(th);
+  }
+  thead.appendChild(trMes);
+
+  const trDia = document.createElement('tr');
+  dates.forEach(f => {
+    const th = document.createElement('th');
+    th.textContent = f.getDate();
+    trDia.appendChild(th);
+  });
+  thead.appendChild(trDia);
+
+  const trDow = document.createElement('tr');
+  dates.forEach(f => {
+    const th = document.createElement('th');
+    th.textContent = DIAS[f.getDay()];
+    trDow.appendChild(th);
+  });
+  thead.appendChild(trDow);
+
+  table.appendChild(thead);
+}
+
+/* ============================================================
+   DESCARGA PDF
+   ============================================================ */
+function downloadPDF(element, filename) {
+  if (typeof html2pdf === 'undefined') {
+    showToast('Librería PDF no disponible. Verificá tu conexión.', true);
+    return;
+  }
+
+  showToast('Generando PDF, aguardá unos segundos…');
+
+  const clone = element.cloneNode(true);
+  clone.style.maxHeight = 'none';
+  clone.style.overflow  = 'visible';
+  clone.style.height    = 'auto';
+  clone.style.borderRadius = '0';
+  clone.style.border = '1px solid #999';
+  clone.style.background = '#fff';
+
+  clone.querySelectorAll('th, td, .col-info, .row-header, .row-header-puesto').forEach(n => {
+    n.style.position = 'static';
+    n.style.left = 'auto';
+    n.style.top = 'auto';
+    n.style.zIndex = 'auto';
+  });
+
+  const wrapper = document.createElement('div');
+  wrapper.style.position = 'fixed';
+  wrapper.style.left = '-99999px';
+  wrapper.style.top  = '0';
+  wrapper.style.background = '#fff';
+  wrapper.style.padding = '6px';
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
+
+  const widthPx  = wrapper.scrollWidth;
+  const heightPx = wrapper.scrollHeight;
+  const widthMm  = Math.max(widthPx / 3.7795, 100);
+  const heightMm = Math.max(heightPx / 3.7795, 50);
+
+  const opt = {
+    margin: 3,
+    filename: filename,
+    image: { type: 'jpeg', quality: 0.95 },
+    html2canvas: {
+      scale: 1.5,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff'
+    },
+    jsPDF: {
+      unit: 'mm',
+      format: [widthMm, heightMm],
+      orientation: 'landscape'
+    }
+  };
+
+  html2pdf().set(opt).from(wrapper).save()
+    .then(() => {
+      showToast('✅ PDF descargado', false, true);
+      if (wrapper.parentNode) document.body.removeChild(wrapper);
+    })
+    .catch(err => {
+      console.error('PDF error:', err);
+      showToast('Error al generar PDF', true);
+      if (wrapper.parentNode) document.body.removeChild(wrapper);
+    });
+}
+
+/* ============================================================
+   MÓDULO SPOT SA
+   ============================================================ */
+const SpotSA = (function () {
+  const fechas = [
+    "1-sep.","2-sep.","3-sep.","4-sep.","5-sep.","6-sep.","7-sep.","8-sep.","9-sep.","10-sep.",
+    "11-sep.","12-sep.","13-sep.","14-sep.","15-sep.","16-sep.","17-sep.","18-sep.","19-sep.","20-sep.",
+    "21-sep.","22-sep.","23-sep.","24-sep.","25-sep.","26-sep.","27-sep.","28-sep.","29-sep.","30-sep.",
+    "1-oct.","2-oct.","3-oct.","4-oct.","5-oct.","6-oct.","7-oct.","8-oct.","9-oct.","10-oct.",
+    "11-oct.","12-oct.","13-oct.","14-oct.","15-oct.","16-oct.","17-oct.","18-oct.","19-oct.","20-oct.",
+    "21-oct.","22-oct.","23-oct.","24-oct.","25-oct.","26-oct.","27-oct.","28-oct.","29-oct.","30-oct.",
+    "31-oct.","1-nov.","2-nov.","3-nov.","4-nov.","5-nov.","6-nov.","7-nov.","8-nov.","9-nov.",
+    "10-nov.","11-nov.","12-nov.","13-nov.","14-nov.","15-nov.","16-nov.","17-nov.","18-nov.","19-nov.",
+    "20-nov.","21-nov.","22-nov.","23-nov.","24-nov.","25-nov.","26-nov.","27-nov.","28-nov.","29-nov.","30-nov.",
+    "1-dic.","2-dic.","3-dic.","4-dic.","5-dic.","6-dic.","7-dic.","8-dic.","9-dic.","10-dic.",
+    "11-dic.","12-dic.","13-dic.","14-dic.","15-dic.","16-dic.","17-dic.","18-dic.","19-dic.","20-dic.",
+    "21-dic.","22-dic.","23-dic.","24-dic.","25-dic.","26-dic.","27-dic.","28-dic.","29-dic.","30-dic.",
+    "31-dic.","1-ene."
+  ];
+
+  const turnosBase = [
+    { horario:"23:00 a 06:00", puesto:"NOCHE", valores:[
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Anneris Guerra","Sofia de Filippi","Sofia de Filippi",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Gile Stafini","Gile Stafini","Gile Stafini","Gile Stafini",
+      "Andrea Kummer","Andrea Kummer","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Gomez Maca","Gomez Maca",
+      "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Gile Stafini","Gile Stafini","Gile Stafini","Gile Stafini",
+      "Ursprung Camila","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+      "Gomez Maca","Gomez Maca","Gomez Maca","Gomez Maca",
+      "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Gile Stafini","Gile Stafini","Gile Stafini","Gile Stafini",
+      "Ursprung Camila","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+      "Gomez Maca","Gomez Maca","Gomez Maca","Gomez Maca",
+      "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "",""
+    ]},
+    { horario:"06:00 a 14:00", puesto:"CAJA", valores:[
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Ursprung Camila","Gomez Maca","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Gile Stafini","Ursprung Camila",
+      "Ursprung Camila","Ursprung Camila","Ursprung Camila","Gomez Maca",
+      "Gomez Maca","Gomez Maca","Gomez Maca","Beltran Veronica",
+      "Beltran Veronica","Beltran Veronica","Beltran Veronica","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Gile Stafini",
+      "Gile Stafini","Ursprung Camila","Ursprung Camila","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Gile Stafini","Ursprung Camila",
+      "Ursprung Camila","Ursprung Camila","Ursprung Camila","Gomez Maca",
+      "Gomez Maca","Gomez Maca","Gomez Maca","Beltran Veronica",
+      "Beltran Veronica","Beltran Veronica","Beltran Veronica","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Gile Stafini","Ursprung Camila",
+      "Ursprung Camila","Ursprung Camila","Ursprung Camila","Gomez Maca",
+      "Gomez Maca","Gomez Maca","Gomez Maca","Beltran Veronica",
+      "Beltran Veronica","Beltran Veronica","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria"
+    ]},
+    { horario:"06:00 a 14:00", puesto:"CAFETERA", valores:[
+      "Ursprung Camila","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Gomez Maca","Gile Stafini","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+      "Ursprung Camila","Ursprung Camila","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Gomez Maca","Beltran Veronica","Beltran Veronica",
+      "Beltran Veronica","Beltran Veronica","Joana Fritzler","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Gile Stafini","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Gile Stafini","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+      "Ursprung Camila","Ursprung Camila","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Gomez Maca","Beltran Veronica","Beltran Veronica",
+      "Beltran Veronica","Beltran Veronica","Joana Fritzler","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Gile Stafini","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+      "Ursprung Camila","Ursprung Camila","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Gomez Maca","Beltran Veronica","Beltran Veronica",
+      "Beltran Veronica","Beltran Veronica","Joana Fritzler","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi"
+    ]},
+    { horario:"08:00 a 16:00", puesto:"PS", valores:[
+      "Gomez Maca","","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Gomez Maca","Gomez Maca","Gomez Maca",
+      "","Beltran Veronica","Joana Fritzler","Joana Fritzler",
+      "Joana Fritzler","Gile Stafini","","Ursprung Camila",
+      "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "Beltran Veronica","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Gile Stafini","Anneris Guerra","Gile Stafini","Gile Stafini",
+      "Ursprung Camila","Ursprung Camila","Gile Stafini","Ursprung Camila",
+      "Gomez Maca","Gomez Maca","Gomez Maca","Ursprung Camila",
+      "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "Beltran Veronica","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Joana Fritzler","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Gile Stafini","Gile Stafini","Gile Stafini",
+      "Gile Stafini","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+      "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "Beltran Veronica","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Joana Fritzler","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Andrea Kummer","Andrea Kummer"
+    ]},
+    { horario:"10:00 a 18:00", puesto:"REFUERZO", valores:[
+      "","","","Gile Stafini",
+      "Gile Stafini","AG","","",
+      "Beltran Veronica","","Ursprung Camila/Beltran Veronica","Ursprung Camila",
+      "Ursprung Camila","Beltran Veronica","Beltran Veronica","",
+      "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+      "Anneris Guerra","Gile Stafini","Gile Stafini","Ursprung Camila",
+      "Ursprung Camila","Gile Stafini","Ursprung Camila","Gomez Maca",
+      "Gomez Maca","Gomez Maca","Ursprung Camila","Beltran Veronica",
+      "Beltran Veronica","Beltran Veronica","Beltran Veronica","Gomez Maca",
+      "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Gile Stafini","Gile Stafini","Gile Stafini","Gile Stafini",
+      "Ursprung Camila","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+      "Gomez Maca","Gomez Maca","Gomez Maca","Gomez Maca",
+      "Beltran Veronica","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra"
+    ]},
+    { horario:"14:00 a 22:00", puesto:"CAJA", valores:[
+      "Andrea Kummer","Joana Fritzler","Joana Fritzler","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","","","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+      "Gile Stafini","Ursprung Camila","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Ursprung Camila","Beltran Veronica","Beltran Veronica",
+      "Beltran Veronica","Beltran Veronica","Gomez Maca","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Lucila Nieto","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Gile Stafini","Ursprung Camila",
+      "Ursprung Camila","Ursprung Camila","Ursprung Camila","Gomez Maca",
+      "Gomez Maca","Gomez Maca","Gomez Maca","Beltran Veronica",
+      "Beltran Veronica","Beltran Veronica","Beltran Veronica","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Joana Fritzler","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Lucila Nieto","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Ayelen Demaria","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Sofia de Filippi","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Gile Stafini"
+    ]},
+    { horario:"14:00 a 22:00", puesto:"CAFETERIA", valores:[
+      "Gile Stafini","","Ursprung Camila","Ursprung Camila",
+      "Ursprung Camila","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+      "Anneris Guerra","Gomez Maca","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Joana Fritzler","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Andrea Kummer","Andrea Kummer",
+      "Ursprung Camila","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+      "Gomez Maca","Gomez Maca","Gile Stafini","Gile Stafini",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Ursprung Camila","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Gomez Maca","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Joana Fritzler","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Andrea Kummer","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Gile Stafini","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+      "Ursprung Camila","Ursprung Camila","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Gomez Maca","Beltran Veronica","Beltran Veronica",
+      "Beltran Veronica","Beltran Veronica","Joana Fritzler","Joana Fritzler",
+      "Joana Fritzler","Joana Fritzler","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Lucila Nieto","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Ayelen Demaria","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Sofia de Filippi","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Anneris Guerra","Gile Stafini","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Ursprung Camila","Ursprung Camila",
+      "Ursprung Camila","Ursprung Camila","Gomez Maca"
+    ]},
+    { horario:"15:15 a 23:00", puesto:"PS", valores:[
+      "Anneris Guerra","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Gile Stafini","Gile Stafini","Gile Stafini",
+      "Gile Stafini","Gile Stafini","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Andrea Kummer","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Joana Fritzler","Gile Stafini","Gile Stafini","Gile Stafini",
+      "Gile Stafini","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+      "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "Beltran Veronica","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Joana Fritzler","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Gile Stafini","Gile Stafini","Gile Stafini",
+      "Gile Stafini","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+      "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+      "Gomez Maca","Beltran Veronica","Beltran Veronica","Beltran Veronica",
+      "Beltran Veronica","Joana Fritzler","Joana Fritzler","Joana Fritzler",
+      "Joana Fritzler","Lucila Nieto","Lucila Nieto","Lucila Nieto",
+      "Lucila Nieto","Ayelen Demaria","Ayelen Demaria","Ayelen Demaria",
+      "Ayelen Demaria","Sofia de Filippi","Sofia de Filippi","Sofia de Filippi",
+      "Sofia de Filippi","Andrea Kummer","Andrea Kummer","Andrea Kummer",
+      "Andrea Kummer","Anneris Guerra","Anneris Guerra","Anneris Guerra",
+      "Anneris Guerra","Gile Stafini","Gile Stafini","Gile Stafini",
+      "Gile Stafini","Ursprung Camila","Ursprung Camila","Ursprung Camila",
+      "Ursprung Camila","Gomez Maca","Gomez Maca","Gomez Maca",
+      "Gomez Maca","",""
+    ]}
+  ];
+
+  const PALETA = [
+    '#FF6B6B','#4ECDC4','#45B7D1','#96CEB4','#FFEEAD',
+    '#D4A5A5','#9B59B6','#3498DB','#E67E22','#1ABC9C',
+    '#E74C3C','#F1C40F','#2ECC71','#8E44AD','#16A085',
+    '#27AE60','#2980B9','#F39C12','#D35400','#7F8C8D',
+    '#FFB3BA','#BAFFC9','#BAE1FF','#E8BAFF','#B3FFE5',
+    '#FFCCB3','#D5AAFF','#A8E6CF','#FFD3B6','#FF8B94'
+  ];
+
+  let turnos = JSON.parse(JSON.stringify(turnosBase));
+  let colaboradores = [];
+  let colorMap = {};
+  let editMode = false;
+
+  const wrap = document.getElementById('spotTableWrap');
+  const leyendaEl = document.getElementById('leyendaSpot');
+
+  function extraerColaboradores() {
+    const set = new Set();
+    turnos.forEach(t => t.valores.forEach(v => {
+      if (v) v.split(/[\/,]/).map(s => s.trim()).filter(Boolean).forEach(p => set.add(p));
+    }));
+    set.delete('AG');
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }
+
+  function generarColorMap(nombres) {
+    const m = {};
+    nombres.forEach((n, i) => m[n] = PALETA[i % PALETA.length]);
+    return m;
+  }
+
+  function colorDe(valor) {
+    if (!valor) return '';
+    for (const c of colaboradores) if (valor.includes(c)) return colorMap[c] || '';
+    return '';
+  }
+
+  function render() {
+    colaboradores = extraerColaboradores();
+    colorMap = generarColorMap(colaboradores);
+
+    let html = '<table><thead><tr>';
+    html += '<th class="col-info">Horario</th>';
+    html += '<th class="col-info col-info-2">Puesto</th>';
+    fechas.forEach(f => { html += '<th>' + f + '</th>'; });
+    html += '</tr></thead><tbody>';
+
+    turnos.forEach((turno, ti) => {
+      html += '<tr>';
+      html += '<td class="row-header">' + turno.horario + '</td>';
+      html += '<td class="row-header-puesto">' + turno.puesto + '</td>';
+      for (let i = 0; i < fechas.length; i++) {
+        const valor = turno.valores[i] || '';
+        const bg = colorDe(valor);
+        const style = bg ? ' style="background:' + bg + ';color:#000;font-weight:600;"' : '';
+        if (editMode) {
+          const opts = [''].concat(colaboradores);
+          if (valor && !opts.includes(valor)) opts.push(valor);
+          html += '<td data-t="' + ti + '" data-d="' + i + '"' + style + '>';
+          html += '<select class="cell-select" data-t="' + ti + '" data-d="' + i + '">';
+          opts.forEach(o => {
+            const lbl = o === '' ? '—' : o;
+            const sel = (o === valor) ? ' selected' : '';
+            html += '<option value="' + o.replace(/"/g, '&quot;') + '"' + sel + '>' + lbl + '</option>';
+          });
+          html += '</select></td>';
+        } else {
+          html += '<td data-t="' + ti + '" data-d="' + i + '"' + style + '>' + valor + '</td>';
+        }
+      }
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+
+    if (editMode) {
+      wrap.querySelectorAll('select').forEach(sel => {
+        sel.addEventListener('change', function () {
+          const t = +this.dataset.t, d = +this.dataset.d;
+          turnos[t].valores[d] = this.value;
+          const td = this.closest('td');
+          const bg = colorDe(this.value);
+          td.style.background = bg || '';
+          td.style.color = bg ? '#000' : '';
+          td.style.fontWeight = bg ? '600' : '';
+        });
+      });
+    }
+    renderLeyenda();
+  }
+
+  function renderLeyenda() {
+    leyendaEl.innerHTML = '';
+    colaboradores.forEach(c => {
+      const d = document.createElement('div');
+      d.style.background = colorMap[c];
+      d.style.color = '#1a237e';
+      d.innerHTML = '<span class="swatch" style="background:' + colorMap[c] + '"></span>' + c;
+      leyendaEl.appendChild(d);
+    });
+  }
+
+  render();
+
+  return {
+    isEdit: () => editMode,
+    setEdit: v => { editMode = v; render(); }
+  };
+})();
+
+/* ============================================================
+   MÓDULO PLANILLA SA
+   ============================================================ */
+const SA = (function () {
+  const START  = new Date(2026, 8, 1);
+  const END    = new Date(2026, 11, 31);
+  const ORIGIN = new Date(2026, 7, 1);
+
+  const CODES = {
+    LR: { nombre: 'Leonardo Requena',  bg: '#c5cae9', fg: '#1a237e' },
+    LB: { nombre: 'Leandro Bancho',    bg: '#c8e6c9', fg: '#1b5e20' },
+    LH: { nombre: 'Luis Heinen',       bg: '#ffe0b2', fg: '#e65100' },
+    NE: { nombre: 'Natalia Emmer',     bg: '#e1bee7', fg: '#4a148c' },
+    VM: { nombre: 'Victor Monzon',     bg: '#b2dfdb', fg: '#004d40' },
+    DB: { nombre: 'David Benitez',     bg: '#f8bbd0', fg: '#880e4f' },
+    SR: { nombre: 'Sabrina Reible',    bg: '#fff9c4', fg: '#827717' },
+    OK: { nombre: 'Oscar Keler',       bg: '#d7ccc8', fg: '#3e2723' },
+    AV: { nombre: 'Alejandro Volken',  bg: '#ffcdd2', fg: '#b71c1c' }
+  };
+
+  const ROWS = [
+    { t: 'header', label: 'TURNO NOCHE' },
+    { t: 'data', turno: 'T₁: 23 hs a 06 hs',    nombre: 'Leonardo Requena', code: 'LR' },
+    { t: 'header', label: 'TURNO MAÑANA' },
+    { t: 'data', turno: 'T₂: 06 hs a 14 hs',    nombre: 'Leandro Bancho',   code: 'LB' },
+    { t: 'data', turno: 'T₂: 06 hs a 14 hs',    nombre: 'Luis Heinen',      code: 'LH' },
+    { t: 'data', turno: 'T₂: 07 hs a 15 hs',    nombre: 'Natalia Emmer',    code: 'NE' },
+    { t: 'data', turno: 'T₂: 07 hs a 15 hs',    nombre: 'Victor Monzon',    code: 'VM' },
+    { t: 'header', label: 'TURNO TARDE' },
+    { t: 'data', turno: 'T₃: 14 hs a 22 hs',    nombre: 'David Benitez',    code: 'DB' },
+    { t: 'data', turno: 'T₃: 14 hs a 22 hs',    nombre: 'Sabrina Reible',   code: 'SR' },
+    { t: 'data', turno: 'T₃: 15:15 hs a 23 hs', nombre: 'Oscar Keler',      code: 'OK' },
+    { t: 'data', turno: 'T₃: 15:15 hs a 23 hs', nombre: 'Alejandro Volken', code: 'AV' }
+  ];
+
+  const cName = c => CODES[c] ? CODES[c].nombre : c;
+  const cBg   = c => CODES[c] ? CODES[c].bg : '#ffffff';
+  const cFg   = c => CODES[c] ? CODES[c].fg : '#1a237e';
+
+  function gIdx(d) {
+    const a = Date.UTC(ORIGIN.getFullYear(), ORIGIN.getMonth(), ORIGIN.getDate());
+    const b = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+    return Math.round((b - a) / 86400000);
+  }
+
+  function getVal(code, idx) {
+    switch (code) {
+      case 'LR':
+        if (idx <= 33) return (idx % 5 === 3) ? 'LH' : 'LR';
+        return ((idx - 38) % 5 === 0) ? 'LR' : 'AV';
+      case 'LB':
+        if (idx <= 32) return (idx % 5 === 4) ? '' : 'LB';
+        return ((idx - 35) % 5 === 0) ? '' : 'DB';
+      case 'LH':
+        if (idx <= 31) { const p = idx % 5; return (p === 2 || p === 3) ? '' : 'LH'; }
+        return ((idx - 35) % 5 >= 3) ? '' : 'LR';
+      case 'NE':
+        if (idx <= 32) return (idx >= 5 && idx % 5 === 0) ? '' : 'NE';
+        return ((idx - 36) % 5 === 0) ? '' : 'SR';
+      case 'VM':
+        if (idx <= 32) return (idx >= 5 && idx % 5 === 0) ? '' : 'VM';
+        return ((idx - 35) % 5 === 0) ? '' : 'LH';
+      case 'DB':
+        if (idx <= 32) return (idx >= 5 && idx % 5 === 0) ? '' : 'DB';
+        return ((idx - 34) % 5 === 0) ? '' : 'LB';
+      case 'SR':
+        if (idx <= 31) return (idx % 5 === 2) ? '' : 'SR';
+        return ((idx - 38) % 5 === 0) ? '' : 'NE';
+      case 'OK':
+        return (idx >= 5 && idx % 5 === 0) ? '' : 'OK';
+      case 'AV':
+        if (idx <= 32) return (idx >= 5 && idx % 5 === 0) ? '' : 'AV';
+        return ((idx - 35) % 5 === 0) ? '' : 'VM';
+      default: return '';
+    }
+  }
+
+  const dates = [];
+  { const d = new Date(START); while (d <= END) { dates.push(new Date(d)); d.setDate(d.getDate() + 1); } }
+
+  const wrap = document.getElementById('saTableWrap');
+  const leyendaEl = document.getElementById('leyendaSA');
+  const allCells = [];
+  let editMode = false;
+
+  function paintCell(td, val) {
+    td.innerHTML = '';
+    if (val) {
+      td.textContent = cName(val);
+      td.style.background = cBg(val);
+      td.style.color      = cFg(val);
+      td.classList.remove('empty');
+    } else {
+      td.textContent = '—';
+      td.style.background = '#fafafa';
+      td.style.color      = '#bbb';
+      td.classList.add('empty');
+    }
+  }
+
+  function build() {
+    const table = document.createElement('table');
+    buildDateHeader(table, dates, 'Turno / Empleado');
+
+    const tbody = document.createElement('tbody');
+    allCells.length = 0;
+
+    for (const row of ROWS) {
+      const tr = document.createElement('tr');
+
+      if (row.t === 'header') {
+        tr.className = 'row-head';
+        const td = document.createElement('td');
+        td.colSpan = 1 + dates.length;
+        td.textContent = row.label;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        continue;
+      }
+
+      const tdInfo = document.createElement('td');
+      tdInfo.className = 'col-info';
+      tdInfo.innerHTML = '<b>' + row.turno + '</b><br>' + row.nombre;
+      tr.appendChild(tdInfo);
+
+      for (let i = 0; i < dates.length; i++) {
+        const td = document.createElement('td');
+        const gi = gIdx(dates[i]);
+        const val = getVal(row.code, gi);
+        td.dataset.code = row.code;
+        td.dataset.idx = gi;
+        td.dataset.val = val;
+        td.classList.add('cell');
+        paintCell(td, val);
+        tr.appendChild(td);
+        allCells.push(td);
+      }
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    wrap.innerHTML = '';
+    wrap.appendChild(table);
+  }
+
+  function entrar() {
+    editMode = true;
+    for (const td of allCells) {
+      const actual = td.dataset.val || '';
+      td.innerHTML = '';
+      td.style.background = '#ffffff';
+
+      const sel = document.createElement('select');
+      sel.className = 'cell-select';
+      const opts = [''].concat(Object.keys(CODES));
+      for (const o of opts) {
+        const opt = document.createElement('option');
+        opt.value = o;
+        opt.textContent = o ? cName(o) : '—';
+        if (o === actual) opt.selected = true;
+        sel.appendChild(opt);
+      }
+      if (actual) {
+        sel.style.background = cBg(actual);
+        sel.style.color      = cFg(actual);
+      }
+      sel.addEventListener('change', function () {
+        td.dataset.val = sel.value;
+        if (sel.value) {
+          sel.style.background = cBg(sel.value);
+          sel.style.color      = cFg(sel.value);
+        } else {
+          sel.style.background = '#fff';
+          sel.style.color      = '#1a237e';
+        }
+      });
+      td.appendChild(sel);
+    }
+  }
+
+  function salir() {
+    editMode = false;
+    for (const td of allCells) {
+      const sel = td.querySelector('select');
+      if (sel) td.dataset.val = sel.value;
+      paintCell(td, td.dataset.val || '');
+    }
+  }
+
+  build();
+
+  for (const [c, info] of Object.entries(CODES)) {
+    const d = document.createElement('div');
+    d.style.background = info.bg;
+    d.style.color      = info.fg;
+    d.innerHTML = '<span class="swatch" style="background:' + info.bg + '"></span>' +
+                  '<b style="min-width:34px;display:inline-block">' + c + '</b> ' + info.nombre;
+    leyendaEl.appendChild(d);
+  }
+
+  return { isEdit: () => editMode, entrar, salir };
+})();
+
+/* ============================================================
+   MÓDULO PLANILLA GUADALUPE
+   ============================================================ */
+const GP = (function () {
+  const START = new Date(2026, 8, 1);
+  const END   = new Date(2026, 11, 1);
+
+  const CODES = {
+    MF: { nombre: 'MARIO FERNANDEZ',     bg: '#c5cae9', fg: '#1a237e' },
+    ER: { nombre: 'ELVIS RANGEL',        bg: '#c8e6c9', fg: '#1b5e20' },
+    NV: { nombre: 'Nicolas Venetz',      bg: '#ffe0b2', fg: '#e65100' },
+    NM: { nombre: 'NAZARENO MARTINEZ',   bg: '#e1bee7', fg: '#4a148c' },
+    LS: { nombre: 'LUCAS SOLVER',        bg: '#b2dfdb', fg: '#004d40' },
+    NG: { nombre: 'NICOLAS GAMARRA',     bg: '#f8bbd0', fg: '#880e4f' },
+    LM: { nombre: 'LAUTARO MONZON',      bg: '#fff9c4', fg: '#827717' },
+    MG: { nombre: 'MAXIMILIANO GALEANO', bg: '#d7ccc8', fg: '#3e2723' }
+  };
+
+  function rep(c, n) { return Array(n).fill(c); }
+
+  const R1 = [].concat(
+    ['MF'],
+    rep('ER', 6), rep('NV', 6), rep('NM', 6), rep('LS', 6),
+    rep('ER', 6), rep('NV', 6), rep('NM', 6), rep('LS', 6),
+    rep('ER', 6), rep('NV', 6), rep('NM', 6),
+    rep('MF', 6), rep('ER', 6), rep('NG', 6), rep('NM', 6),
+    ['']
+  );
+
+  const R2 = [].concat(
+    rep('NG', 3), rep('LS', 6), rep('ER', 6), rep('NV', 6),
+    rep('NM', 6), rep('LS', 6), rep('ER', 6), rep('NV', 6),
+    rep('NM', 6), rep('LS', 6), rep('ER', 6), rep('NV', 6),
+    rep('NM', 6), rep('LS', 4), rep('NV', 6), rep('LS', 4),
+    rep('LM', 3)
+  );
+
+  const R3 = [].concat(
+    ['LS'],
+    rep('LM', 6), rep('NG', 4), rep('MF', 6), rep('LM', 6),
+    rep('NG', 4), rep('MF', 6), rep('LM', 6), rep('MF', 2),
+    rep('LM', 6), rep('NG', 4), rep('MF', 6), rep('LM', 6),
+    rep('MF', 2), rep('ER', 6), rep('NG', 4), rep('MF', 6),
+    rep('ER', 6), rep('NG', 5)
+  );
+
+  const R4 = [].concat(
+    rep('NV', 5), rep('NM', 6), rep('LS', 6), rep('ER', 6),
+    rep('NV', 6), rep('NM', 6), rep('LS', 6), rep('ER', 6),
+    rep('NV', 6), rep('NM', 6), rep('LS', 6), rep('LM', 6),
+    rep('NV', 6), rep('NM', 6), rep('LM', 4), rep('NV', 5)
+  );
+
+  const R5 = [].concat(
+    rep('NM', 3), rep('MF', 6), rep('LM', 6), rep('NG', 4),
+    rep('MF', 6), rep('LM', 6), rep('NG', 4), rep('MF', 4),
+    rep('NG', 4), rep('MF', 6), rep('LM', 6), rep('NG', 4),
+    rep('MF', 4), rep('NG', 4), rep('LS', 6), rep('LM', 6),
+    rep('LS', 2), rep('LM', 2), rep('MF', 6), rep('ER', 3)
+  );
+
+  const R6 = [].concat(
+    rep('', 5),  ['NG', 'NG'],
+    rep('', 6),  ['NG', 'NG'],
+    rep('', 6),  ['NG', 'NG'],
+    rep('', 6),  ['NG', 'NG'],
+    rep('', 6),  ['NG', 'NG'],
+    rep('', 6),  ['NG', 'NG'],
+    rep('', 6),  ['NG', 'NG'],
+    rep('', 6),  ['NG', 'NG'],
+    rep('', 8),  ['NG', 'NG'],
+    rep('', 6),  ['LS', 'LS'],
+    rep('', 4),  ['LM'],
+    rep('', 2),  ['LS'],
+    rep('', 3)
+  );
+
+  const R7 = [].concat(
+    rep('MG', 5), [''], rep('MG', 6), [''], rep('MG', 6), [''],
+    rep('MG', 6), [''], rep('MG', 6), [''], rep('MG', 6), [''],
+    rep('MG', 6), [''], rep('MG', 6), [''], rep('MG', 6), [''],
+    rep('MG', 6), [''], rep('MG', 6), [''], rep('MG', 6), [''],
+    rep('MG', 6), [''], rep('MG', 6), [''], rep('MG', 6)
+  );
+
+  const ROWS = [
+    { label: '23:00 - 06:00',          data: R1 },
+    { label: '06:00 - 14:00',          data: R2 },
+    { label: '07:00 - 15:00',          data: R3 },
+    { label: '14:00 - 21:50',          data: R4 },
+    { label: '15:15 - 23:00',          data: R5 },
+    { label: '8 a 12 hs - 16 a 20 hs', data: R6 },
+    { label: '🛻 Lun - Sab medio día', data: R7 }
+  ];
+
+  const cName = c => CODES[c] ? CODES[c].nombre : c;
+  const cBg   = c => CODES[c] ? CODES[c].bg : '#ffffff';
+  const cFg   = c => CODES[c] ? CODES[c].fg : '#1a237e';
+
+  const dates = [];
+  { const d = new Date(START); while (d <= END) { dates.push(new Date(d)); d.setDate(d.getDate() + 1); } }
+
+  const wrap = document.getElementById('gpTableWrap');
+  const leyendaEl = document.getElementById('leyendaGP');
+  const allCells = [];
+  let editMode = false;
+
+  function paintCell(td, val) {
+    td.innerHTML = '';
+    if (val && CODES[val]) {
+      td.textContent = cName(val);
+      td.style.background = cBg(val);
+      td.style.color      = cFg(val);
+      td.classList.remove('empty');
+    } else if (val) {
+      td.textContent = val;
+      td.style.background = '#fff';
+      td.style.color      = '#1a237e';
+      td.classList.remove('empty');
+    } else {
+      td.textContent = '—';
+      td.style.background = '#fafafa';
+      td.style.color      = '#bbb';
+      td.classList.add('empty');
+    }
+  }
+
+  function build() {
+    const table = document.createElement('table');
+    buildDateHeader(table, dates, 'Horario / Día');
+
+    const tbody = document.createElement('tbody');
+    allCells.length = 0;
+
+    for (const row of ROWS) {
+      const tr = document.createElement('tr');
+
+      const tdInfo = document.createElement('td');
+      tdInfo.className = 'col-info';
+      tdInfo.innerHTML = '<b>' + row.label + '</b>';
+      tr.appendChild(tdInfo);
+
+      for (let i = 0; i < dates.length; i++) {
+        const td = document.createElement('td');
+        const val = row.data[i] || '';
+        td.dataset.val = val;
+        td.classList.add('cell');
+        paintCell(td, val);
+        tr.appendChild(td);
+        allCells.push(td);
+      }
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    wrap.innerHTML = '';
+    wrap.appendChild(table);
+  }
+
+  function entrar() {
+    editMode = true;
+    for (const td of allCells) {
+      const actual = td.dataset.val || '';
+      td.innerHTML = '';
+      td.style.background = '#ffffff';
+
+      const sel = document.createElement('select');
+      sel.className = 'cell-select';
+      const opts = [''].concat(Object.keys(CODES));
+      for (const o of opts) {
+        const opt = document.createElement('option');
+        opt.value = o;
+        opt.textContent = o ? cName(o) : '—';
+        if (o === actual) opt.selected = true;
+        sel.appendChild(opt);
+      }
+      if (actual && CODES[actual]) {
+        sel.style.background = cBg(actual);
+        sel.style.color      = cFg(actual);
+      }
+      sel.addEventListener('change', function () {
+        td.dataset.val = sel.value;
+        if (sel.value && CODES[sel.value]) {
+          sel.style.background = cBg(sel.value);
+          sel.style.color      = cFg(sel.value);
+        } else {
+          sel.style.background = '#fff';
+          sel.style.color      = '#1a237e';
+        }
+      });
+      td.appendChild(sel);
+    }
+  }
+
+  function salir() {
+    editMode = false;
+    for (const td of allCells) {
+      const sel = td.querySelector('select');
+      if (sel) td.dataset.val = sel.value;
+      paintCell(td, td.dataset.val || '');
+    }
+  }
+
+  build();
+
+  for (const [c, info] of Object.entries(CODES)) {
+    const d = document.createElement('div');
+    d.style.background = info.bg;
+    d.style.color      = info.fg;
+    d.innerHTML = '<span class="swatch" style="background:' + info.bg + '"></span>' +
+                  '<b style="min-width:34px;display:inline-block">' + c + '</b> ' + info.nombre;
+    leyendaEl.appendChild(d);
+  }
+
+  return { isEdit: () => editMode, entrar, salir };
+})();
+
+/* ============================================================
+   CONTROLES DE EDICIÓN Y PDF — SA
+   ============================================================ */
+const btnSA  = document.getElementById('btnEditSA');
+const btnSA2 = document.getElementById('btnEditSA2');
+const hintSA = document.getElementById('hintSA');
+let saEdit = false;
+
+function updateSAButtons() {
+  btnSA.textContent  = saEdit ? '💾 Guardar y salir' : '🔐 Editar planillas';
+  btnSA.classList.toggle('active', saEdit);
+
+  btnSA2.textContent = saEdit ? '💾 Guardar y salir' : '🔏Editar';
+  btnSA2.classList.toggle('active', saEdit);
+
+  hintSA.textContent = saEdit
+    ? 'Modo edición activo · elegí un colaborador por día'
+    : 'Vista de solo lectura';
+}
+
+function enterSAEdit() {
+  SA.entrar();
+  SpotSA.setEdit(true);
+  saEdit = true;
+  updateSAButtons();
+  showToast('Modo edición activado');
+}
+
+function exitSAEdit(silent) {
+  if (!saEdit) return;
+  SA.salir();
+  SpotSA.setEdit(false);
+  saEdit = false;
+  updateSAButtons();
+  if (!silent) showToast('Cambios guardados', false, true);
+}
+
+btnSA.addEventListener('click', function () {
+  if (saEdit) { exitSAEdit(); return; }
+  if (!promptPassword(PWD_ADMIN)) return;
+  enterSAEdit();
+});
+
+btnSA2.addEventListener('click', function () {
+  if (saEdit) { exitSAEdit(); return; }
+  if (!promptPassword(PWD_ZAZU)) return;
+  enterSAEdit();
+});
+
+document.getElementById('btnPdfSA').addEventListener('click', function () {
+  if (saEdit) exitSAEdit(true);
+  setTimeout(() => {
+    downloadPDF(document.getElementById('saTableWrap'), 'Planilla_SA.pdf');
+  }, 200);
+});
+
+document.getElementById('btnPdfSpot').addEventListener('click', function () {
+  if (saEdit) exitSAEdit(true);
+  setTimeout(() => {
+    downloadPDF(document.getElementById('spotTableWrap'), 'Spot_SA.pdf');
+  }, 200);
+});
+
+/* ============================================================
+   CONTROLES DE EDICIÓN Y PDF — GUADALUPE
+   ============================================================ */
+const btnGP  = document.getElementById('btnEditGP');
+const btnGP2 = document.getElementById('btnEditGP2');
+const hintGP = document.getElementById('hintGP');
+let gpEdit = false;
+
+function updateGPButtons() {
+  btnGP.textContent  = gpEdit ? '💾 Guardar y salir' : '🔐 Editar planilla';
+  btnGP.classList.toggle('active', gpEdit);
+
+  btnGP2.textContent = gpEdit ? '💾 Guardar y salir' : '🔏Editar';
+  btnGP2.classList.toggle('active', gpEdit);
+
+  hintGP.textContent = gpEdit
+    ? 'Modo edición activo · elegí un colaborador por día'
+    : 'Vista de solo lectura';
+}
+
+function enterGPEdit() {
+  GP.entrar();
+  gpEdit = true;
+  updateGPButtons();
+  showToast('Modo edición activado');
+}
+
+function exitGPEdit(silent) {
+  if (!gpEdit) return;
+  GP.salir();
+  gpEdit = false;
+  updateGPButtons();
+  if (!silent) showToast('Cambios guardados', false, true);
+}
+
+btnGP.addEventListener('click', function () {
+  if (gpEdit) { exitGPEdit(); return; }
+  if (!promptPassword(PWD_ADMIN)) return;
+  enterGPEdit();
+});
+
+btnGP2.addEventListener('click', function () {
+  if (gpEdit) { exitGPEdit(); return; }
+  if (!promptPassword(PWD_ZAZU)) return;
+  enterGPEdit();
+});
+
+document.getElementById('btnPdfGP').addEventListener('click', function () {
+  if (gpEdit) exitGPEdit(true);
+  setTimeout(() => {
+    downloadPDF(document.getElementById('gpTableWrap'), 'Planilla_Guadalupe.pdf');
+  }, 200);
+});
+</script>
+
+</body>
+</html>
