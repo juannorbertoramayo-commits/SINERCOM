@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Capacitación - ISO 9001</title>
+    <style>
+        /* Definición de la paleta de colores proporcionada */
+        :root {
+            --color-pink: #DD2FB5;
+            --color-purple: #7A29E6;
+            --color-blue: #2632F0;
+            --color-navy: #021241;
+            --color-white: #ffffff;
+            --color-bg: #f8f9fa;
+            --color-gray: #e9ecef;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-navy);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: var(--color-white);
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(2, 18, 65, 0.15);
+            border-top: 8px solid var(--color-blue);
+        }
+
+        /* Encabezado */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--color-gray);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: var(--color-navy);
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            color: var(--color-purple);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Botón Editar */
+        .btn-edit {
+            background-color: var(--color-pink);
+            color: var(--color-white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s;
+            box-shadow: 0 2px 5px rgba(221, 47, 181, 0.3);
+        }
+
+        .btn-edit:hover {
+            background-color: var(--color-purple);
+            transform: translateY(-2px);
+        }
+
+        .btn-edit:active {
+            transform: translateY(0);
+        }
+
+        /* Secciones */
+        .section-title {
+            background-color: var(--color-navy);
+            color: var(--color-white);
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .section-title.blue-bg {
+            background-color: var(--color-blue);
+        }
+
+        .section-title.purple-bg {
+            background-color: var(--color-purple);
+        }
+
+        /* Grid para campos del formulario */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-grid.full-width {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: var(--color-purple);
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        /* Estilos de los Inputs */
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--color-navy);
+            background-color: var(--color-white);
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-blue);
+            box-shadow: 0 0 0 2px rgba(38, 50, 240, 0.2);
+        }
+
+        /* Estilos cuando está en modo lectura */
+        input:read-only,
+        textarea:read-only,
+        select:disabled {
+            background-color: var(--color-gray);
+            color: #666;
+            cursor: not-allowed;
+            border-color: #ddd;
+        }
+
+        /* Tablas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--color-blue);
+            color: var(--color-white);
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--color-bg);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid var(--color-gray);
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Encabezado con Botón de Edición -->
+        <div class="header">
+            <div>
+                <h1>Registro de Capacitación</h1>
+                <p>Norma ISO 9001:2015 - Cláusula 7.2 (Competencia)</p>
+            </div>
+            <button id="editBtn" class="btn-edit" onclick="toggleEdit()">Editar Formulario</button>
+        </div>
+
+        <form id="capacitacionForm">
+            <!-- 1. Datos Generales -->
+            <div class="section-title">1. Datos Generales del Evento</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nombre de la Organización</label>
+                    <input type="text" id="organizacion" placeholder="Ej. Mi Empresa S.A." readonly>
+                </div>
+                <div class="form-group">
+                    <label>Nombre del Evento / Curso</label>
+                    <input type="text" id="curso" placeholder="Ej. Inducción a la Calidad" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Capacitación</label>
+                    <select id="tipo" disabled>
+                        <option value="">Seleccione...</option>
+                        <option value="Interna">Interna (in-house)</option>
+                        <option value="Externa">Externa</option>
+                        <option value="E-learning">E-learning</option>
+                        <option value="Induccion">Inducción</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Realización</label>
+                    <input type="date" id="fecha" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Duración (Horas)</label>
+                    <input type="number" id="duracion" placeholder="Ej. 8" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Instructor / Tutor</label>
+                    <input type="text" id="instructor" placeholder="Nombre del instructor" readonly>
+                </div>
+            </div>
+
+            <!-- 2. Objetivo -->
+            <div class="section-title blue-bg">2. Objetivo y Alcance</div>
+            <div class="form-grid full-width">
+                <div class="form-group">
+                    <label>Objetivo de la Capacitación (¿Qué competencia se desarrolla?)</label>
+                    <textarea id="objetivo" rows="3" placeholder="Describa el objetivo principal de la capacitación..." readonly></textarea>
+                </div>
+            </div>
+
+            <!-- 3. Asistentes -->
+            <div class="section-title purple-bg">3. Registro de Asistentes</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombre Completo</th>
+                        <th>ID / DNI</th>
+                        <th>Puesto</th>
+                        <th>Firma</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                        <td><input type="text" style="width:100%; border:none; background:transparent;" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 4. Evaluación de Eficacia -->
+            <div class="section-title">4. Evaluación de la Eficacia</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nivel 1: Reacción (Encuesta)</label>
+                    <select id="nivel1" disabled>
+                        <option value="">Seleccione...</option>
+                        <option value="Satisfactorio">Satisfactorio</option>
+                        <option value="No Satisfactorio">No Satisfactorio</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nivel 2: Aprendizaje (Examen)</label>
+                    <input type="text" id="nivel2" placeholder="Puntaje obtenido / Observaciones" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Nivel 3: Transferencia al Puesto</label>
+                    <select id="nivel3" disabled>
+                        <option value="">Seleccione...</option>
+                        <option value="Competencia demostrada">Competencia demostrada</option>
+                        <option value="En seguimiento">En seguimiento</option>
+                        <option value="No competente">No competente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nivel 4: Resultados (KPIs)</label>
+                    <input type="text" id="nivel4" placeholder="Indicadores de mejora" readonly>
+                </div>
+            </div>
+
+            <div class="form-grid full-width" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>Conclusión de la Eficacia</label>
+                    <select id="conclusion" disabled>
+                        <option value="">Seleccione...</option>
+                        <option value="Eficaz">Eficaz. La competencia ha sido adquirida.</option>
+                        <option value="Parcialmente eficaz">Parcialmente eficaz. Requiere refuerzo.</option>
+                        <option value="No eficaz">No eficaz. Tomar acciones correctivas.</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Acciones Correctivas / de Mejora (si aplica)</label>
+                    <textarea id="acciones" rows="2" placeholder="Describa las acciones a tomar..." readonly></textarea>
+                </div>
+            </div>
+
+            <!-- 5. Firmas -->
+            <div class="section-title purple-bg">5. Firmas y Aprobaciones</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Elaboró (Responsable de Formación)</label>
+                    <input type="text" id="elaboro" placeholder="Nombre y Firma" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Revisó (Jefe de Área)</label>
+                    <input type="text" id="reviso" placeholder="Nombre y Firma" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Aprobó (Responsable de Calidad)</label>
+                    <input type="text" id="aprobo" placeholder="Nombre y Firma" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Aprobación</label>
+                    <input type="date" id="fechaAprobacion" readonly>
+                </div>
+            </div>
+        </form>
+
+        <div class="footer">
+            Documento controlado por el Sistema de Gestión de Calidad - ISO 9001:2015
+        </div>
+    </div>
+
+    <script>
+        // Función para habilitar/deshabilitar la edición del formulario
+        let isEditing = false;
+
+        function toggleEdit() {
+            isEditing = !isEditing;
+            const formElements = document.querySelectorAll('#capacitacionForm input, #capacitacionForm select, #capacitacionForm textarea');
+            const editBtn = document.getElementById('editBtn');
+
+            formElements.forEach(element => {
+                // No aplicar a los inputs de la tabla si no queremos que se bloqueen, 
+                // pero aquí los bloqueamos todos para simular un formulario controlado
+                if (isEditing) {
+                    element.removeAttribute('readonly');
+                    element.removeAttribute('disabled');
+                } else {
+                    element.setAttribute('readonly', 'true');
+                    element.setAttribute('disabled', 'true');
+                }
+            });
+
+            // Cambiar el texto y color del botón según el estado
+            if (isEditing) {
+                editBtn.textContent = 'Guardar Cambios';
+                editBtn.style.backgroundColor = 'var(--color-blue)';
+            } else {
+                editBtn.textContent = 'Editar Formulario';
+                editBtn.style.backgroundColor = 'var(--color-pink)';
+            }
+        }
+
+        // Inicializar el formulario en modo lectura
+        document.addEventListener('DOMContentLoaded', () => {
+            const formElements = document.querySelectorAll('#capacitacionForm input, #capacitacionForm select, #capacitacionForm textarea');
+            formElements.forEach(element => {
+                element.setAttribute('readonly', 'true');
+                element.setAttribute('disabled', 'true');
+            });
+        });
+    </script>
+
+</body>
+</html>
