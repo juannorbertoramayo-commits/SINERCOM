@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SINERCOM HR â€” People & HR Management</title>
+  <title>SINERCOM HR — People & HR Management</title>
   <!-- Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
   </script>
@@ -38,30 +38,19 @@
     @media(max-width:1000px){.dashboard{grid-template-columns:1fr}.panel-left{grid-row:auto}.cards-identity,.cards-liquid{grid-template-columns:repeat(3,1fr)}.cards-indicators{grid-template-columns:repeat(3,1fr)}.bottom-section{grid-template-columns:1fr}.header{flex-wrap:wrap}.tabs{margin-left:auto}}
     @media(max-width:650px){.header{padding:12px 15px}.header-left{width:100%}.tabs{width:100%;justify-content:center}.tab-btn{flex:1;padding:8px 8px}.selector-bar{margin:0 10px 12px}.selector-bar select{min-width:0;width:100%}.dashboard{padding:0 10px}.cards-identity,.cards-liquid,.cards-indicators{grid-template-columns:1fr 1fr}.absence-stats{grid-template-columns:1fr 1fr}.edit-container{margin:0 10px;padding:14px}.toolbar{align-items:stretch}.btn{justify-content:center}.bar-chart-wrap{min-height:350px}}
   </style>
-<style id="sinercom-theme">
-:root { --sinercom-magenta:#DD2FB5; --sinercom-purple:#7A29E6; --sinercom-blue:#2632F0; --sinercom-navy:#021241; --sinercom-border:#e5e2f7; }
-body { background-color:#f7f7ff !important; background-image:radial-gradient(circle at 8% 0%,rgba(221,47,181,.12),transparent 34%),radial-gradient(circle at 92% 8%,rgba(122,41,230,.10),transparent 32%),radial-gradient(circle at 85% 100%,rgba(38,50,240,.09),transparent 36%) !important; color:var(--sinercom-navy) !important; }
-header,.app-header,nav,.navbar,.topbar { background:linear-gradient(125deg,var(--sinercom-navy),#11136a 55%,var(--sinercom-purple)) !important; color:#fff !important; border-bottom-color:var(--sinercom-magenta) !important; }
-button,.btn,a.btn,input[type="submit"],input[type="button"] { border-color:transparent !important; background:linear-gradient(135deg,var(--sinercom-blue),var(--sinercom-purple)) !important; color:#fff !important; }
-button:hover,.btn:hover,a.btn:hover,input[type="submit"]:hover,input[type="button"]:hover { background:linear-gradient(135deg,var(--sinercom-purple),var(--sinercom-magenta)) !important; }
-a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--sinercom-navy); }
-.card,.tool-card,.panel,.container-card,.dashboard-card,section { border-color:var(--sinercom-border) !important; box-shadow:0 10px 28px rgba(2,18,65,.09) !important; }
-.badge,.tag,.chip,.pill { border-color:#e6d5fa !important; }
-.sinercom-brand { position:fixed;top:14px;left:16px;z-index:9999;display:flex;align-items:center;gap:9px;padding:6px 11px 6px 7px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid rgba(221,47,181,.28);box-shadow:0 8px 22px rgba(2,18,65,.16);color:var(--sinercom-navy);font:700 12px/1.1 Arial,sans-serif;letter-spacing:.04em; }
-.sinercom-brand img { width:30px;height:30px;object-fit:cover;border-radius:50%; } @media(max-width:700px){.sinercom-brand{top:8px;left:8px;}}
-</style></head>
-<body><div class="sinercom-brand"><img src="sinercom.jpeg" alt="SINERCOM"><span>SINERCOM</span></div>
+</head>
+<body>
   <div class="overlay">
 
     <!-- ===== HEADER CON LOGO ===== -->
     <div class="header">
       <div class="header-left">
         <div class="header-logo">SINER<span>COM</span></div>
-        <div class="header-title">People & HR Management<small>Dashboard de Recursos Humanos Â· GestiÃ³n de Personas</small></div>
+        <div class="header-title">People & HR Management<small>Dashboard de Recursos Humanos · Gestión de Personas</small></div>
       </div>
       <div class="tabs">
-        <button class="tab-btn active" data-tab="tab-dashboard" onclick="switchTab('tab-dashboard')">â–¦ Dashboard</button>
-        <button class="tab-btn" data-tab="tab-editar" onclick="switchTab('tab-editar')">â™™ Empleados</button>
+        <button class="tab-btn active" data-tab="tab-dashboard" onclick="switchTab('tab-dashboard')">▦ Dashboard</button>
+        <button class="tab-btn" data-tab="tab-editar" onclick="switchTab('tab-editar')">♙ Empleados</button>
       </div>
     </div>
 
@@ -80,7 +69,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
           </div>
           <div class="legend">
             <div class="legend-item"><div class="legend-dot" style="background:#4A6CF7"></div>Accidente</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#C026D3"></div>MÃ©dico</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#C026D3"></div>Médico</div>
             <div class="legend-item"><div class="legend-dot" style="background:#7C3AED"></div>Otras Lic.</div>
             <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div>Faltas</div>
             <div class="legend-item"><div class="legend-dot" style="background:#EF4444"></div>Suspensiones</div>
@@ -90,62 +79,62 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         <div class="right-panels">
           <!-- ROW 1: Identidad -->
           <div class="cards-identity">
-            <div class="card"><div class="card-title">Personal</div><div class="card-value small" id="c-personal">â€”</div></div>
-            <div class="card"><div class="card-title">Legajo</div><div class="card-value" id="c-legajo">â€”</div></div>
-            <div class="card"><div class="card-title">CUIL</div><div class="card-value small" id="c-cuil">â€”</div></div>
-            <div class="card"><div class="card-title">Fecha Ingreso</div><div class="card-value small" id="c-fechaIngreso">â€”</div></div>
-            <div class="card"><div class="card-title">CategorÃ­a</div><div class="card-value small" id="c-categoria">â€”</div></div>
+            <div class="card"><div class="card-title">Personal</div><div class="card-value small" id="c-personal">—</div></div>
+            <div class="card"><div class="card-title">Legajo</div><div class="card-value" id="c-legajo">—</div></div>
+            <div class="card"><div class="card-title">CUIL</div><div class="card-value small" id="c-cuil">—</div></div>
+            <div class="card"><div class="card-title">Fecha Ingreso</div><div class="card-value small" id="c-fechaIngreso">—</div></div>
+            <div class="card"><div class="card-title">Categoría</div><div class="card-value small" id="c-categoria">—</div></div>
           </div>
 
-          <!-- ROW 2: LiquidaciÃ³n + Combustibles -->
+          <!-- ROW 2: Liquidación + Combustibles -->
           <div class="cards-liquid">
-            <div class="card"><div class="card-title">Sueldo / Jornal</div><div class="card-value money" id="c-sueldo">â€”</div></div>
-            <div class="card"><div class="card-title">AÃ±os de Ant</div><div class="card-value large" id="c-ant">â€”</div></div>
-            <div class="card"><div class="card-title">Manejo de Fondo</div><div class="card-value fondo" id="c-fondo">â€”</div></div>
-            <div class="card"><div class="card-title">0222 Manejo Fondo</div><div class="card-value fondo" id="c-fondo0222">â€”</div></div>
-            <div class="card"><div class="card-title">â›½ Venta Combustibles</div><div class="card-value ventas" id="c-ventas">$0</div></div>
+            <div class="card"><div class="card-title">Sueldo / Jornal</div><div class="card-value money" id="c-sueldo">—</div></div>
+            <div class="card"><div class="card-title">Años de Ant</div><div class="card-value large" id="c-ant">—</div></div>
+            <div class="card"><div class="card-title">Manejo de Fondo</div><div class="card-value fondo" id="c-fondo">—</div></div>
+            <div class="card"><div class="card-title">0222 Manejo Fondo</div><div class="card-value fondo" id="c-fondo0222">—</div></div>
+            <div class="card"><div class="card-title">⛽ Venta Combustibles</div><div class="card-value ventas" id="c-ventas">$0</div></div>
           </div>
 
           <!-- ROW 3: Indicadores -->
           <div class="cards-indicators">
             <div class="card">
-              <div class="card-title">ðŸ’° Descuentos</div>
+              <div class="card-title">💰 Descuentos</div>
               <div class="card-value badge" id="c-descuentos">0</div>
             </div>
             <div class="card">
-              <div class="card-title">ðŸ”„ Cambios de Turno</div>
+              <div class="card-title">🔄 Cambios de Turno</div>
               <div class="card-value badge" id="c-cambiosTurno">0</div>
             </div>
             <div class="card">
-              <div class="card-title">ðŸŽ“ Cursos / Capacitaciones</div>
+              <div class="card-title">🎓 Cursos / Capacitaciones</div>
               <div class="card-value badge-success" id="c-cursos">0%</div>
             </div>
             <div class="card">
-              <div class="card-title">â° Llegadas Tardes</div>
+              <div class="card-title">⏰ Llegadas Tardes</div>
               <div class="card-value danger" id="c-llegadasTarde">0</div>
             </div>
             <div class="card">
-              <div class="card-title">ðŸ‘ Opiniones Positivas</div>
+              <div class="card-title">👍 Opiniones Positivas</div>
               <div class="card-value op-pos" id="c-op-pos">0</div>
             </div>
             <div class="card">
-              <div class="card-title">ðŸ‘Ž Opiniones Negativas</div>
+              <div class="card-title">👎 Opiniones Negativas</div>
               <div class="card-value op-neg" id="c-op-neg">0</div>
             </div>
           </div>
 
-          <!-- BOTTOM: GrÃ¡fico Ausentismo + Stats -->
+          <!-- BOTTOM: Gráfico Ausentismo + Stats -->
           <div class="bottom-section">
             <div class="pie-wrap">
-              <h4>DistribuciÃ³n de ausentismo</h4>
+              <h4>Distribución de ausentismo</h4>
               <div class="pie-canvas-wrap"><canvas id="pieChart"></canvas></div>
             </div>
             <div class="absence-stats">
-              <div class="card"><div class="card-title">MÃ©dico</div><div class="card-value danger" id="c-medico">â€”</div></div>
-              <div class="card"><div class="card-title">Faltas</div><div class="card-value danger" id="c-faltas">â€”</div></div>
-              <div class="card"><div class="card-title">Suspensiones</div><div class="card-value danger" id="c-suspensiones">â€”</div></div>
-              <div class="card"><div class="card-title">Accidente</div><div class="card-value" id="c-accidente">â€”</div></div>
-              <div class="card" style="grid-column: span 2;"><div class="card-title">Otras Licencias</div><div class="card-value" id="c-otras">â€”</div></div>
+              <div class="card"><div class="card-title">Médico</div><div class="card-value danger" id="c-medico">—</div></div>
+              <div class="card"><div class="card-title">Faltas</div><div class="card-value danger" id="c-faltas">—</div></div>
+              <div class="card"><div class="card-title">Suspensiones</div><div class="card-value danger" id="c-suspensiones">—</div></div>
+              <div class="card"><div class="card-title">Accidente</div><div class="card-value" id="c-accidente">—</div></div>
+              <div class="card" style="grid-column: span 2;"><div class="card-title">Otras Licencias</div><div class="card-value" id="c-otras">—</div></div>
             </div>
           </div>
         </div>
@@ -155,13 +144,13 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     <!-- ===== TAB: EDITAR PERFILES ===== -->
     <div id="tab-editar" class="tab-content">
       <div class="edit-container">
-        <h3>GestiÃ³n de perfiles de empleados</h3>
+        <h3>Gestión de perfiles de empleados</h3>
 
         <div class="toolbar">
-          <button class="btn btn-primary" onclick="addEmployee()">âž• Agregar</button>
-          <button class="btn btn-success btn-save-all" onclick="saveAllChanges()">ðŸ’¾ Guardar Cambios</button>
-          <button class="btn btn-excel" onclick="exportToExcel()">ðŸ“Š Exportar Excel</button>
-          <button class="btn btn-excel" onclick="document.getElementById('fileInput').click()">ðŸ“‚ Importar Excel</button>
+          <button class="btn btn-primary" onclick="addEmployee()">➕ Agregar</button>
+          <button class="btn btn-success btn-save-all" onclick="saveAllChanges()">💾 Guardar Cambios</button>
+          <button class="btn btn-excel" onclick="exportToExcel()">📊 Exportar Excel</button>
+          <button class="btn btn-excel" onclick="document.getElementById('fileInput').click()">📂 Importar Excel</button>
           <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none;" onchange="importFromExcel(event)" />
           <span style="color:var(--text-muted); font-size:11px; margin-left:auto;">Guardar para actualizar el dashboard</span>
         </div>
@@ -174,12 +163,12 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
                 <th>Legajo</th>
                 <th>CUIL</th>
                 <th>Fecha Ingreso</th>
-                <th>CategorÃ­a</th>
+                <th>Categoría</th>
                 <th>Sueldo / Jornal</th>
-                <th>AÃ±os Ant</th>
+                <th>Años Ant</th>
                 <th>0222 Manejo Fondo</th>
                 <th>Venta Combustibles</th>
-                <th>MÃ©dico</th>
+                <th>Médico</th>
                 <th>Faltas</th>
                 <th>Suspensiones</th>
                 <th>Accidente</th>
@@ -190,7 +179,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
                 <th>Llegadas Tarde</th>
                 <th>Op. Positivas</th>
                 <th>Op. Negativas</th>
-                <th>AcciÃ³n</th>
+                <th>Acción</th>
               </tr>
             </thead>
             <tbody id="editTableBody"></tbody>
@@ -209,7 +198,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     // ============================================================
     let employees = [];
 
-    // Opiniones extraÃ­das del documento
+    // Opiniones extraídas del documento
     const opinionesData = {
       "Keller Oscar": { positivas: 12, negativas: 0 },
       "Sabrina": { positivas: 4, negativas: 0 },
@@ -219,7 +208,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       "Joana": { positivas: 2, negativas: 0 },
       "Natalia": { positivas: 4, negativas: 0 },
       "Sole": { positivas: 2, negativas: 0 },
-      "SofÃ­a": { positivas: 5, negativas: 0 },
+      "Sofía": { positivas: 5, negativas: 0 },
       "Lucila": { positivas: 5, negativas: 0 },
       "Ayelen": { positivas: 3, negativas: 0 },
       "Bianca": { positivas: 3, negativas: 0 },
@@ -237,21 +226,21 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
 
     function generateSampleData() {
       const baseEmployees = [
-        { PERSONAL: "Bechi, Valeria Angelica", LEG: 2, CUIL: "27-27793967-9", FECHA_INGRESO: "04/06/2016", CATEGORIA: "SHOP OPERARIO SHOP", SUELDO: "$ 1.496.011,00", AÃ‘OS_ANT: 10, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 125000 },
-        { PERSONAL: "Paduan, Soraya Rocio", LEG: 3, CUIL: "27-30621205-8", FECHA_INGRESO: "04/06/2016", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÃ‘OS_ANT: 10, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 98000 },
-        { PERSONAL: "Maqueda, Federico Gaston", LEG: 5, CUIL: "20-33068266-4", FECHA_INGRESO: "01/03/2017", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÃ‘OS_ANT: 9, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 87000 },
-        { PERSONAL: "Spinardi, Lara Candelaria", LEG: 6, CUIL: "27-37282895-7", FECHA_INGRESO: "01/09/2017", CATEGORIA: "SHOP OPERARIO SHOP", SUELDO: "$ 1.496.011,00", AÃ‘OS_ANT: 8, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 112000 },
-        { PERSONAL: "Cerrudo, Guillermo Sebastian", LEG: 7, CUIL: "20-34939468-6", FECHA_INGRESO: "01/12/2017", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÃ‘OS_ANT: 8, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 76000 },
-        { PERSONAL: "Rangel, Elvis Jesus", LEG: 10, CUIL: "20-96067470-8", FECHA_INGRESO: "01/11/2019", CATEGORIA: "ENC ENCARGADO TURNO", SUELDO: "$ 1.571.404,00", AÃ‘OS_ANT: 6, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 145000 },
-        { PERSONAL: "Kremser, Emmanuel", LEG: 11, CUIL: "20-33039758-7", FECHA_INGRESO: "20/11/2020", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÃ‘OS_ANT: 5, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 92000 },
-        { PERSONAL: "Biasoni, Emanuel", LEG: 12, CUIL: "20-32744974-6", FECHA_INGRESO: "16/12/2020", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÃ‘OS_ANT: 5, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 68000 },
-        { PERSONAL: "Ortiz, Gustavo", LEG: 13, CUIL: "20-25531702-5", FECHA_INGRESO: "01/02/2021", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÃ‘OS_ANT: 5, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 54000 },
-        { PERSONAL: "Moran, Emiliano Jose", LEG: 14, CUIL: "20-38982919-7", FECHA_INGRESO: "05/04/2021", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÃ‘OS_ANT: 5, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 61000 },
-        { PERSONAL: "Biasoni, Martin", LEG: 15, CUIL: "20-36326069-2", FECHA_INGRESO: "10/04/2021", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÃ‘OS_ANT: 5, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 59000 },
-        { PERSONAL: "Odriozola, Maria Jose", LEG: 16, CUIL: "27-36877547-4", FECHA_INGRESO: "01/09/2021", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÃ‘OS_ANT: 4, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 83000 },
-        { PERSONAL: "Soriano, Maria Elena", LEG: 22, CUIL: "27-35250009-2", FECHA_INGRESO: "01/06/2022", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÃ‘OS_ANT: 4, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 77000 },
-        { PERSONAL: "Luque, Horacio Lindor", LEG: 23, CUIL: "20-13925293-5", FECHA_INGRESO: "01/06/2022", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÃ‘OS_ANT: 4, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 52000 },
-        { PERSONAL: "Goy, Guillermo Omar", LEG: 25, CUIL: "20-35752335-5", FECHA_INGRESO: "19/04/2022", CATEGORIA: "CHO TRANSP COMBUSTIBLE", SUELDO: "$ 1.272.012,35", AÃ‘OS_ANT: 4, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 156000 }
+        { PERSONAL: "Bechi, Valeria Angelica", LEG: 2, CUIL: "27-27793967-9", FECHA_INGRESO: "04/06/2016", CATEGORIA: "SHOP OPERARIO SHOP", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 10, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 125000 },
+        { PERSONAL: "Paduan, Soraya Rocio", LEG: 3, CUIL: "27-30621205-8", FECHA_INGRESO: "04/06/2016", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 10, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 98000 },
+        { PERSONAL: "Maqueda, Federico Gaston", LEG: 5, CUIL: "20-33068266-4", FECHA_INGRESO: "01/03/2017", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 9, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 87000 },
+        { PERSONAL: "Spinardi, Lara Candelaria", LEG: 6, CUIL: "27-37282895-7", FECHA_INGRESO: "01/09/2017", CATEGORIA: "SHOP OPERARIO SHOP", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 8, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 112000 },
+        { PERSONAL: "Cerrudo, Guillermo Sebastian", LEG: 7, CUIL: "20-34939468-6", FECHA_INGRESO: "01/12/2017", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 8, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 76000 },
+        { PERSONAL: "Rangel, Elvis Jesus", LEG: 10, CUIL: "20-96067470-8", FECHA_INGRESO: "01/11/2019", CATEGORIA: "ENC ENCARGADO TURNO", SUELDO: "$ 1.571.404,00", AÑOS_ANT: 6, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 145000 },
+        { PERSONAL: "Kremser, Emmanuel", LEG: 11, CUIL: "20-33039758-7", FECHA_INGRESO: "20/11/2020", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 5, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 92000 },
+        { PERSONAL: "Biasoni, Emanuel", LEG: 12, CUIL: "20-32744974-6", FECHA_INGRESO: "16/12/2020", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 5, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 68000 },
+        { PERSONAL: "Ortiz, Gustavo", LEG: 13, CUIL: "20-25531702-5", FECHA_INGRESO: "01/02/2021", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 5, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 54000 },
+        { PERSONAL: "Moran, Emiliano Jose", LEG: 14, CUIL: "20-38982919-7", FECHA_INGRESO: "05/04/2021", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 5, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 61000 },
+        { PERSONAL: "Biasoni, Martin", LEG: 15, CUIL: "20-36326069-2", FECHA_INGRESO: "10/04/2021", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 5, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 59000 },
+        { PERSONAL: "Odriozola, Maria Jose", LEG: 16, CUIL: "27-36877547-4", FECHA_INGRESO: "01/09/2021", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 4, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 83000 },
+        { PERSONAL: "Soriano, Maria Elena", LEG: 22, CUIL: "27-35250009-2", FECHA_INGRESO: "01/06/2022", CATEGORIA: "ADM ADMINISTRATIVO", SUELDO: "$ 1.514.099,00", AÑOS_ANT: 4, FONDO_0222: "$ 94.975,00", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 77000 },
+        { PERSONAL: "Luque, Horacio Lindor", LEG: 23, CUIL: "20-13925293-5", FECHA_INGRESO: "01/06/2022", CATEGORIA: "OPER OPERARIO PLAYA", SUELDO: "$ 1.496.011,00", AÑOS_ANT: 4, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 52000 },
+        { PERSONAL: "Goy, Guillermo Omar", LEG: 25, CUIL: "20-35752335-5", FECHA_INGRESO: "19/04/2022", CATEGORIA: "CHO TRANSP COMBUSTIBLE", SUELDO: "$ 1.272.012,35", AÑOS_ANT: 4, FONDO_0222: "No figura", MEDICO: 0, FALTAS: 0, SUSPENSIONES: 0, ACCIDENTE: 0, OTRAS_LIC: 0, VENTAS: 156000 }
       ];
 
       return baseEmployees.map(e => {
@@ -330,22 +319,22 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
 
       document.getElementById('c-personal').textContent = e.PERSONAL;
       document.getElementById('c-legajo').textContent = e.LEG;
-      document.getElementById('c-cuil').textContent = e.CUIL || 'â€”';
-      document.getElementById('c-fechaIngreso').textContent = e.FECHA_INGRESO || 'â€”';
-      document.getElementById('c-categoria').textContent = e.CATEGORIA || 'â€”';
-      document.getElementById('c-sueldo').textContent = e.SUELDO || 'â€”';
-      document.getElementById('c-ant').textContent = e.AÃ‘OS_ANT + ' aÃ±os';
+      document.getElementById('c-cuil').textContent = e.CUIL || '—';
+      document.getElementById('c-fechaIngreso').textContent = e.FECHA_INGRESO || '—';
+      document.getElementById('c-categoria').textContent = e.CATEGORIA || '—';
+      document.getElementById('c-sueldo').textContent = e.SUELDO || '—';
+      document.getElementById('c-ant').textContent = e.AÑOS_ANT + ' años';
 
       const fondoEl = document.getElementById('c-fondo');
       if (e.FONDO_0222 && e.FONDO_0222 !== 'No figura' && e.FONDO_0222 !== '') {
-        fondoEl.textContent = 'âœ… SÃ­';
+        fondoEl.textContent = '✅ Sí';
         fondoEl.className = 'card-value fondo';
       } else {
-        fondoEl.textContent = 'âŒ No';
+        fondoEl.textContent = '❌ No';
         fondoEl.className = 'card-value fondo-no';
       }
 
-      document.getElementById('c-fondo0222').textContent = e.FONDO_0222 || 'â€”';
+      document.getElementById('c-fondo0222').textContent = e.FONDO_0222 || '—';
       document.getElementById('c-fondo0222').className = 'card-value fondo' + (e.FONDO_0222 === 'No figura' || e
         .FONDO_0222 === '' ? '-no' : '');
 
@@ -369,15 +358,15 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       const acc = e.ACCIDENTE || 0;
       const otr = e.OTRAS_LIC || 0;
 
-      document.getElementById('c-medico').textContent = med + ' dÃ­as';
+      document.getElementById('c-medico').textContent = med + ' días';
       document.getElementById('c-medico').className = 'card-value ' + (med > 0 ? 'danger' : 'zero');
-      document.getElementById('c-faltas').textContent = fal + ' dÃ­as';
+      document.getElementById('c-faltas').textContent = fal + ' días';
       document.getElementById('c-faltas').className = 'card-value ' + (fal > 0 ? 'danger' : 'zero');
-      document.getElementById('c-suspensiones').textContent = sus + ' dÃ­as';
+      document.getElementById('c-suspensiones').textContent = sus + ' días';
       document.getElementById('c-suspensiones').className = 'card-value ' + (sus > 0 ? 'danger' : 'zero');
-      document.getElementById('c-accidente').textContent = acc + ' dÃ­as';
+      document.getElementById('c-accidente').textContent = acc + ' días';
       document.getElementById('c-accidente').className = 'card-value ' + (acc > 0 ? 'danger' : 'zero');
-      document.getElementById('c-otras').textContent = otr + ' dÃ­as';
+      document.getElementById('c-otras').textContent = otr + ' días';
       document.getElementById('c-otras').className = 'card-value ' + (otr > 0 ? '' : 'zero');
 
       // Pie chart: solo Faltas, Suspensiones, Accidente, Otras Lic
@@ -428,7 +417,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     }
 
     // ============================================================
-    //  FUNCIONES DE EDICIÃ“N
+    //  FUNCIONES DE EDICIÓN
     // ============================================================
     function renderEditTable() {
       const tbody = document.getElementById('editTableBody');
@@ -443,7 +432,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
               <td><input type="text" class="edit-input" data-field="FECHA_INGRESO" value="${e.FECHA_INGRESO || ''}" /></td>
               <td><input type="text" class="edit-input" data-field="CATEGORIA" value="${e.CATEGORIA || ''}" /></td>
               <td><input type="text" class="edit-input" data-field="SUELDO" value="${e.SUELDO || ''}" /></td>
-              <td><input type="number" class="edit-input" data-field="AÃ‘OS_ANT" value="${e.AÃ‘OS_ANT || 0}" /></td>
+              <td><input type="number" class="edit-input" data-field="AÑOS_ANT" value="${e.AÑOS_ANT || 0}" /></td>
               <td><input type="text" class="edit-input" data-field="FONDO_0222" value="${e.FONDO_0222 || ''}" /></td>
               <td><input type="number" class="edit-input" data-field="VENTAS" value="${e.VENTAS || 0}" /></td>
               <td><input type="number" class="edit-input" data-field="MEDICO" value="${e.MEDICO || 0}" /></td>
@@ -458,7 +447,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
               <td><input type="number" class="edit-input" data-field="OP_POSITIVAS" value="${e.OP_POSITIVAS || 0}" /></td>
               <td><input type="number" class="edit-input" data-field="OP_NEGATIVAS" value="${e.OP_NEGATIVAS || 0}" /></td>
               <td class="col-actions">
-                <button class="btn btn-danger" onclick="deleteRow(${i})">ðŸ—‘ï¸</button>
+                <button class="btn btn-danger" onclick="deleteRow(${i})">🗑️</button>
               </td>
             `;
         tbody.appendChild(tr);
@@ -473,7 +462,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         inputs.forEach(inp => {
           const field = inp.dataset.field;
           let val = inp.value;
-          if (['LEG', 'AÃ‘OS_ANT', 'VENTAS', 'MEDICO', 'FALTAS', 'SUSPENSIONES', 'ACCIDENTE', 'OTRAS_LIC', 'DESCUENTOS',
+          if (['LEG', 'AÑOS_ANT', 'VENTAS', 'MEDICO', 'FALTAS', 'SUSPENSIONES', 'ACCIDENTE', 'OTRAS_LIC', 'DESCUENTOS',
               'CAMBIOS_TURNO', 'CURSOS', 'LLEGADAS_TARDE', 'OP_POSITIVAS', 'OP_NEGATIVAS'
             ].includes(field)) {
             val = parseFloat(val) || 0;
@@ -484,21 +473,21 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       populateSelect();
       updateCards(selectedIdx);
       renderEditTable();
-      showToast('âœ… Todos los cambios guardados exitosamente');
+      showToast('✅ Todos los cambios guardados exitosamente');
     }
 
     function deleteRow(index) {
       if (employees.length <= 1) {
-        showToast('âš ï¸ Debe haber al menos un empleado');
+        showToast('⚠️ Debe haber al menos un empleado');
         return;
       }
-      if (confirm(`Â¿Eliminar a "${employees[index].PERSONAL}"?`)) {
+      if (confirm(`¿Eliminar a "${employees[index].PERSONAL}"?`)) {
         employees.splice(index, 1);
         if (selectedIdx >= employees.length) selectedIdx = employees.length - 1;
         populateSelect();
         updateCards(selectedIdx);
         renderEditTable();
-        showToast('ðŸ—‘ï¸ Empleado eliminado');
+        showToast('🗑️ Empleado eliminado');
       }
     }
 
@@ -510,7 +499,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         FECHA_INGRESO: "01/01/2020",
         CATEGORIA: "OF. 1RA.",
         SUELDO: "$ 0,00",
-        AÃ‘OS_ANT: 0,
+        AÑOS_ANT: 0,
         FONDO_0222: "No figura",
         VENTAS: 0,
         MEDICO: 0,
@@ -530,7 +519,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       populateSelect();
       updateCards(selectedIdx);
       renderEditTable();
-      showToast('âž• Empleado agregado. Edita los datos y presiona "Guardar Cambios".');
+      showToast('➕ Empleado agregado. Edita los datos y presiona "Guardar Cambios".');
     }
 
     // ============================================================
@@ -542,12 +531,12 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         'Legajo': e.LEG,
         'CUIL': e.CUIL || '',
         'Fecha Ingreso': e.FECHA_INGRESO || '',
-        'CategorÃ­a': e.CATEGORIA || '',
+        'Categoría': e.CATEGORIA || '',
         'Sueldo / Jornal': e.SUELDO || '',
-        'AÃ±os Ant': e.AÃ‘OS_ANT || 0,
+        'Años Ant': e.AÑOS_ANT || 0,
         '0222 Manejo Fondo': e.FONDO_0222 || '',
         'Venta Combustibles': e.VENTAS || 0,
-        'MÃ©dico': e.MEDICO || 0,
+        'Médico': e.MEDICO || 0,
         'Faltas': e.FALTAS || 0,
         'Suspensiones': e.SUSPENSIONES || 0,
         'Accidente': e.ACCIDENTE || 0,
@@ -564,7 +553,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       const ws = XLSX.utils.json_to_sheet(data);
       XLSX.utils.book_append_sheet(wb, ws, 'Empleados');
       XLSX.writeFile(wb, 'empleados_sinercom.xlsx');
-      showToast('ðŸ“Š Archivo Excel exportado correctamente');
+      showToast('📊 Archivo Excel exportado correctamente');
     }
 
     function importFromExcel(event) {
@@ -580,7 +569,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
           const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
           if (jsonData.length === 0) {
-            showToast('âš ï¸ El archivo estÃ¡ vacÃ­o');
+            showToast('⚠️ El archivo está vacío');
             return;
           }
 
@@ -589,12 +578,12 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
             LEG: parseInt(row['Legajo'] || row['LEG'] || 0),
             CUIL: row['CUIL'] || row['Cuil'] || '',
             FECHA_INGRESO: row['Fecha Ingreso'] || row['FECHA_INGRESO'] || '',
-            CATEGORIA: row['CategorÃ­a'] || row['CATEGORIA'] || '',
+            CATEGORIA: row['Categoría'] || row['CATEGORIA'] || '',
             SUELDO: row['Sueldo / Jornal'] || row['SUELDO'] || '$ 0,00',
-            AÃ‘OS_ANT: parseInt(row['AÃ±os Ant'] || row['AÃ‘OS_ANT'] || 0),
+            AÑOS_ANT: parseInt(row['Años Ant'] || row['AÑOS_ANT'] || 0),
             FONDO_0222: row['0222 Manejo Fondo'] || row['FONDO_0222'] || 'No figura',
             VENTAS: parseFloat(row['Venta Combustibles'] || row['VENTAS'] || 0),
-            MEDICO: parseInt(row['MÃ©dico'] || row['MEDICO'] || 0),
+            MEDICO: parseInt(row['Médico'] || row['MEDICO'] || 0),
             FALTAS: parseInt(row['Faltas'] || row['FALTAS'] || 0),
             SUSPENSIONES: parseInt(row['Suspensiones'] || row['SUSPENSIONES'] || 0),
             ACCIDENTE: parseInt(row['Accidente'] || row['ACCIDENTE'] || 0),
@@ -613,10 +602,10 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
             populateSelect();
             updateCards(selectedIdx);
             renderEditTable();
-            showToast(`ðŸ“‚ ${employees.length} empleados importados correctamente`);
+            showToast(`📂 ${employees.length} empleados importados correctamente`);
           }
         } catch (err) {
-          showToast('âŒ Error al leer el archivo: ' + err.message);
+          showToast('❌ Error al leer el archivo: ' + err.message);
         }
       };
       reader.readAsArrayBuffer(file);
@@ -656,7 +645,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     }
 
     // ============================================================
-    //  INICIALIZAR GRÃFICOS
+    //  INICIALIZAR GRÁFICOS
     // ============================================================
     function initCharts() {
       const filtered = getFilteredEmployees();
@@ -673,7 +662,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
             backgroundColor: filtered.map((_, i) => i === 0 ? '#4A6CF7' : 'rgba(74,108,247,0.2)'),
             borderRadius: 3
           }, {
-            label: 'MÃ©dico',
+            label: 'Médico',
             data: filtered.map(e => e.MEDICO || 0),
             backgroundColor: filtered.map((_, i) => i === 0 ? '#C026D3' : 'rgba(192,38,211,0.2)'),
             borderRadius: 3

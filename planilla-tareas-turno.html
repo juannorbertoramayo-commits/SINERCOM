@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Planilla de gestiÃ³n de tareas - SINERCOM</title>
+    <title>Planilla de gestión de tareas - SINERCOM</title>
     <style>
-        /* --- ESTILOS (idÃ©nticos a la versiÃ³n anterior) --- */
+        /* --- ESTILOS (idénticos a la versión anterior) --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -343,19 +343,8 @@
             .tab-content#tab-historial { display: none !important; }
         }
     </style>
-<style id="sinercom-theme">
-:root { --sinercom-magenta:#DD2FB5; --sinercom-purple:#7A29E6; --sinercom-blue:#2632F0; --sinercom-navy:#021241; --sinercom-border:#e5e2f7; }
-body { background-color:#f7f7ff !important; background-image:radial-gradient(circle at 8% 0%,rgba(221,47,181,.12),transparent 34%),radial-gradient(circle at 92% 8%,rgba(122,41,230,.10),transparent 32%),radial-gradient(circle at 85% 100%,rgba(38,50,240,.09),transparent 36%) !important; color:var(--sinercom-navy) !important; }
-header,.app-header,nav,.navbar,.topbar { background:linear-gradient(125deg,var(--sinercom-navy),#11136a 55%,var(--sinercom-purple)) !important; color:#fff !important; border-bottom-color:var(--sinercom-magenta) !important; }
-button,.btn,a.btn,input[type="submit"],input[type="button"] { border-color:transparent !important; background:linear-gradient(135deg,var(--sinercom-blue),var(--sinercom-purple)) !important; color:#fff !important; }
-button:hover,.btn:hover,a.btn:hover,input[type="submit"]:hover,input[type="button"]:hover { background:linear-gradient(135deg,var(--sinercom-purple),var(--sinercom-magenta)) !important; }
-a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--sinercom-navy); }
-.card,.tool-card,.panel,.container-card,.dashboard-card,section { border-color:var(--sinercom-border) !important; box-shadow:0 10px 28px rgba(2,18,65,.09) !important; }
-.badge,.tag,.chip,.pill { border-color:#e6d5fa !important; }
-.sinercom-brand { position:fixed;top:14px;left:16px;z-index:9999;display:flex;align-items:center;gap:9px;padding:6px 11px 6px 7px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid rgba(221,47,181,.28);box-shadow:0 8px 22px rgba(2,18,65,.16);color:var(--sinercom-navy);font:700 12px/1.1 Arial,sans-serif;letter-spacing:.04em; }
-.sinercom-brand img { width:30px;height:30px;object-fit:cover;border-radius:50%; } @media(max-width:700px){.sinercom-brand{top:8px;left:8px;}}
-</style></head>
-<body><div class="sinercom-brand"><img src="sinercom.jpeg" alt="SINERCOM"><span>SINERCOM</span></div>
+</head>
+<body>
 <div class="container">
 
     <!-- ===== LOGO SINERCOM ===== -->
@@ -365,17 +354,17 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         </div>
     </div>
 
-    <h1>ðŸ“‹ GestiÃ³n de tareas en turno</h1>
+    <h1>📋 Gestión de tareas en turno</h1>
 
-    <!-- Aviso si localStorage no estÃ¡ disponible -->
+    <!-- Aviso si localStorage no está disponible -->
     <div id="avisoStorage" class="aviso-sandbox" style="display:none;">
-        âš ï¸ El almacenamiento local no estÃ¡ disponible en este entorno. Los registros se guardarÃ¡n en memoria y se perderÃ¡n al recargar la pÃ¡gina.
+        ⚠️ El almacenamiento local no está disponible en este entorno. Los registros se guardarán en memoria y se perderán al recargar la página.
     </div>
 
-    <!-- PestaÃ±as -->
+    <!-- Pestañas -->
     <div class="tabs">
-        <button class="tab-btn active" data-tab="tab-planilla">ðŸ“ Planilla</button>
-        <button class="tab-btn" data-tab="tab-historial">ðŸ“‚ Historial (<span id="contadorHistorial">0</span>)</button>
+        <button class="tab-btn active" data-tab="tab-planilla">📝 Planilla</button>
+        <button class="tab-btn" data-tab="tab-historial">📂 Historial (<span id="contadorHistorial">0</span>)</button>
     </div>
 
     <!-- ================= TAB PLANILLA ================= -->
@@ -384,12 +373,12 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
             <!-- Encabezado -->
             <div class="header-grid">
                 <div class="field-group">
-                    <label for="fecha">ðŸ“… Fecha:</label>
+                    <label for="fecha">📅 Fecha:</label>
                     <input type="date" id="fecha" name="fecha" />
                     <span class="reloj" id="relojTiempoReal">--:--:--</span>
                 </div>
                 <div class="field-group">
-                    <label for="coordinador">ðŸ‘¤ Coordinador:</label>
+                    <label for="coordinador">👤 Coordinador:</label>
                     <select id="coordinador" name="coordinador" class="colaborador-select">
                         <option value="">-- Seleccionar --</option>
                     </select>
@@ -399,13 +388,13 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
             <!-- Tabla de tareas -->
             <table class="task-table">
                 <tbody>
-                    <!-- VERIFICACIÃ“N DE NOVEDADES -->
+                    <!-- VERIFICACIÓN DE NOVEDADES -->
                     <tr>
                         <td colspan="2" style="padding:0; border:1px solid #dde3e9;">
                             <table class="checklist-subtable">
-                                <tr><td colspan="2" class="checklist-header">âœ” VerificaciÃ³n de novedades turno anterior:</td></tr>
-                                <tr><td class="item-label">BaÃ±os estaciÃ³n</td><td class="item-check"><input type="checkbox" name="verificacion_banios_estacion" /></td></tr>
-                                <tr><td class="item-label">BaÃ±os transportistas</td><td class="item-check"><input type="checkbox" name="verificacion_banios_transportistas" /></td></tr>
+                                <tr><td colspan="2" class="checklist-header">✔ Verificación de novedades turno anterior:</td></tr>
+                                <tr><td class="item-label">Baños estación</td><td class="item-check"><input type="checkbox" name="verificacion_banios_estacion" /></td></tr>
+                                <tr><td class="item-label">Baños transportistas</td><td class="item-check"><input type="checkbox" name="verificacion_banios_transportistas" /></td></tr>
                                 <tr><td class="item-label">Veredas</td><td class="item-check"><input type="checkbox" name="verificacion_veredas" /></td></tr>
                                 <tr><td class="item-label">Surtidores</td><td class="item-check"><input type="checkbox" name="verificacion_surtidores" /></td></tr>
                                 <tr><td class="item-label">Cestos</td><td class="item-check"><input type="checkbox" name="verificacion_cestos" /></td></tr>
@@ -420,19 +409,19 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
                     <!-- OBSERVACIONES -->
                     <tr>
                         <td class="label-cell" style="vertical-align:top; background:#f9fafb;">
-                            <strong>ðŸ“ OBSERVACIONES:</strong>
+                            <strong>📝 OBSERVACIONES:</strong>
                         </td>
                         <td class="field-cell" style="padding:6px 10px;">
-                            <textarea name="observaciones" class="observaciones-area" placeholder="Escriba aquÃ­ las observaciones..."></textarea>
+                            <textarea name="observaciones" class="observaciones-area" placeholder="Escriba aquí las observaciones..."></textarea>
                         </td>
                     </tr>
 
-                    <!-- LIMPIEZA DE BAÃ‘OS -->
-                    <tr><td class="label-cell">ðŸ§¹ Limpieza de baÃ±os.</td><td class="field-cell checkbox-cell"><input type="checkbox" name="limpieza_banios" /></td></tr>
+                    <!-- LIMPIEZA DE BAÑOS -->
+                    <tr><td class="label-cell">🧹 Limpieza de baños.</td><td class="field-cell checkbox-cell"><input type="checkbox" name="limpieza_banios" /></td></tr>
                     
                     <!-- RONDA -->
                     <tr>
-                        <td class="label-cell">ðŸ”„ Ronda:</td>
+                        <td class="label-cell">🔄 Ronda:</td>
                         <td class="field-cell">
                             <div class="ronda-selects">
                                 <div class="ronda-item">
@@ -464,21 +453,21 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
                     </tr>
 
                     <!-- TAREAS DIARIAS -->
-                    <tr><td class="label-cell">ðŸ–ï¸ Barrido de playa</td><td class="field-cell"><select name="barrido_playa" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
-                    <tr><td class="label-cell">ðŸš¶ Barrido de vereda perimetral y sector de inflado</td><td class="field-cell"><select name="barrido_vereda" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
-                    <tr><td class="label-cell">ðŸ‘€ Recorrida predio</td><td class="field-cell"><select name="recorrida_predio" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
-                    <tr><td class="label-cell">ðŸ—‘ï¸ Retiro basura de cestos en predio y surtidores <span class="parentesis">(una vez por turno)</span></td><td class="field-cell"><select name="retiro_basura" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
-                    <tr><td class="label-cell">ðŸš» Repaso baÃ±os transportistas <span class="parentesis">(fin de cada turno)</span></td><td class="field-cell"><select name="repaso_banios_transportistas" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <tr><td class="label-cell">🏖️ Barrido de playa</td><td class="field-cell"><select name="barrido_playa" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <tr><td class="label-cell">🚶 Barrido de vereda perimetral y sector de inflado</td><td class="field-cell"><select name="barrido_vereda" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <tr><td class="label-cell">👀 Recorrida predio</td><td class="field-cell"><select name="recorrida_predio" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <tr><td class="label-cell">🗑️ Retiro basura de cestos en predio y surtidores <span class="parentesis">(una vez por turno)</span></td><td class="field-cell"><select name="retiro_basura" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <tr><td class="label-cell">🚻 Repaso baños transportistas <span class="parentesis">(fin de cada turno)</span></td><td class="field-cell"><select name="repaso_banios_transportistas" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
 
-                    <!-- TURNO NOCHE (todos los dÃ­as) -->
-                    <tr><td class="label-cell">ðŸ’¡ Cenefa Spot <span class="parentesis">(todos los dÃ­as turno noche)</span></td><td class="field-cell"><select name="cenefa_spot" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
-                    <tr><td class="label-cell">â›½ Limpieza de surtidores <span class="parentesis">(todos los dÃ­as turno noche)</span></td><td class="field-cell"><select name="limpieza_surtidores" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <!-- TURNO NOCHE (todos los días) -->
+                    <tr><td class="label-cell">💡 Cenefa Spot <span class="parentesis">(todos los días turno noche)</span></td><td class="field-cell"><select name="cenefa_spot" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <tr><td class="label-cell">⛽ Limpieza de surtidores <span class="parentesis">(todos los días turno noche)</span></td><td class="field-cell"><select name="limpieza_surtidores" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
 
-                    <!-- DÃAS ESPECÃFICOS -->
-                    <tr><td class="label-cell">ðŸ›¢ï¸ Limpieza de Boca de Tanques y mediciÃ³n <span class="parentesis">(Martes por la noche)</span></td><td class="field-cell"><select name="limpieza_boca_tanques" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
-                    <tr><td class="label-cell">ðŸ”§ Limpieza rejillas perimetrales <span class="parentesis">(miÃ©rcoles turno noche)</span></td><td class="field-cell"><select name="limpieza_rejillas" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
-                    <tr><td class="label-cell">ðŸ¢ Limpieza oficina <span class="parentesis">(lunes turno noche)</span></td><td class="field-cell"><select name="limpieza_oficina" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
-                    <tr><td class="label-cell">ðŸªµ Deck <span class="parentesis">(Domingos y Viernes Turno Noche)</span></td><td class="field-cell"><select name="deck_domingos_viernes" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <!-- DÍAS ESPECÍFICOS -->
+                    <tr><td class="label-cell">🛢️ Limpieza de Boca de Tanques y medición <span class="parentesis">(Martes por la noche)</span></td><td class="field-cell"><select name="limpieza_boca_tanques" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <tr><td class="label-cell">🔧 Limpieza rejillas perimetrales <span class="parentesis">(miércoles turno noche)</span></td><td class="field-cell"><select name="limpieza_rejillas" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <tr><td class="label-cell">🏢 Limpieza oficina <span class="parentesis">(lunes turno noche)</span></td><td class="field-cell"><select name="limpieza_oficina" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
+                    <tr><td class="label-cell">🪵 Deck <span class="parentesis">(Domingos y Viernes Turno Noche)</span></td><td class="field-cell"><select name="deck_domingos_viernes" class="colaborador-select"><option value="">-- Realizado por --</option></select></td></tr>
 
                     <!-- RECEPTOR -->
                     <tr class="receptor-row"><td class="label-cell"><strong>Receptor:</strong></td>
@@ -491,15 +480,15 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
             <!-- Hora final -->
             <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
                 <div class="campo-hora-final">
-                    <span>â±ï¸ Hora de finalizaciÃ³n:</span>
+                    <span>⏱️ Hora de finalización:</span>
                     <span id="horaFinalDisplay">(al guardar)</span>
                 </div>
             </div>
 
             <!-- Botones -->
             <div class="actions">
-                <button type="reset" class="btn">ðŸ—‘ï¸ Limpiar</button>
-                <button type="button" class="btn btn-success" id="btnGuardar">âœ… Guardar turno</button>
+                <button type="reset" class="btn">🗑️ Limpiar</button>
+                <button type="button" class="btn btn-success" id="btnGuardar">✅ Guardar turno</button>
             </div>
         </form>
     </div>
@@ -507,11 +496,11 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     <!-- ================= TAB HISTORIAL ================= -->
     <div id="tab-historial" class="tab-content">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-            <h2 style="margin:0;">ðŸ“œ Registros guardados</h2>
-            <button class="btn btn-warning" id="btnDescartarTodos">ðŸ“¥ Descartar todos los informes</button>
+            <h2 style="margin:0;">📜 Registros guardados</h2>
+            <button class="btn btn-warning" id="btnDescartarTodos">📥 Descartar todos los informes</button>
         </div>
         <div id="historialContainer">
-            <p style="color:#64748b;">No hay registros guardados aÃºn.</p>
+            <p style="color:#64748b;">No hay registros guardados aún.</p>
         </div>
     </div>
 
@@ -519,7 +508,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     <div class="modal-overlay" id="modalDetalle">
         <div class="modal-box">
             <button class="close-btn" id="modalCerrar">&times;</button>
-            <h2>ðŸ“„ Detalle del turno</h2>
+            <h2>📄 Detalle del turno</h2>
             <div id="modalContenido"></div>
         </div>
     </div>
@@ -566,7 +555,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         document.getElementById('fecha').value = `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,'0')}-${String(h.getDate()).padStart(2,'0')}`;
     }
 
-    // ========== GESTIÃ“N DEL HISTORIAL CON FALLBACK ==========
+    // ========== GESTIÓN DEL HISTORIAL CON FALLBACK ==========
     let memoriaRegistros = []; // respaldo en memoria
 
     function isLocalStorageAvailable() {
@@ -618,7 +607,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         const container = document.getElementById('historialContainer');
         const registros = getHistorial();
         if (registros.length === 0) {
-            container.innerHTML = '<p style="color:#64748b;">No hay registros guardados aÃºn.</p>';
+            container.innerHTML = '<p style="color:#64748b;">No hay registros guardados aún.</p>';
             return;
         }
         let html = `<table class="historial-table">
@@ -670,7 +659,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
 
     // ========== ELIMINAR REGISTRO INDIVIDUAL ==========
     function eliminarRegistro(idx) {
-        if (!confirm('Â¿Eliminar este registro?')) return;
+        if (!confirm('¿Eliminar este registro?')) return;
         let registros = getHistorial();
         registros.splice(idx, 1);
         setHistorial(registros);
@@ -688,11 +677,11 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         if (clave === null) return;
 
         if (clave !== 'admin123') {
-            alert('âŒ Clave incorrecta. No se pueden descartar los informes.');
+            alert('❌ Clave incorrecta. No se pueden descartar los informes.');
             return;
         }
 
-        if (!confirm(`Se descargarÃ¡ un archivo .txt con ${registros.length} registro(s) y luego se eliminarÃ¡n del historial. Â¿Continuar?`)) {
+        if (!confirm(`Se descargará un archivo .txt con ${registros.length} registro(s) y luego se eliminarán del historial. ¿Continuar?`)) {
             return;
         }
 
@@ -719,7 +708,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         URL.revokeObjectURL(url);
 
         setHistorial([]);
-        alert('âœ… Todos los registros han sido descartados y el archivo .txt se ha descargado.');
+        alert('✅ Todos los registros han sido descartados y el archivo .txt se ha descargado.');
     });
 
     // ========== GUARDAR NUEVO REGISTRO ==========
@@ -732,7 +721,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         document.getElementById('horaFinal').value = horaFinalStr;
         document.getElementById('horaFinalDisplay').textContent = horaFinalStr;
 
-        const getCheck = (name) => formData.get(name) === 'on' ? 'âœ…' : 'âŒ';
+        const getCheck = (name) => formData.get(name) === 'on' ? '✅' : '❌';
 
         const registro = {
             id: Date.now(),
@@ -773,11 +762,11 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         historial.push(registro);
         setHistorial(historial);
 
-        alert(`âœ… Turno guardado correctamente en el historial.`);
+        alert(`✅ Turno guardado correctamente en el historial.`);
         document.querySelector('[data-tab="tab-historial"]').click();
     });
 
-    // ========== CAMBIO DE PESTAÃ‘AS ==========
+    // ========== CAMBIO DE PESTAÑAS ==========
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));

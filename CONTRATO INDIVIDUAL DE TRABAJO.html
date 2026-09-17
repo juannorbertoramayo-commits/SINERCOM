@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -82,14 +82,14 @@
       border-radius: 2px;
       display: inline-block;
       font-weight: 500;
-      border-bottom: 1px dashed #b8860b; /* â† lÃ­nea punteada en pantalla */
+      border-bottom: 1px dashed #b8860b; /* ← línea punteada en pantalla */
       color: #1e1e1e;
       min-width: 60px;
     }
-    /* --- MODO PDF: sin amarillo Y SIN LÃNEA INFERIOR --- */
+    /* --- MODO PDF: sin amarillo Y SIN LÍNEA INFERIOR --- */
     .pdf-mode .empty-field {
       background-color: transparent !important;
-      border-bottom: none !important; /* â† ELIMINA LA LÃNEA */
+      border-bottom: none !important; /* ← ELIMINA LA LÍNEA */
     }
     .empty-field-sm { min-width: 50px; }
     .empty-field-md { min-width: 120px; }
@@ -115,7 +115,7 @@
       width: 100%;
     }
     .firma-item span { font-size: 0.8rem; }
-    /* --- BOTÃ“N --- */
+    /* --- BOTÓN --- */
     .btn-pdf {
       background: #1a3a5c;
       color: white;
@@ -148,19 +148,8 @@
       .firma-item { width: 100%; }
     }
   </style>
-<style id="sinercom-theme">
-:root { --sinercom-magenta:#DD2FB5; --sinercom-purple:#7A29E6; --sinercom-blue:#2632F0; --sinercom-navy:#021241; --sinercom-border:#e5e2f7; }
-body { background-color:#f7f7ff !important; background-image:radial-gradient(circle at 8% 0%,rgba(221,47,181,.12),transparent 34%),radial-gradient(circle at 92% 8%,rgba(122,41,230,.10),transparent 32%),radial-gradient(circle at 85% 100%,rgba(38,50,240,.09),transparent 36%) !important; color:var(--sinercom-navy) !important; }
-header,.app-header,nav,.navbar,.topbar { background:linear-gradient(125deg,var(--sinercom-navy),#11136a 55%,var(--sinercom-purple)) !important; color:#fff !important; border-bottom-color:var(--sinercom-magenta) !important; }
-button,.btn,a.btn,input[type="submit"],input[type="button"] { border-color:transparent !important; background:linear-gradient(135deg,var(--sinercom-blue),var(--sinercom-purple)) !important; color:#fff !important; }
-button:hover,.btn:hover,a.btn:hover,input[type="submit"]:hover,input[type="button"]:hover { background:linear-gradient(135deg,var(--sinercom-purple),var(--sinercom-magenta)) !important; }
-a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--sinercom-navy); }
-.card,.tool-card,.panel,.container-card,.dashboard-card,section { border-color:var(--sinercom-border) !important; box-shadow:0 10px 28px rgba(2,18,65,.09) !important; }
-.badge,.tag,.chip,.pill { border-color:#e6d5fa !important; }
-.sinercom-brand { position:fixed;top:14px;left:16px;z-index:9999;display:flex;align-items:center;gap:9px;padding:6px 11px 6px 7px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid rgba(221,47,181,.28);box-shadow:0 8px 22px rgba(2,18,65,.16);color:var(--sinercom-navy);font:700 12px/1.1 Arial,sans-serif;letter-spacing:.04em; }
-.sinercom-brand img { width:30px;height:30px;object-fit:cover;border-radius:50%; } @media(max-width:700px){.sinercom-brand{top:8px;left:8px;}}
-</style></head>
-<body><div class="sinercom-brand"><img src="sinercom.jpeg" alt="SINERCOM"><span>SINERCOM</span></div>
+</head>
+<body>
 
 <div class="contract-container" id="contract-content">
 
@@ -169,30 +158,30 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     <div class="header-logo">
       <div class="logo-text">
         SINERCOM
-        <small>energÃ­as que potencian</small>
+        <small>energías que potencian</small>
       </div>
       <div class="cuit">
         <strong>CUIT:</strong> <span class="empty-field empty-field-sm">30-71426416-4</span>
       </div>
     </div>
 
-    <h1>CONTRATO INDIVIDUAL DE TRABAJO CON PERÃODO DE PRUEBA <br><span>ART. 92 BIS, LEY 20.744</span></h1>
+    <h1>CONTRATO INDIVIDUAL DE TRABAJO CON PERÍODO DE PRUEBA <br><span>ART. 92 BIS, LEY 20.744</span></h1>
 
-    <p><strong>PRELIMINAR</strong> <em>(A- PARTES)</em> Entre <strong>SINERCOM SRL</strong> CUIT <span class="empty-field">30-71426416-4</span>, con domicilio en <span class="empty-field empty-field-md">Habegger NÂ° 511</span> de la ciudad de <span class="empty-field">Reconquista</span>, provincia de Santa Fe, en adelante EL EMPLEADOR, inscripto en el AFIP -- DGI bajo <strong>CUIT NÂ° <span class="empty-field">30-71426416-4</span>.</strong> y el Srta. <span class="empty-field empty-field-lg">YOST BIANCA MARIA DE LOS MILAGROS</span>, DNI NÂº <span class="empty-field">47208606</span> CUIL NÂº <span class="empty-field">27-47208606-0</span> con domicilio en calle <span class="empty-field empty-field-md">25 DE MAYO NÂ° 1191</span> de la LOCALIDAD DE <span class="empty-field">SAN AGUSTIN</span>, Provincia de Santa Fe, llamado EL EMPLEADO, celebran este <strong>CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO INDETERMINADO CON PERÃODO DE PRUEBA</strong>, en los tÃ©rminos de los art. 92 bis de la ley 20.744, reformados por las leyes 24.465 y 25.250, 25.877 y demÃ¡s normas laborales y supletoriamente a las declaraciones y estipulaciones siguientes:</p>
+    <p><strong>PRELIMINAR</strong> <em>(A- PARTES)</em> Entre <strong>SINERCOM SRL</strong> CUIT <span class="empty-field">30-71426416-4</span>, con domicilio en <span class="empty-field empty-field-md">Habegger N° 511</span> de la ciudad de <span class="empty-field">Reconquista</span>, provincia de Santa Fe, en adelante EL EMPLEADOR, inscripto en el AFIP -- DGI bajo <strong>CUIT N° <span class="empty-field">30-71426416-4</span>.</strong> y el Srta. <span class="empty-field empty-field-lg">YOST BIANCA MARIA DE LOS MILAGROS</span>, DNI Nº <span class="empty-field">47208606</span> CUIL Nº <span class="empty-field">27-47208606-0</span> con domicilio en calle <span class="empty-field empty-field-md">25 DE MAYO N° 1191</span> de la LOCALIDAD DE <span class="empty-field">SAN AGUSTIN</span>, Provincia de Santa Fe, llamado EL EMPLEADO, celebran este <strong>CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO INDETERMINADO CON PERÍODO DE PRUEBA</strong>, en los términos de los art. 92 bis de la ley 20.744, reformados por las leyes 24.465 y 25.250, 25.877 y demás normas laborales y supletoriamente a las declaraciones y estipulaciones siguientes:</p>
 
-    <p><strong>PRIMERA</strong> <em>(I- OBJETO)</em> El EMPLEADOR contrata al EMPLEADO para realizar las tareas siguientes: <span class="empty-field empty-field-lg">OPERARIO DE SHOP</span> (susceptible de modificaciÃ³n que no implique un cambio sustancial) y su actividad se regirÃ¡ por el Convenio Colectivo de Trabajo NÂº <span class="empty-field">345/2002</span>.</p>
+    <p><strong>PRIMERA</strong> <em>(I- OBJETO)</em> El EMPLEADOR contrata al EMPLEADO para realizar las tareas siguientes: <span class="empty-field empty-field-lg">OPERARIO DE SHOP</span> (susceptible de modificación que no implique un cambio sustancial) y su actividad se regirá por el Convenio Colectivo de Trabajo Nº <span class="empty-field">345/2002</span>.</p>
 
-    <p><strong>SEGUNDA</strong> <em>(II- PLAZO)</em> <strong>a)</strong> El plazo contractual serÃ¡ indeterminado, pero regirÃ¡ el perÃ­odo de prueba previsto en el artÃ­culo 92 bis de la ley 20.744, con las reformas de las leyes 24.465, 25.250 y 25.877. <strong>b)</strong> Durante el periodo de prueba, es decir <span class="empty-field">3 meses</span> desde el inicio de la relaciÃ³n laboral cualquiera de las partes y de acuerdo al art. 2 de la Ley 25.877 modificatoria del art. 92 bis de la LCT, podrÃ¡ rescindir el contrato de trabajo sin expresiÃ³n de causa alguna y sin derecho a indemnizaciÃ³n por antigÃ¼edad.</p>
+    <p><strong>SEGUNDA</strong> <em>(II- PLAZO)</em> <strong>a)</strong> El plazo contractual será indeterminado, pero regirá el período de prueba previsto en el artículo 92 bis de la ley 20.744, con las reformas de las leyes 24.465, 25.250 y 25.877. <strong>b)</strong> Durante el periodo de prueba, es decir <span class="empty-field">3 meses</span> desde el inicio de la relación laboral cualquiera de las partes y de acuerdo al art. 2 de la Ley 25.877 modificatoria del art. 92 bis de la LCT, podrá rescindir el contrato de trabajo sin expresión de causa alguna y sin derecho a indemnización por antigüedad.</p>
 
-    <p><strong>TERCERA</strong> <em>(III- JORNADA Y LUGAR DE TRABAJO)</em> La jornada laboral tendrÃ¡ <span class="empty-field">8</span> horas, y se desarrollarÃ¡ en Calle <span class="empty-field empty-field-lg">AUTOVIA 19 Y ACCESO A SAN AGUSTIN</span> de la ciudad de <span class="empty-field">SANTA FE</span>, <strong>pudiendo modificarse a opciÃ³n del EMPLEADOR segÃºn las necesidades laborales lo requieran.</strong></p>
+    <p><strong>TERCERA</strong> <em>(III- JORNADA Y LUGAR DE TRABAJO)</em> La jornada laboral tendrá <span class="empty-field">8</span> horas, y se desarrollará en Calle <span class="empty-field empty-field-lg">AUTOVIA 19 Y ACCESO A SAN AGUSTIN</span> de la ciudad de <span class="empty-field">SANTA FE</span>, <strong>pudiendo modificarse a opción del EMPLEADOR según las necesidades laborales lo requieran.</strong></p>
 
-    <p><strong>CUARTA</strong> <em>(IV- SALARIO)</em> La remuneraciÃ³n mensual bruta <em>(antes de los descuentos), <strong>y dejando a salvo futuras modificaciones</strong>,</em> serÃ¡ de pesos <span class="empty-field empty-field-lg">UN MILLON DOSCIENTOS SESENTA MIL QUINIENTOS VEINTISIETE ($ 1.260.527)</span>, a cobrar por mes vencido.</p>
+    <p><strong>CUARTA</strong> <em>(IV- SALARIO)</em> La remuneración mensual bruta <em>(antes de los descuentos), <strong>y dejando a salvo futuras modificaciones</strong>,</em> será de pesos <span class="empty-field empty-field-lg">UN MILLON DOSCIENTOS SESENTA MIL QUINIENTOS VEINTISIETE ($ 1.260.527)</span>, a cobrar por mes vencido.</p>
 
-    <p><strong>QUINTA</strong> <em>(V- DATOS PERSONALES)</em> <strong>a)</strong> El empleado denuncia en este acto con carÃ¡cter de declaraciÃ³n jurada sus datos personales: Nacionalidad <span class="empty-field">argentino</span>, Sexo <span class="empty-field">femenino</span>, edad <span class="empty-field">19</span> aÃ±os, Documento <span class="empty-field">47208606</span> (DNI, <del>LC, LE</del>), Fecha de nacimiento <span class="empty-field">23/03/2006</span> domicilio calle <span class="empty-field empty-field-md">25 DE MAYO NÂ° 1191</span> de la LOCALIDAD DE <span class="empty-field">SAN AGUSTIN</span>, TelÃ©fono <span class="empty-field">(342) 6981152</span> Hija de <span class="empty-field empty-field-md">YOST ANGEL DANIEL</span> Y <span class="empty-field empty-field-md">ESPINDOLA DEOLINDA ISABEL</span> <strong>b)</strong> El trabajador deberÃ¡ presentar y entregar la documentaciÃ³n legalmente necesaria que se archivarÃ¡ en su legajo personal. <strong>c)</strong> Por otra parte asume especialmente el compromiso de actualizar los datos que se modificaren, de lo contrario serÃ¡n plenamente eficaces cualesquiera notificaciones en los domicilios y con los datos consignados en el presente.</p>
+    <p><strong>QUINTA</strong> <em>(V- DATOS PERSONALES)</em> <strong>a)</strong> El empleado denuncia en este acto con carácter de declaración jurada sus datos personales: Nacionalidad <span class="empty-field">argentino</span>, Sexo <span class="empty-field">femenino</span>, edad <span class="empty-field">19</span> años, Documento <span class="empty-field">47208606</span> (DNI, <del>LC, LE</del>), Fecha de nacimiento <span class="empty-field">23/03/2006</span> domicilio calle <span class="empty-field empty-field-md">25 DE MAYO N° 1191</span> de la LOCALIDAD DE <span class="empty-field">SAN AGUSTIN</span>, Teléfono <span class="empty-field">(342) 6981152</span> Hija de <span class="empty-field empty-field-md">YOST ANGEL DANIEL</span> Y <span class="empty-field empty-field-md">ESPINDOLA DEOLINDA ISABEL</span> <strong>b)</strong> El trabajador deberá presentar y entregar la documentación legalmente necesaria que se archivará en su legajo personal. <strong>c)</strong> Por otra parte asume especialmente el compromiso de actualizar los datos que se modificaren, de lo contrario serán plenamente eficaces cualesquiera notificaciones en los domicilios y con los datos consignados en el presente.</p>
 
-    <p><strong>SEXTA</strong> <em>(VI- DOMICILIOS)</em> Los domicilios declarados precedentemente tienen carÃ¡cter de declaraciÃ³n jurada y mientras no sean modificados eficazmente -- denuncia por escrito ante empleador - serÃ¡n eficaces a los efectos de cualesquiera notificaciones. Asimismo a partir de la segunda notificaciÃ³n serÃ¡ plenamente valido el domicilio alternativo denunciado.</p>
+    <p><strong>SEXTA</strong> <em>(VI- DOMICILIOS)</em> Los domicilios declarados precedentemente tienen carácter de declaración jurada y mientras no sean modificados eficazmente -- denuncia por escrito ante empleador - serán eficaces a los efectos de cualesquiera notificaciones. Asimismo a partir de la segunda notificación será plenamente valido el domicilio alternativo denunciado.</p>
 
-    <p><strong>SÃ‰PTIMA</strong> <em>(VII- VIGENCIA)</em> El presente contrato comenzarÃ¡ su vigencia en la fecha <span class="empty-field">07/01/2026</span> rigiendo el periodo de prueba -- Art. 92 bis LCT - hasta fecha <span class="empty-field">07/07/2026</span> plazo en el cual cualquiera de las partes y de acuerdo al art. 2 de la Ley 25.877 modificatoria del art. 92 bis de la LCT, podrÃ¡ rescindir el contrato de trabajo sin expresiÃ³n de causa alguna y sin derecho a indemnizaciÃ³n por antigÃ¼edad.</p>
+    <p><strong>SÉPTIMA</strong> <em>(VII- VIGENCIA)</em> El presente contrato comenzará su vigencia en la fecha <span class="empty-field">07/01/2026</span> rigiendo el periodo de prueba -- Art. 92 bis LCT - hasta fecha <span class="empty-field">07/07/2026</span> plazo en el cual cualquiera de las partes y de acuerdo al art. 2 de la Ley 25.877 modificatoria del art. 92 bis de la LCT, podrá rescindir el contrato de trabajo sin expresión de causa alguna y sin derecho a indemnización por antigüedad.</p>
 
     <p><strong>OCTAVA</strong> <em>(IX- LUGAR Y FECHA)</em> Celebrado en la ciudad de <span class="empty-field">SANTA FE</span>, provincia Santa Fe a los <span class="empty-field">07</span> DIAS DEL MES DE <span class="empty-field">ENERO</span> DE <span class="empty-field">2026</span></p>
 
@@ -201,14 +190,14 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
   <!-- FIRMAS -->
   <div class="firma-section">
     <div class="firma-item"><div class="line"></div><span><strong>Firma</strong></span></div>
-    <div class="firma-item"><div class="line"></div><span><strong>AclaraciÃ³n</strong></span></div>
+    <div class="firma-item"><div class="line"></div><span><strong>Aclaración</strong></span></div>
     <div class="firma-item"><div class="line"></div><span><strong>DNI</strong></span></div>
   </div>
 
 </div>
 
-<button class="btn-pdf" id="downloadPdfBtn">ðŸ“„ Guardar como PDF</button>
-<p class="note">ðŸ’¡ Los campos en amarillo son editables en la pantalla. En el PDF se verÃ¡n sin sombreado ni lÃ­nea inferior.</p>
+<button class="btn-pdf" id="downloadPdfBtn">📄 Guardar como PDF</button>
+<p class="note">💡 Los campos en amarillo son editables en la pantalla. En el PDF se verán sin sombreado ni línea inferior.</p>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -219,10 +208,10 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     const contractElement = document.getElementById('contract-content');
 
     downloadBtn.addEventListener('click', function() {
-      downloadBtn.textContent = 'â³ Generando PDF...';
+      downloadBtn.textContent = '⏳ Generando PDF...';
       downloadBtn.disabled = true;
 
-      // ðŸ”¥ Activamos el modo PDF (quita amarillo y lÃ­nea inferior)
+      // 🔥 Activamos el modo PDF (quita amarillo y línea inferior)
       contractElement.classList.add('pdf-mode');
 
       html2canvas(contractElement, {
@@ -236,7 +225,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         windowWidth: contractElement.scrollWidth,
         windowHeight: contractElement.scrollHeight
       }).then((canvas) => {
-        // ðŸ”¥ Quitamos el modo PDF para que la pantalla siga con amarillo
+        // 🔥 Quitamos el modo PDF para que la pantalla siga con amarillo
         contractElement.classList.remove('pdf-mode');
 
         const imgData = canvas.toDataURL('image/jpeg', 0.98);
@@ -263,12 +252,12 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         pdf.addImage(imgData, 'JPEG', x, y, finalWidth, finalHeight);
         pdf.save('Contrato_de_Trabajo_Periodo_Prueba.pdf');
 
-        downloadBtn.textContent = 'ðŸ“„ Guardar como PDF';
+        downloadBtn.textContent = '📄 Guardar como PDF';
         downloadBtn.disabled = false;
       }).catch((err) => {
         contractElement.classList.remove('pdf-mode');
         console.error('Error:', err);
-        downloadBtn.textContent = 'ðŸ“„ Guardar como PDF';
+        downloadBtn.textContent = '📄 Guardar como PDF';
         downloadBtn.disabled = false;
         alert('Error al generar el PDF. Intenta nuevamente.');
       });

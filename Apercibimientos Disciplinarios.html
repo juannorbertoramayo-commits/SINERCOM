@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Apercibimientos â€” Tiendas Spot</title>
+<title>Apercibimientos — Tiendas Spot</title>
 <style>
   :root{
     --ink:#16202e;
@@ -79,7 +79,7 @@
   }
   .status-msg.show{opacity:1;}
 
-  /* ---------- PESTAÃ‘AS ---------- */
+  /* ---------- PESTAÑAS ---------- */
   .tabs{
     display:flex; gap:8px; flex-wrap:wrap;
     padding:18px 22px 0;
@@ -229,7 +229,7 @@
     display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
   }
 
-  /* ---------- MODO EDICIÃ“N ---------- */
+  /* ---------- MODO EDICIÓN ---------- */
   [data-field]{
     border-radius:4px;
     transition:background .15s, box-shadow .15s;
@@ -439,7 +439,7 @@
     .hist-motivo{max-width:180px;}
   }
 
-  /* ---------- IMPRESIÃ“N ---------- */
+  /* ---------- IMPRESIÓN ---------- */
   @page{ size:A4; margin:16mm; }
 
   @media print{
@@ -469,19 +469,8 @@
     }
   }
 </style>
-<style id="sinercom-theme">
-:root { --sinercom-magenta:#DD2FB5; --sinercom-purple:#7A29E6; --sinercom-blue:#2632F0; --sinercom-navy:#021241; --sinercom-border:#e5e2f7; }
-body { background-color:#f7f7ff !important; background-image:radial-gradient(circle at 8% 0%,rgba(221,47,181,.12),transparent 34%),radial-gradient(circle at 92% 8%,rgba(122,41,230,.10),transparent 32%),radial-gradient(circle at 85% 100%,rgba(38,50,240,.09),transparent 36%) !important; color:var(--sinercom-navy) !important; }
-header,.app-header,nav,.navbar,.topbar { background:linear-gradient(125deg,var(--sinercom-navy),#11136a 55%,var(--sinercom-purple)) !important; color:#fff !important; border-bottom-color:var(--sinercom-magenta) !important; }
-button,.btn,a.btn,input[type="submit"],input[type="button"] { border-color:transparent !important; background:linear-gradient(135deg,var(--sinercom-blue),var(--sinercom-purple)) !important; color:#fff !important; }
-button:hover,.btn:hover,a.btn:hover,input[type="submit"]:hover,input[type="button"]:hover { background:linear-gradient(135deg,var(--sinercom-purple),var(--sinercom-magenta)) !important; }
-a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--sinercom-navy); }
-.card,.tool-card,.panel,.container-card,.dashboard-card,section { border-color:var(--sinercom-border) !important; box-shadow:0 10px 28px rgba(2,18,65,.09) !important; }
-.badge,.tag,.chip,.pill { border-color:#e6d5fa !important; }
-.sinercom-brand { position:fixed;top:14px;left:16px;z-index:9999;display:flex;align-items:center;gap:9px;padding:6px 11px 6px 7px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid rgba(221,47,181,.28);box-shadow:0 8px 22px rgba(2,18,65,.16);color:var(--sinercom-navy);font:700 12px/1.1 Arial,sans-serif;letter-spacing:.04em; }
-.sinercom-brand img { width:30px;height:30px;object-fit:cover;border-radius:50%; } @media(max-width:700px){.sinercom-brand{top:8px;left:8px;}}
-</style></head>
-<body><div class="sinercom-brand"><img src="sinercom.jpeg" alt="SINERCOM"><span>SINERCOM</span></div>
+</head>
+<body>
 
 <!-- ================= BARRA SUPERIOR ================= -->
 <header class="topbar">
@@ -489,22 +478,22 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     <span class="dot"></span>
     <div>
       Apercibimientos Disciplinarios
-      <small>Tiendas Spot Â· Santa Fe</small>
+      <small>Tiendas Spot · Santa Fe</small>
     </div>
   </h1>
 
   <div class="topbar-actions">
-    <span class="status-msg" id="statusMsg">âœ“ Cambios guardados</span>
+    <span class="status-msg" id="statusMsg">✓ Cambios guardados</span>
 
-    <button class="btn warn" id="btnEditar">âœï¸ Editar</button>
-    <button class="btn ok"   id="btnGuardar" hidden>ðŸ’¾ Guardar</button>
-    <button class="btn ghost" id="btnCancelar" hidden>âœ– Cancelar</button>
+    <button class="btn warn" id="btnEditar">✏️ Editar</button>
+    <button class="btn ok"   id="btnGuardar" hidden>💾 Guardar</button>
+    <button class="btn ghost" id="btnCancelar" hidden>✖ Cancelar</button>
 
-    <button class="btn" onclick="window.print()">ðŸ–¨ Imprimir / PDF</button>
+    <button class="btn" onclick="window.print()">🖨 Imprimir / PDF</button>
   </div>
 </header>
 
-<!-- ================= PESTAÃ‘AS ================= -->
+<!-- ================= PESTAÑAS ================= -->
 <nav class="tabs" id="tabs">
   <button class="tab active" data-target="p-apercibimiento">Apercibimiento</button>
   <button class="tab" data-target="p-historial">
@@ -517,7 +506,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
 <div class="wrap">
 
   <!-- ============================================================
-       PANEL GENERAL â€” APERCIBIMIENTO
+       PANEL GENERAL — APERCIBIMIENTO
   ============================================================= -->
   <section class="panel active" id="p-apercibimiento">
 
@@ -525,15 +514,15 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       <label>
         Cargar datos de:
         <select id="selEmpleado">
-          <option value="">â€” Seleccionar empleado â€”</option>
+          <option value="">— Seleccionar empleado —</option>
         </select>
       </label>
 
       <button class="btn-reg" id="btnRegistrar" title="Guardar el apercibimiento en el historial">
-        ðŸ“‹ Registrar en historial
+        📋 Registrar en historial
       </button>
 
-      <span class="hint" id="toolbarHint">PresionÃ¡ â€œEditarâ€ para modificar el texto.</span>
+      <span class="hint" id="toolbarHint">Presioná “Editar” para modificar el texto.</span>
     </div>
 
     <div class="sheet" id="hoja">
@@ -541,11 +530,11 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       <div class="membrete">
         <div class="marca">
           Tiendas Spot
-          <span>EstaciÃ³n de Servicio Â· Santa Fe</span>
+          <span>Estación de Servicio · Santa Fe</span>
         </div>
         <div class="lugar">
           <div data-field="lugar">Santa Fe, 14 de septiembre de 2026</div>
-          <div data-field="direccion">3000 â€“ Santa Fe â€“ Santa Fe</div>
+          <div data-field="direccion">3000 – Santa Fe – Santa Fe</div>
         </div>
       </div>
 
@@ -562,25 +551,25 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         </div>
         <div class="campo">
           <strong>Fecha del hecho</strong>
-          <span data-field="fechaHecho">14/09/2026 â€” Turno matutino</span>
+          <span data-field="fechaHecho">14/09/2026 — Turno matutino</span>
         </div>
       </div>
 
       <div class="cuerpo">
         <p data-field="parrafo1">
           Por medio de la presente, se le comunica que se la <strong>apercibe</strong> debido a que,
-          el dÃ­a <strong>14/09/2026</strong> durante el turno matutino, usted no respetÃ³ el protocolo
-          de atenciÃ³n al cliente y las normas internas de la empresa.
+          el día <strong>14/09/2026</strong> durante el turno matutino, usted no respetó el protocolo
+          de atención al cliente y las normas internas de la empresa.
         </p>
 
         <div class="hecho" data-field="hecho">
-          Se constatÃ³, mediante registros fÃ­lmicos, el uso de <strong>celular personal en horario
-          laboral y en zona de mostrador</strong>, lo que generÃ³ un malestar en los clientes que
-          hacÃ­an fila para ser atendidos, afectando la imagen de la empresa.
+          Se constató, mediante registros fílmicos, el uso de <strong>celular personal en horario
+          laboral y en zona de mostrador</strong>, lo que generó un malestar en los clientes que
+          hacían fila para ser atendidos, afectando la imagen de la empresa.
         </div>
 
         <div class="apercibimiento" data-field="apercibimiento">
-          Todo ello, bajo apercibimiento de aplicÃ¡rsele <strong>sanciones disciplinarias mÃ¡s
+          Todo ello, bajo apercibimiento de aplicársele <strong>sanciones disciplinarias más
           severas</strong>, tales como suspensiones e incluso el despido con justa causa, en caso
           de reincidir en esta conducta.
         </div>
@@ -588,13 +577,13 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
 
       <div class="cierre">
         <p data-field="cierre">En consecuencia, queda Ud. debidamente notificado.</p>
-        <p>Sin mÃ¡s, saludo atte.</p>
+        <p>Sin más, saludo atte.</p>
       </div>
 
       <div class="firma">
         <div class="bloque">
           <div class="linea"></div>
-          <div class="rol">RecibÃ­ conforme</div>
+          <div class="rol">Recibí conforme</div>
           <div class="nom" id="firmaNombre">GOMEZ, Macarena</div>
           <div class="rol" style="margin-top:4px;" id="firmaCuil">CUIL 27-45344901-2</div>
         </div>
@@ -607,7 +596,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       </div>
 
       <div class="pie-doc">
-        <span id="pieNombre">Apercibimiento Â· GOMEZ, Macarena</span>
+        <span id="pieNombre">Apercibimiento · GOMEZ, Macarena</span>
         <span id="pieFecha">Emitido el 14/09/2026</span>
       </div>
 
@@ -621,12 +610,12 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
 
     <div class="panel-head">
       <h2>
-        ðŸ“‹ Historial de apercibimientos
+        📋 Historial de apercibimientos
       </h2>
       <div class="acciones-bd">
         <span class="count" id="contHist">0 registros</span>
-        <button class="btn-mini" id="btnExportHist">â¬‡ Exportar CSV</button>
-        <button class="btn-mini" id="btnLimpiarHist" style="color:#b91c1c; border-color:#f3c9c9;">ðŸ—‘ Vaciar historial</button>
+        <button class="btn-mini" id="btnExportHist">⬇ Exportar CSV</button>
+        <button class="btn-mini" id="btnLimpiarHist" style="color:#b91c1c; border-color:#f3c9c9;">🗑 Vaciar historial</button>
       </div>
     </div>
 
@@ -646,7 +635,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     </div>
 
     <div class="buscador no-print">
-      <input type="text" id="filtroHist" placeholder="Buscar por nombre, CUIL o motivoâ€¦" autocomplete="off">
+      <input type="text" id="filtroHist" placeholder="Buscar por nombre, CUIL o motivo…" autocomplete="off">
     </div>
 
     <div class="tabla-scroll">
@@ -666,13 +655,13 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       </table>
 
       <div class="hist-vacio" id="histVacio">
-        <div class="icono">ðŸ“­</div>
-        <h3>AÃºn no hay apercibimientos registrados</h3>
-        <p>CompletÃ¡ el formulario en la pestaÃ±a â€œApercibimientoâ€ y presionÃ¡<br>
-           <strong>â€œðŸ“‹ Registrar en historialâ€</strong> para guardarlo acÃ¡.</p>
+        <div class="icono">📭</div>
+        <h3>Aún no hay apercibimientos registrados</h3>
+        <p>Completá el formulario en la pestaña “Apercibimiento” y presioná<br>
+           <strong>“📋 Registrar en historial”</strong> para guardarlo acá.</p>
       </div>
 
-      <div class="sin-resultados" id="histSinResultados">Sin resultados para la bÃºsqueda.</div>
+      <div class="sin-resultados" id="histSinResultados">Sin resultados para la búsqueda.</div>
     </div>
   </section>
 
@@ -685,13 +674,13 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       <h2>Base de datos de personal</h2>
 
       <div class="acciones-bd">
-        <span class="count" id="contador">â€” registros</span>
-        <button class="btn-mini primary" id="btnNuevo" hidden>âž• Nuevo registro</button>
+        <span class="count" id="contador">— registros</span>
+        <button class="btn-mini primary" id="btnNuevo" hidden>➕ Nuevo registro</button>
       </div>
     </div>
 
     <div class="buscador no-print">
-      <input type="text" id="filtro" placeholder="Buscar por nombre, CUIL, categorÃ­a u oficinaâ€¦" autocomplete="off">
+      <input type="text" id="filtro" placeholder="Buscar por nombre, CUIL, categoría u oficina…" autocomplete="off">
     </div>
 
     <div class="tabla-scroll">
@@ -701,7 +690,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
             <th>#</th>
             <th>Apellido y Nombre</th>
             <th>CUIL</th>
-            <th>CategorÃ­a</th>
+            <th>Categoría</th>
             <th>Oficina</th>
             <th>Estado</th>
             <th class="col-acciones">Acciones</th>
@@ -709,13 +698,13 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
         </thead>
         <tbody id="cuerpo-bd"></tbody>
       </table>
-      <div class="sin-resultados" id="sinResultados">Sin resultados para la bÃºsqueda.</div>
+      <div class="sin-resultados" id="sinResultados">Sin resultados para la búsqueda.</div>
     </div>
   </section>
 
 </div>
 
-<!-- ================= MODAL DE EDICIÃ“N ================= -->
+<!-- ================= MODAL DE EDICIÓN ================= -->
 <div class="modal-overlay no-print" id="modal">
   <div class="modal">
     <h3 id="modalTitulo">Editar registro</h3>
@@ -726,11 +715,11 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     <label>CUIL
       <input type="text" id="m-cuil" placeholder="27-00000000-0">
     </label>
-    <label>CategorÃ­a
+    <label>Categoría
       <input type="text" id="m-cat" placeholder="Operario Shop / Operario Playa">
     </label>
     <label>Oficina
-      <input type="text" id="m-ofi" placeholder="AutovÃ­a 19â€¦ / General Paz 7500">
+      <input type="text" id="m-ofi" placeholder="Autovía 19… / General Paz 7500">
     </label>
 
     <div class="modal-actions">
@@ -742,95 +731,95 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
 
 <script>
 /* ============================================================
-   1. DATOS INICIALES â€” BASE DE DATOS DE PERSONAL
+   1. DATOS INICIALES — BASE DE DATOS DE PERSONAL
    ============================================================ */
 const PERSONAL_DEFAULT = [
-  { n:"Abarrategui Soledad Ayelen",         c:"27-43766021-8", cat:"Operario Shop", ofi:"AutovÃ­a 19 y acceso a San AgustÃ­n" },
-  { n:"Baroni De Fillipi Sofia Dalma",      c:"27-41513545-4", cat:"Operario Shop", ofi:"AutovÃ­a 19 y acceso a San AgustÃ­n" },
+  { n:"Abarrategui Soledad Ayelen",         c:"27-43766021-8", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Baroni De Fillipi Sofia Dalma",      c:"27-41513545-4", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
   { n:"Bechi Valeria Angelica",             c:"27-27793967-9", cat:"Operario Shop", ofi:"General Paz 7500" },
-  { n:"De La Mata Sofia Ayelen",            c:"27-43126056-0", cat:"â€”",             ofi:"General Paz 7500" },
-  { n:"Demaria Ayelen Ebelyn",              c:"27-36684115-1", cat:"Operario Shop", ofi:"AutovÃ­a 19 y acceso a San AgustÃ­n" },
-  { n:"Fritzler Joana Ainelen",             c:"27-37713777-4", cat:"Operario Shop", ofi:"â€”" },
+  { n:"De La Mata Sofia Ayelen",            c:"27-43126056-0", cat:"—",             ofi:"General Paz 7500" },
+  { n:"Demaria Ayelen Ebelyn",              c:"27-36684115-1", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Fritzler Joana Ainelen",             c:"27-37713777-4", cat:"Operario Shop", ofi:"—" },
   { n:"Gomez Gisela Carolina",              c:"27-35652155-8", cat:"Operario Shop", ofi:"General Paz 7500" },
   { n:"Gomez Yesica Aylen",                 c:"27-41792355-7", cat:"Operario Shop", ofi:"General Paz 7500" },
-  { n:"Guerra Anneris",                     c:"27-31196445-9", cat:"â€”",             ofi:"â€”" },
+  { n:"Guerra Anneris",                     c:"27-31196445-9", cat:"—",             ofi:"—" },
   { n:"Mannarino Anabela",                  c:"27-42687585-9", cat:"Operario Shop", ofi:"General Paz 7500" },
-  { n:"Nieto Lucila Antonella",             c:"27-40959252-5", cat:"Operario Shop", ofi:"AutovÃ­a 19 y acceso a San AgustÃ­n" },
-  { n:"Spinardi Lara Candelaria",           c:"27-37282895-7", cat:"Operario Shop", ofi:"AutovÃ­a 19 y acceso a San AgustÃ­n" },
-  { n:"Yost Bianca Maria De Los Milagros",  c:"27-47208606-0", cat:"Operario Shop", ofi:"AutovÃ­a 19 y acceso a San AgustÃ­n" },
-  { n:"Reible Sabrina Lorena",              c:"27-43124537-5", cat:"Operario Playa", ofi:"â€”" },
-  { n:"Bechi Valeria Angelica",             c:"27-27793967-9", cat:"â€”", ofi:"â€”" },
-  { n:"Paduan Soraya Rocio",                c:"27-30621205-8", cat:"â€”", ofi:"â€”" },
-  { n:"Maqueda Federico Gaston",            c:"20-33068266-4", cat:"â€”", ofi:"â€”" },
-  { n:"Cerrudo Guillermo Sebastian",        c:"20-34939468-6", cat:"â€”", ofi:"â€”" },
-  { n:"Rangel Elvis Jesus",                 c:"20-96067470-8", cat:"â€”", ofi:"â€”" },
-  { n:"Kremser Emmanuel",                   c:"20-33039758-7", cat:"â€”", ofi:"â€”" },
-  { n:"Biasoni Emanuel",                    c:"20-32744974-6", cat:"â€”", ofi:"â€”" },
-  { n:"Ortiz Gustavo",                      c:"20-25531702-5", cat:"â€”", ofi:"â€”" },
-  { n:"Moran Emiliano Jose",                c:"20-38982919-7", cat:"â€”", ofi:"â€”" },
-  { n:"Biasoni Martin",                     c:"20-36326069-2", cat:"â€”", ofi:"â€”" },
-  { n:"Odriozola Maria Jose",               c:"27-36877547-4", cat:"â€”", ofi:"â€”" },
-  { n:"Soriano Maria Elena",                c:"27-35250009-2", cat:"â€”", ofi:"â€”" },
-  { n:"Luque Horacio Lindor",               c:"20-13925293-5", cat:"â€”", ofi:"â€”" },
-  { n:"Goy Guillermo Omar",                 c:"20-35752335-5", cat:"â€”", ofi:"â€”" },
-  { n:"Soriano Diego Gustavo",              c:"20-28764610-1", cat:"â€”", ofi:"â€”" },
-  { n:"Francisco Raul Cussit",              c:"20-28036830-0", cat:"â€”", ofi:"â€”" },
-  { n:"Diaz Rodolfo Agustin",               c:"20-39630565-9", cat:"â€”", ofi:"â€”" },
-  { n:"Monzon Lautaro",                     c:"20-42561138-1", cat:"â€”", ofi:"â€”" },
-  { n:"Nicle Lisandro Hernando",            c:"20-27518759-4", cat:"â€”", ofi:"â€”" },
-  { n:"Galeano Maximiliano",                c:"20-44023017-3", cat:"â€”", ofi:"â€”" },
-  { n:"Da Silva Claudio Marcelo",           c:"20-29233613-7", cat:"â€”", ofi:"â€”" },
-  { n:"Solver Lucas Emmanuel Nicolas",      c:"20-40314490-9", cat:"â€”", ofi:"â€”" },
-  { n:"Fontana Paula Oriana",               c:"27-37282753-5", cat:"â€”", ofi:"â€”" },
-  { n:"Boutonnet Oriana Magali",            c:"27-37446737-4", cat:"â€”", ofi:"â€”" },
-  { n:"Dimarco Valentina",                  c:"27-44064601-3", cat:"â€”", ofi:"â€”" },
-  { n:"Orrego Maximiliano Sebastian",       c:"20-37970137-0", cat:"â€”", ofi:"â€”" },
-  { n:"Larralde Facundo Leonel",            c:"20-41050964-5", cat:"â€”", ofi:"â€”" },
-  { n:"Bogado Daniel Alberto",              c:"20-25303864-1", cat:"â€”", ofi:"â€”" },
-  { n:"Britch Antonella",                   c:"27-40790856-8", cat:"â€”", ofi:"â€”" },
-  { n:"Sosa Rodrigo Ezequiel",              c:"20-39681073-6", cat:"â€”", ofi:"â€”" },
-  { n:"Viglianco Candela",                  c:"27-42331304-3", cat:"â€”", ofi:"â€”" },
-  { n:"Martinez Nazareno Catriel",          c:"20-39127850-5", cat:"â€”", ofi:"â€”" },
-  { n:"Altamirano Jonatan Omar",            c:"20-39240732-5", cat:"â€”", ofi:"â€”" },
-  { n:"Gamarra Nicolas Nataniel",           c:"20-44427436-1", cat:"â€”", ofi:"â€”" },
-  { n:"Fernandez Mario Ivan",               c:"20-43770067-3", cat:"â€”", ofi:"â€”" },
-  { n:"Mesina Franco",                      c:"20-38401610-4", cat:"â€”", ofi:"â€”" },
-  { n:"Moyano Diego",                       c:"20-37137676-4", cat:"â€”", ofi:"â€”" },
-  { n:"Cruz Anibal Jonathan",               c:"23-38349259-9", cat:"â€”", ofi:"â€”" },
-  { n:"De Filippi Baroni Sofia Dalma",      c:"27-41513545-4", cat:"â€”", ofi:"â€”" },
-  { n:"Yost Bianca Ma De Los Milagros",     c:"27-47208606-0", cat:"â€”", ofi:"â€”" },
-  { n:"Nieto Lucila Antonella",             c:"27-40959252-5", cat:"â€”", ofi:"â€”" },
-  { n:"Volken Alejandro",                   c:"20-35033764-5", cat:"â€”", ofi:"â€”" },
-  { n:"Keller Oscar Ernesto",               c:"20-42332869-0", cat:"â€”", ofi:"â€”" },
-  { n:"Benitez David Ezequiel",             c:"20-33068435-7", cat:"â€”", ofi:"â€”" },
-  { n:"Bancho Leandro Agustin",             c:"20-45507429-1", cat:"â€”", ofi:"â€”" },
-  { n:"Heinen Luis Oscar",                  c:"20-36684012-6", cat:"â€”", ofi:"â€”" },
-  { n:"Monzon Victor AndrÃ©s",               c:"20-39370401-3", cat:"â€”", ofi:"â€”" },
-  { n:"Reible Sabrina Lorena",              c:"27-43124537-5", cat:"â€”", ofi:"â€”" },
-  { n:"Aguilar William Antonio",            c:"20-29490288-1", cat:"â€”", ofi:"â€”" },
-  { n:"Guerra Anneris Ludmila",             c:"27-31196445-9", cat:"â€”", ofi:"â€”" },
-  { n:"Fritzler Joana Ainelen",             c:"27-37713777-4", cat:"â€”", ofi:"â€”" },
-  { n:"Demaria Ayelen Ebelyn",              c:"27-36684115-1", cat:"â€”", ofi:"â€”" },
-  { n:"Lucero Fares Ezequiel Andres",       c:"20-36731897-0", cat:"â€”", ofi:"â€”" },
-  { n:"De La Mata Sofia Ayelen",            c:"27-43126056-0", cat:"â€”", ofi:"â€”" },
-  { n:"Gomez Gisela Carolina",              c:"27-35652155-8", cat:"â€”", ofi:"â€”" },
-  { n:"Venetz Fabio Nicolas",               c:"23-36758834-9", cat:"â€”", ofi:"â€”" },
-  { n:"Mannarino Anabela Rosario Sole",     c:"27-42687585-9", cat:"â€”", ofi:"â€”" },
-  { n:"Requena Leonardo Gabriel",           c:"20-37802342-5", cat:"â€”", ofi:"â€”" },
-  { n:"Emmert Natalia Carolina",            c:"27-26244656-0", cat:"â€”", ofi:"â€”" },
-  { n:"Eguiazu Maria De Los Milagros",      c:"27-39630521-1", cat:"â€”", ofi:"â€”" },
-  { n:"Sanchez Andres Guillermo",           c:"23-28834446-9", cat:"â€”", ofi:"â€”" },
-  { n:"Kieffer Lucila Noelia",              c:"23-42923241-4", cat:"â€”", ofi:"â€”" },
-  { n:"Robledo Mauricio Daniel",            c:"20-42510797-7", cat:"â€”", ofi:"â€”" },
-  { n:"Sosa Daiana Ayelen",                 c:"27-38289410-9", cat:"â€”", ofi:"â€”" },
-  { n:"Ramayo Juan Carlos Norberto",        c:"23-33296568-9", cat:"â€”", ofi:"â€”" },
-  { n:"Kummer Andrea Guadalupe",            c:"27-28882181-5", cat:"â€”", ofi:"â€”" },
-  { n:"Gile Stefani Elisabet",              c:"27-41732696-6", cat:"â€”", ofi:"â€”" },
-  { n:"Di Paolo Emanuel Antonio",           c:"20-31671262-3", cat:"â€”", ofi:"â€”" },
-  { n:"Rodriguez Luciana Carolina",         c:"27-28437970-0", cat:"â€”", ofi:"â€”" },
-  { n:"Ursprung Camila Stella Maris",       c:"27-37831237-5", cat:"â€”", ofi:"â€”" },
-  { n:"Regis Valentina Guadalupe",          c:"27-46371982-4", cat:"â€”", ofi:"â€”" },
-  { n:"Gomez Macarena Soledad",             c:"27-45344901-2", cat:"â€”", ofi:"â€”" }
+  { n:"Nieto Lucila Antonella",             c:"27-40959252-5", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Spinardi Lara Candelaria",           c:"27-37282895-7", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Yost Bianca Maria De Los Milagros",  c:"27-47208606-0", cat:"Operario Shop", ofi:"Autovía 19 y acceso a San Agustín" },
+  { n:"Reible Sabrina Lorena",              c:"27-43124537-5", cat:"Operario Playa", ofi:"—" },
+  { n:"Bechi Valeria Angelica",             c:"27-27793967-9", cat:"—", ofi:"—" },
+  { n:"Paduan Soraya Rocio",                c:"27-30621205-8", cat:"—", ofi:"—" },
+  { n:"Maqueda Federico Gaston",            c:"20-33068266-4", cat:"—", ofi:"—" },
+  { n:"Cerrudo Guillermo Sebastian",        c:"20-34939468-6", cat:"—", ofi:"—" },
+  { n:"Rangel Elvis Jesus",                 c:"20-96067470-8", cat:"—", ofi:"—" },
+  { n:"Kremser Emmanuel",                   c:"20-33039758-7", cat:"—", ofi:"—" },
+  { n:"Biasoni Emanuel",                    c:"20-32744974-6", cat:"—", ofi:"—" },
+  { n:"Ortiz Gustavo",                      c:"20-25531702-5", cat:"—", ofi:"—" },
+  { n:"Moran Emiliano Jose",                c:"20-38982919-7", cat:"—", ofi:"—" },
+  { n:"Biasoni Martin",                     c:"20-36326069-2", cat:"—", ofi:"—" },
+  { n:"Odriozola Maria Jose",               c:"27-36877547-4", cat:"—", ofi:"—" },
+  { n:"Soriano Maria Elena",                c:"27-35250009-2", cat:"—", ofi:"—" },
+  { n:"Luque Horacio Lindor",               c:"20-13925293-5", cat:"—", ofi:"—" },
+  { n:"Goy Guillermo Omar",                 c:"20-35752335-5", cat:"—", ofi:"—" },
+  { n:"Soriano Diego Gustavo",              c:"20-28764610-1", cat:"—", ofi:"—" },
+  { n:"Francisco Raul Cussit",              c:"20-28036830-0", cat:"—", ofi:"—" },
+  { n:"Diaz Rodolfo Agustin",               c:"20-39630565-9", cat:"—", ofi:"—" },
+  { n:"Monzon Lautaro",                     c:"20-42561138-1", cat:"—", ofi:"—" },
+  { n:"Nicle Lisandro Hernando",            c:"20-27518759-4", cat:"—", ofi:"—" },
+  { n:"Galeano Maximiliano",                c:"20-44023017-3", cat:"—", ofi:"—" },
+  { n:"Da Silva Claudio Marcelo",           c:"20-29233613-7", cat:"—", ofi:"—" },
+  { n:"Solver Lucas Emmanuel Nicolas",      c:"20-40314490-9", cat:"—", ofi:"—" },
+  { n:"Fontana Paula Oriana",               c:"27-37282753-5", cat:"—", ofi:"—" },
+  { n:"Boutonnet Oriana Magali",            c:"27-37446737-4", cat:"—", ofi:"—" },
+  { n:"Dimarco Valentina",                  c:"27-44064601-3", cat:"—", ofi:"—" },
+  { n:"Orrego Maximiliano Sebastian",       c:"20-37970137-0", cat:"—", ofi:"—" },
+  { n:"Larralde Facundo Leonel",            c:"20-41050964-5", cat:"—", ofi:"—" },
+  { n:"Bogado Daniel Alberto",              c:"20-25303864-1", cat:"—", ofi:"—" },
+  { n:"Britch Antonella",                   c:"27-40790856-8", cat:"—", ofi:"—" },
+  { n:"Sosa Rodrigo Ezequiel",              c:"20-39681073-6", cat:"—", ofi:"—" },
+  { n:"Viglianco Candela",                  c:"27-42331304-3", cat:"—", ofi:"—" },
+  { n:"Martinez Nazareno Catriel",          c:"20-39127850-5", cat:"—", ofi:"—" },
+  { n:"Altamirano Jonatan Omar",            c:"20-39240732-5", cat:"—", ofi:"—" },
+  { n:"Gamarra Nicolas Nataniel",           c:"20-44427436-1", cat:"—", ofi:"—" },
+  { n:"Fernandez Mario Ivan",               c:"20-43770067-3", cat:"—", ofi:"—" },
+  { n:"Mesina Franco",                      c:"20-38401610-4", cat:"—", ofi:"—" },
+  { n:"Moyano Diego",                       c:"20-37137676-4", cat:"—", ofi:"—" },
+  { n:"Cruz Anibal Jonathan",               c:"23-38349259-9", cat:"—", ofi:"—" },
+  { n:"De Filippi Baroni Sofia Dalma",      c:"27-41513545-4", cat:"—", ofi:"—" },
+  { n:"Yost Bianca Ma De Los Milagros",     c:"27-47208606-0", cat:"—", ofi:"—" },
+  { n:"Nieto Lucila Antonella",             c:"27-40959252-5", cat:"—", ofi:"—" },
+  { n:"Volken Alejandro",                   c:"20-35033764-5", cat:"—", ofi:"—" },
+  { n:"Keller Oscar Ernesto",               c:"20-42332869-0", cat:"—", ofi:"—" },
+  { n:"Benitez David Ezequiel",             c:"20-33068435-7", cat:"—", ofi:"—" },
+  { n:"Bancho Leandro Agustin",             c:"20-45507429-1", cat:"—", ofi:"—" },
+  { n:"Heinen Luis Oscar",                  c:"20-36684012-6", cat:"—", ofi:"—" },
+  { n:"Monzon Victor Andrés",               c:"20-39370401-3", cat:"—", ofi:"—" },
+  { n:"Reible Sabrina Lorena",              c:"27-43124537-5", cat:"—", ofi:"—" },
+  { n:"Aguilar William Antonio",            c:"20-29490288-1", cat:"—", ofi:"—" },
+  { n:"Guerra Anneris Ludmila",             c:"27-31196445-9", cat:"—", ofi:"—" },
+  { n:"Fritzler Joana Ainelen",             c:"27-37713777-4", cat:"—", ofi:"—" },
+  { n:"Demaria Ayelen Ebelyn",              c:"27-36684115-1", cat:"—", ofi:"—" },
+  { n:"Lucero Fares Ezequiel Andres",       c:"20-36731897-0", cat:"—", ofi:"—" },
+  { n:"De La Mata Sofia Ayelen",            c:"27-43126056-0", cat:"—", ofi:"—" },
+  { n:"Gomez Gisela Carolina",              c:"27-35652155-8", cat:"—", ofi:"—" },
+  { n:"Venetz Fabio Nicolas",               c:"23-36758834-9", cat:"—", ofi:"—" },
+  { n:"Mannarino Anabela Rosario Sole",     c:"27-42687585-9", cat:"—", ofi:"—" },
+  { n:"Requena Leonardo Gabriel",           c:"20-37802342-5", cat:"—", ofi:"—" },
+  { n:"Emmert Natalia Carolina",            c:"27-26244656-0", cat:"—", ofi:"—" },
+  { n:"Eguiazu Maria De Los Milagros",      c:"27-39630521-1", cat:"—", ofi:"—" },
+  { n:"Sanchez Andres Guillermo",           c:"23-28834446-9", cat:"—", ofi:"—" },
+  { n:"Kieffer Lucila Noelia",              c:"23-42923241-4", cat:"—", ofi:"—" },
+  { n:"Robledo Mauricio Daniel",            c:"20-42510797-7", cat:"—", ofi:"—" },
+  { n:"Sosa Daiana Ayelen",                 c:"27-38289410-9", cat:"—", ofi:"—" },
+  { n:"Ramayo Juan Carlos Norberto",        c:"23-33296568-9", cat:"—", ofi:"—" },
+  { n:"Kummer Andrea Guadalupe",            c:"27-28882181-5", cat:"—", ofi:"—" },
+  { n:"Gile Stefani Elisabet",              c:"27-41732696-6", cat:"—", ofi:"—" },
+  { n:"Di Paolo Emanuel Antonio",           c:"20-31671262-3", cat:"—", ofi:"—" },
+  { n:"Rodriguez Luciana Carolina",         c:"27-28437970-0", cat:"—", ofi:"—" },
+  { n:"Ursprung Camila Stella Maris",       c:"27-37831237-5", cat:"—", ofi:"—" },
+  { n:"Regis Valentina Guadalupe",          c:"27-46371982-4", cat:"—", ofi:"—" },
+  { n:"Gomez Macarena Soledad",             c:"27-45344901-2", cat:"—", ofi:"—" }
 ];
 
 /* CUILes con apercibimiento registrado por defecto (badge rojo) */
@@ -865,7 +854,7 @@ let historial  = cargarLS(LS_HIST, []);
 let apercibidos = new Set(APERCIBIDOS_DEFAULT);
 /* Sumar CUILes del historial */
 historial.forEach(h=>{
-  if(h.cuil && h.cuil !== "â€”") apercibidos.add(h.cuil);
+  if(h.cuil && h.cuil !== "—") apercibidos.add(h.cuil);
 });
 
 /* ============================================================
@@ -924,7 +913,7 @@ function mostrarEstado(txt){
 
 function formatFechaHora(iso){
   const d = new Date(iso);
-  if(isNaN(d)) return "â€”";
+  if(isNaN(d)) return "—";
   const f = d.toLocaleDateString("es-AR", {day:"2-digit", month:"2-digit", year:"numeric"});
   const h = d.toLocaleTimeString("es-AR", {hour:"2-digit", minute:"2-digit"});
   return f + " " + h;
@@ -945,16 +934,16 @@ function renderTabla(lista){
     return `<tr>
       <td>${i+1}</td>
       <td><strong>${escaparHTML(p.n)}</strong></td>
-      <td class="cuil">${escaparHTML(p.c || "â€”")}</td>
-      <td>${p.cat && p.cat !== "â€”" ? `<span class="badge">${escaparHTML(p.cat)}</span>` : "â€”"}</td>
-      <td>${p.ofi && p.ofi !== "â€”" ? escaparHTML(p.ofi) : "â€”"}</td>
+      <td class="cuil">${escaparHTML(p.c || "—")}</td>
+      <td>${p.cat && p.cat !== "—" ? `<span class="badge">${escaparHTML(p.cat)}</span>` : "—"}</td>
+      <td>${p.ofi && p.ofi !== "—" ? escaparHTML(p.ofi) : "—"}</td>
       <td>${esApercibido
             ? '<span class="badge apercibido">Apercibido</span>'
-            : '<span style="color:#8b98ab">â€”</span>'}</td>
+            : '<span style="color:#8b98ab">—</span>'}</td>
       <td class="col-acciones">
         <div class="row-actions">
-          <button class="icon-btn" title="Editar" data-edit="${idx}">âœï¸</button>
-          <button class="icon-btn danger" title="Eliminar" data-del="${idx}">ðŸ—‘ï¸</button>
+          <button class="icon-btn" title="Editar" data-edit="${idx}">✏️</button>
+          <button class="icon-btn danger" title="Eliminar" data-del="${idx}">🗑️</button>
         </div>
       </td>
     </tr>`;
@@ -972,7 +961,7 @@ function filtrarBD(){
   renderTabla(res);
 }
 
-/* DelegaciÃ³n de eventos en la tabla BD */
+/* Delegación de eventos en la tabla BD */
 tbody.addEventListener("click", e=>{
   const btnEdit = e.target.closest("[data-edit]");
   const btnDel  = e.target.closest("[data-del]");
@@ -984,7 +973,7 @@ tbody.addEventListener("click", e=>{
     const i = parseInt(btnDel.dataset.del, 10);
     const p = personal[i];
     if(!p) return;
-    if(confirm(`Â¿Eliminar el registro de "${p.n}"?`)){
+    if(confirm(`¿Eliminar el registro de "${p.n}"?`)){
       personal.splice(i, 1);
       filtrarBD();
       poblarSelect();
@@ -1004,7 +993,7 @@ function renderHistorial(){
   // Stats
   actualizarStats();
 
-  // Contadores de pestaÃ±a
+  // Contadores de pestaña
   contHist.textContent = `${historial.length} registro${historial.length===1?"":"s"}`;
   tabHistCount.textContent = historial.length;
 
@@ -1034,8 +1023,8 @@ function renderHistorial(){
       <td><div class="hist-motivo">${escaparHTML(h.motivo)}</div></td>
       <td>
         <div class="row-actions">
-          <button class="icon-btn" title="Cargar en documento" data-ver="${idx}">ðŸ‘ï¸</button>
-          <button class="icon-btn" title="Eliminar del historial" data-delhist="${idx}">ðŸ—‘ï¸</button>
+          <button class="icon-btn" title="Cargar en documento" data-ver="${idx}">👁️</button>
+          <button class="icon-btn" title="Eliminar del historial" data-delhist="${idx}">🗑️</button>
         </div>
       </td>
     </tr>`;
@@ -1054,11 +1043,11 @@ function actualizarStats(){
   }).length;
   statMes.textContent = delMes;
 
-  const unicos = new Set(historial.map(h=>h.cuil).filter(c=>c && c !== "â€”"));
+  const unicos = new Set(historial.map(h=>h.cuil).filter(c=>c && c !== "—"));
   statEmpleados.textContent = unicos.size;
 }
 
-/* DelegaciÃ³n de eventos en el historial */
+/* Delegación de eventos en el historial */
 cuerpoHist.addEventListener("click", e=>{
   const btnVer = e.target.closest("[data-ver]");
   const btnDel = e.target.closest("[data-delhist]");
@@ -1068,26 +1057,26 @@ cuerpoHist.addEventListener("click", e=>{
     const h = historial[i];
     if(!h) return;
     aplicarDocumento(h.doc);
-    // Ir a la pestaÃ±a del documento
+    // Ir a la pestaña del documento
     document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
     document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
     document.querySelector('[data-target="p-apercibimiento"]').classList.add("active");
     document.getElementById("p-apercibimiento").classList.add("active");
     window.scrollTo({top:0, behavior:"smooth"});
-    mostrarEstado("âœ“ Apercibimiento cargado");
+    mostrarEstado("✓ Apercibimiento cargado");
   }
 
   if(btnDel){
     const i = parseInt(btnDel.dataset.delhist, 10);
     const h = historial[i];
     if(!h) return;
-    if(confirm(`Â¿Eliminar el registro de "${h.nombre}" del historial?`)){
+    if(confirm(`¿Eliminar el registro de "${h.nombre}" del historial?`)){
       historial.splice(i, 1);
       guardarLS(LS_HIST, historial);
       // Reconstruir set de apercibidos (por defecto + historial)
       apercibidos = new Set(APERCIBIDOS_DEFAULT);
       historial.forEach(x=>{
-        if(x.cuil && x.cuil !== "â€”") apercibidos.add(x.cuil);
+        if(x.cuil && x.cuil !== "—") apercibidos.add(x.cuil);
       });
       renderHistorial();
       filtrarBD();
@@ -1100,8 +1089,8 @@ cuerpoHist.addEventListener("click", e=>{
    ============================================================ */
 function poblarSelect(){
   const valorPrevio = selEmpleado.value;
-  selEmpleado.innerHTML = '<option value="">â€” Seleccionar empleado â€”</option>' +
-    personal.map((p, i)=>`<option value="${i}">${escaparHTML(p.n)} â€” ${escaparHTML(p.c)}</option>`).join("");
+  selEmpleado.innerHTML = '<option value="">— Seleccionar empleado —</option>' +
+    personal.map((p, i)=>`<option value="${i}">${escaparHTML(p.n)} — ${escaparHTML(p.c)}</option>`).join("");
   if(valorPrevio && personal[valorPrevio]) selEmpleado.value = valorPrevio;
 }
 
@@ -1111,9 +1100,9 @@ selEmpleado.addEventListener("change", ()=>{
   const p = personal[+idx];
   if(!p) return;
   setField("nombre", p.n);
-  setField("cuil",   p.c || "â€”");
+  setField("cuil",   p.c || "—");
   sincronizarFirma();
-  mostrarEstado("Datos cargados âœ“");
+  mostrarEstado("Datos cargados ✓");
 });
 
 /* ============================================================
@@ -1130,15 +1119,15 @@ function getField(name){
 }
 
 function sincronizarFirma(){
-  const nombre = getField("nombre") || "â€”";
-  const cuil   = getField("cuil")   || "â€”";
+  const nombre = getField("nombre") || "—";
+  const cuil   = getField("cuil")   || "—";
   firmaNombre.textContent = nombre;
   firmaCuil.textContent   = "CUIL " + cuil;
-  pieNombre.textContent   = "Apercibimiento Â· " + nombre;
+  pieNombre.textContent   = "Apercibimiento · " + nombre;
 
   const lugar = getField("lugar");
-  const m = lugar.match(/(\d{1,2}\s+de\s+[a-zA-ZÃ¡Ã©Ã­Ã³Ãº]+\s+de\s+\d{4})/);
-  pieFecha.textContent = m ? "Emitido el " + m[1] : "Emitido el â€”";
+  const m = lugar.match(/(\d{1,2}\s+de\s+[a-zA-Záéíóú]+\s+de\s+\d{4})/);
+  pieFecha.textContent = m ? "Emitido el " + m[1] : "Emitido el —";
 }
 
 /* Re-sincronizar la firma mientras se edita */
@@ -1149,7 +1138,7 @@ document.getElementById("hoja").addEventListener("input", e=>{
 });
 
 /* ============================================================
-   9. MODO EDICIÃ“N
+   9. MODO EDICIÓN
    ============================================================ */
 let editMode = false;
 let docBackup = null;
@@ -1170,7 +1159,7 @@ function entrarEdicion(){
   btnCancelar.hidden = false;
   btnNuevo.hidden    = false;
 
-  toolbarHint.textContent = "Modo ediciÃ³n: los campos resaltados son editables.";
+  toolbarHint.textContent = "Modo edición: los campos resaltados son editables.";
   filtrarBD();
 }
 
@@ -1186,7 +1175,7 @@ function salirEdicion(){
   btnCancelar.hidden = true;
   btnNuevo.hidden    = true;
 
-  toolbarHint.textContent = "PresionÃ¡ â€œEditarâ€ para modificar el texto.";
+  toolbarHint.textContent = "Presioná “Editar” para modificar el texto.";
   filtrarBD();
 }
 
@@ -1204,27 +1193,27 @@ function aplicarDocumento(obj){
   sincronizarFirma();
 }
 
-/* --- BotÃ³n Editar --- */
+/* --- Botón Editar --- */
 btnEditar.addEventListener("click", entrarEdicion);
 
-/* --- BotÃ³n Guardar --- */
+/* --- Botón Guardar --- */
 btnGuardar.addEventListener("click", ()=>{
   const doc = leerDocumento();
   const okDoc = guardarLS(LS_DOC, doc);
   const okBd  = guardarLS(LS_BD, personal);
 
   if(okDoc && okBd){
-    mostrarEstado("âœ“ Cambios guardados");
+    mostrarEstado("✓ Cambios guardados");
   }else{
-    mostrarEstado("âš  No se pudo guardar");
+    mostrarEstado("⚠ No se pudo guardar");
   }
   sincronizarFirma();
   salirEdicion();
 });
 
-/* --- BotÃ³n Cancelar --- */
+/* --- Botón Cancelar --- */
 btnCancelar.addEventListener("click", ()=>{
-  if(!confirm("Â¿Descartar los cambios no guardados?")) return;
+  if(!confirm("¿Descartar los cambios no guardados?")) return;
   if(docBackup) aplicarDocumento(docBackup);
   if(bdBackup)  personal = JSON.parse(JSON.stringify(bdBackup));
   poblarSelect();
@@ -1241,23 +1230,23 @@ btnRegistrar.addEventListener("click", ()=>{
   const nombre = (doc.nombre || "").replace(/<[^>]+>/g,"").trim();
   const cuil   = (doc.cuil   || "").replace(/<[^>]+>/g,"").trim();
 
-  if(!nombre || nombre === "â€”"){
-    alert("El documento no tiene Apellido y Nombre. CargÃ¡ un empleado o completÃ¡ el campo antes de registrar.");
+  if(!nombre || nombre === "—"){
+    alert("El documento no tiene Apellido y Nombre. Cargá un empleado o completá el campo antes de registrar.");
     return;
   }
 
   // Extraer motivo (texto plano del campo hecho)
   const hechoDiv = document.querySelector('[data-field="hecho"]');
   const hechoTxt = hechoDiv ? hechoDiv.textContent.replace(/\s+/g," ").trim() : "";
-  const motivo = hechoTxt.length > 180 ? hechoTxt.slice(0,180) + "â€¦" : hechoTxt;
+  const motivo = hechoTxt.length > 180 ? hechoTxt.slice(0,180) + "…" : hechoTxt;
 
-  const fechaHecho = (doc.fechaHecho || "â€”").replace(/<[^>]+>/g,"").trim();
+  const fechaHecho = (doc.fechaHecho || "—").replace(/<[^>]+>/g,"").trim();
 
   const entry = {
     id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
     fechaRegistro: new Date().toISOString(),
     nombre,
-    cuil: cuil || "â€”",
+    cuil: cuil || "—",
     fechaHecho,
     motivo,
     doc: JSON.parse(JSON.stringify(doc))
@@ -1270,11 +1259,11 @@ btnRegistrar.addEventListener("click", ()=>{
   }
 
   // Agregar a apercibidos para que se refleje el badge en BD
-  if(cuil && cuil !== "â€”") apercibidos.add(cuil);
+  if(cuil && cuil !== "—") apercibidos.add(cuil);
 
   renderHistorial();
   filtrarBD();
-  mostrarEstado("âœ“ Apercibimiento registrado en historial");
+  mostrarEstado("✓ Apercibimiento registrado en historial");
 });
 
 /* ============================================================
@@ -1306,15 +1295,15 @@ document.getElementById("btnExportHist").addEventListener("click", ()=>{
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  mostrarEstado("âœ“ CSV exportado");
+  mostrarEstado("✓ CSV exportado");
 });
 
 document.getElementById("btnLimpiarHist").addEventListener("click", ()=>{
   if(historial.length === 0){
-    alert("El historial ya estÃ¡ vacÃ­o.");
+    alert("El historial ya está vacío.");
     return;
   }
-  if(!confirm(`Â¿Vaciar todo el historial? Se eliminarÃ¡n ${historial.length} registro(s). Esta acciÃ³n no se puede deshacer.`)) return;
+  if(!confirm(`¿Vaciar todo el historial? Se eliminarán ${historial.length} registro(s). Esta acción no se puede deshacer.`)) return;
 
   historial = [];
   guardarLS(LS_HIST, historial);
@@ -1328,7 +1317,7 @@ document.getElementById("btnLimpiarHist").addEventListener("click", ()=>{
 filtroHist.addEventListener("input", renderHistorial);
 
 /* ============================================================
-   12. MODAL DE EDICIÃ“N DE BD
+   12. MODAL DE EDICIÓN DE BD
    ============================================================ */
 let modalIndex = -1;
 
@@ -1340,8 +1329,8 @@ function abrirModal(i){
 
   mNombre.value = p.n   || "";
   mCuil.value   = p.c   || "";
-  mCat.value    = (p.cat && p.cat !== "â€”") ? p.cat : "";
-  mOfi.value    = (p.ofi && p.ofi !== "â€”") ? p.ofi : "";
+  mCat.value    = (p.cat && p.cat !== "—") ? p.cat : "";
+  mOfi.value    = (p.ofi && p.ofi !== "—") ? p.ofi : "";
 
   modalTitulo.textContent = modalIndex >= 0 ? "Editar registro" : "Nuevo registro";
   modal.classList.add("open");
@@ -1366,16 +1355,16 @@ document.addEventListener("keydown", e=>{
 document.getElementById("m-guardar").addEventListener("click", ()=>{
   const nombre = mNombre.value.trim();
   if(!nombre){
-    alert("IngresÃ¡ al menos el Apellido y Nombre.");
+    alert("Ingresá al menos el Apellido y Nombre.");
     mNombre.focus();
     return;
   }
 
   const registro = {
     n:   nombre,
-    c:   mCuil.value.trim()  || "â€”",
-    cat: mCat.value.trim()   || "â€”",
-    ofi: mOfi.value.trim()   || "â€”"
+    c:   mCuil.value.trim()  || "—",
+    cat: mCat.value.trim()   || "—",
+    ofi: mOfi.value.trim()   || "—"
   };
 
   if(modalIndex >= 0){
@@ -1387,14 +1376,14 @@ document.getElementById("m-guardar").addEventListener("click", ()=>{
   filtrarBD();
   poblarSelect();
   cerrarModal();
-  mostrarEstado("âœ“ Base de datos actualizada");
+  mostrarEstado("✓ Base de datos actualizada");
 });
 
-/* --- BotÃ³n Nuevo registro --- */
+/* --- Botón Nuevo registro --- */
 btnNuevo.addEventListener("click", ()=>abrirModal(-1));
 
 /* ============================================================
-   13. PESTAÃ‘AS
+   13. PESTAÑAS
    ============================================================ */
 document.getElementById("tabs").addEventListener("click", e=>{
   const tab = e.target.closest(".tab");
@@ -1414,7 +1403,7 @@ document.getElementById("tabs").addEventListener("click", e=>{
 filtro.addEventListener("input", filtrarBD);
 
 /* ============================================================
-   15. INICIALIZACIÃ“N
+   15. INICIALIZACIÓN
    ============================================================ */
 (function init(){
   // Restaurar documento guardado

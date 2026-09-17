@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SINERCOM Â· Control de Stock de Ropa</title>
+<title>SINERCOM · Control de Stock de Ropa</title>
 <style>
 :root{
   --brand:#1d4ed8; --brand2:#0ea5e9; --ink:#0f172a; --muted:#64748b;
@@ -55,7 +55,7 @@ header .spacer{flex:1}
 .stat.blue .val{color:#1d4ed8}.stat.green .val{color:var(--ok)}
 .stat.amber .val{color:var(--warn)}.stat.red .val{color:var(--bad)}
 
-/* ---------- CATEGORÃAS ---------- */
+/* ---------- CATEGORÍAS ---------- */
 .cat{background:var(--card);border-radius:16px;border:1px solid var(--line);
   margin-bottom:20px;overflow:hidden;box-shadow:0 2px 11px rgba(15,23,42,.06)}
 .cat-head{display:flex;align-items:center;gap:11px;padding:14px 18px;
@@ -176,19 +176,8 @@ table.mov td.num{text-align:center;font-weight:800}
   .stat .val{font-size:1.45rem}
 }
 </style>
-<style id="sinercom-theme">
-:root { --sinercom-magenta:#DD2FB5; --sinercom-purple:#7A29E6; --sinercom-blue:#2632F0; --sinercom-navy:#021241; --sinercom-border:#e5e2f7; }
-body { background-color:#f7f7ff !important; background-image:radial-gradient(circle at 8% 0%,rgba(221,47,181,.12),transparent 34%),radial-gradient(circle at 92% 8%,rgba(122,41,230,.10),transparent 32%),radial-gradient(circle at 85% 100%,rgba(38,50,240,.09),transparent 36%) !important; color:var(--sinercom-navy) !important; }
-header,.app-header,nav,.navbar,.topbar { background:linear-gradient(125deg,var(--sinercom-navy),#11136a 55%,var(--sinercom-purple)) !important; color:#fff !important; border-bottom-color:var(--sinercom-magenta) !important; }
-button,.btn,a.btn,input[type="submit"],input[type="button"] { border-color:transparent !important; background:linear-gradient(135deg,var(--sinercom-blue),var(--sinercom-purple)) !important; color:#fff !important; }
-button:hover,.btn:hover,a.btn:hover,input[type="submit"]:hover,input[type="button"]:hover { background:linear-gradient(135deg,var(--sinercom-purple),var(--sinercom-magenta)) !important; }
-a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--sinercom-navy); }
-.card,.tool-card,.panel,.container-card,.dashboard-card,section { border-color:var(--sinercom-border) !important; box-shadow:0 10px 28px rgba(2,18,65,.09) !important; }
-.badge,.tag,.chip,.pill { border-color:#e6d5fa !important; }
-.sinercom-brand { position:fixed;top:14px;left:16px;z-index:9999;display:flex;align-items:center;gap:9px;padding:6px 11px 6px 7px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid rgba(221,47,181,.28);box-shadow:0 8px 22px rgba(2,18,65,.16);color:var(--sinercom-navy);font:700 12px/1.1 Arial,sans-serif;letter-spacing:.04em; }
-.sinercom-brand img { width:30px;height:30px;object-fit:cover;border-radius:50%; } @media(max-width:700px){.sinercom-brand{top:8px;left:8px;}}
-</style></head>
-<body><div class="sinercom-brand"><img src="sinercom.jpeg" alt="SINERCOM"><span>SINERCOM</span></div>
+</head>
+<body>
 
 <!-- ================= HEADER CON LOGO SINERCOM ================= -->
 <header>
@@ -207,22 +196,22 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     </svg>
     <div>
       <div class="brand-name">SINERCOM</div>
-      <div class="brand-sub">Stock de Ropa Â· Septiembre 2026</div>
+      <div class="brand-sub">Stock de Ropa · Septiembre 2026</div>
     </div>
   </div>
 
   <div class="spacer"></div>
 
-  <button class="hbtn primary" data-action="nuevo">ï¼‹ Nuevo movimiento</button>
-  <button class="hbtn" data-action="export">â¬‡ Exportar CSV</button>
-  <button class="hbtn danger" data-action="reset">â†º Restablecer</button>
+  <button class="hbtn primary" data-action="nuevo">＋ Nuevo movimiento</button>
+  <button class="hbtn" data-action="export">⬇ Exportar CSV</button>
+  <button class="hbtn danger" data-action="reset">↺ Restablecer</button>
 </header>
 
 <!-- ================= TABS ================= -->
 <div class="tabs">
-  <button class="tab" data-action="tab" data-vista="gp">ðŸ¬ General Paz <span class="count" id="cnt-gp">0</span></button>
-  <button class="tab" data-action="tab" data-vista="sa">ðŸ¬ San AgustÃ­n <span class="count" id="cnt-sa">0</span></button>
-  <button class="tab" data-action="tab" data-vista="mov">ðŸ“‹ Entregas y Compras <span class="count" id="cnt-mov">0</span></button>
+  <button class="tab" data-action="tab" data-vista="gp">🏬 General Paz <span class="count" id="cnt-gp">0</span></button>
+  <button class="tab" data-action="tab" data-vista="sa">🏬 San Agustín <span class="count" id="cnt-sa">0</span></button>
+  <button class="tab" data-action="tab" data-vista="mov">📋 Entregas y Compras <span class="count" id="cnt-mov">0</span></button>
 </div>
 
 <main class="wrap" id="contenido"></main>
@@ -233,21 +222,21 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
     <div class="modal-head">
       <span class="dot"></span>
       <h3>Registrar movimiento</h3>
-      <button class="x" data-action="cerrar" title="Cerrar">âœ•</button>
+      <button class="x" data-action="cerrar" title="Cerrar">✕</button>
     </div>
     <div class="modal-body">
       <div class="field">
         <label>Tipo de movimiento</label>
         <div class="seg">
-          <button type="button" data-action="tipo" data-tipo="entrega">â†“ Entrega</button>
-          <button type="button" data-action="tipo" data-tipo="compra">â†‘ Compra</button>
+          <button type="button" data-action="tipo" data-tipo="entrega">↓ Entrega</button>
+          <button type="button" data-action="tipo" data-tipo="compra">↑ Compra</button>
         </div>
       </div>
       <div class="field">
         <label>Unidad de negocio</label>
         <select id="movUnidad">
           <option value="gp">General Paz</option>
-          <option value="sa">San AgustÃ­n</option>
+          <option value="sa">San Agustín</option>
         </select>
       </div>
       <div class="field">
@@ -270,7 +259,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
       </div>
       <div class="field" style="margin-bottom:0">
         <label>Nota / Detalle (opcional)</label>
-        <input type="text" id="movNota" placeholder="Ej: cliente, proveedor, NÂ° de remito...">
+        <input type="text" id="movNota" placeholder="Ej: cliente, proveedor, N° de remito...">
       </div>
     </div>
     <div class="modal-foot">
@@ -284,7 +273,7 @@ a { color:var(--sinercom-blue); } h1,h2,h3,h4,.title,.card-title { color:var(--s
 
 <script>
 /* =====================================================================
-   DATOS INICIALES (extraÃ­dos del archivo "Stock de Ropa Septiembre 2026")
+   DATOS INICIALES (extraídos del archivo "Stock de Ropa Septiembre 2026")
    ===================================================================== */
 const STOCK_INICIAL = {
   gp: {
@@ -296,25 +285,25 @@ const STOCK_INICIAL = {
         { id:'gp-p3', nombre:'Camisas Lilas Mangas Cortas Hombre', talles:{'40':3,'42':4,'46':5,'52':2,'54':0} },
         { id:'gp-p4', nombre:'Camisas Lilas Mangas Largas Hombre', talles:{'42':1,'44':6,'46':9,'52':0,'54':0} }
       ]},
-      { id:'gp-shop', nombre:'SHOP Â· Gral Paz', items:[
+      { id:'gp-shop', nombre:'SHOP · Gral Paz', items:[
         { id:'gp-s1', nombre:'Chaquetas Verdes', talles:{'38':1,'40':2,'42':6} },
         { id:'gp-s2', nombre:'Pantalones Cargo', talles:{'38':4,'40':5,'42':1} }
       ]},
       { id:'gp-acc', nombre:'Accesorios', items:[
-        { id:'gp-b1', nombre:'Billeteras Largas', talles:{'Ãšnico':13} }
+        { id:'gp-b1', nombre:'Billeteras Largas', talles:{'Único':13} }
       ]}
     ]
   },
   sa: {
-    nombre: 'San AgustÃ­n',
+    nombre: 'San Agustín',
     categorias: [
-      { id:'sa-playas', nombre:'Playas San AgustÃ­n', items:[
+      { id:'sa-playas', nombre:'Playas San Agustín', items:[
         { id:'sa-p1', nombre:'Mangas Cortas Mujer', talles:{'38':2,'40':2,'42':12,'44':0,'46':0} },
         { id:'sa-p2', nombre:'Mangas Largas Mujer', talles:{'38':0,'40':0,'42':0,'44':0,'46':0} },
         { id:'sa-p3', nombre:'Mangas Cortas Hombre', talles:{'38':0,'40':3,'42':0,'44':1,'46':0} },
         { id:'sa-p4', nombre:'Mangas Largas Hombre', talles:{'38':0,'40':0,'42':2,'44':1,'46':0} }
       ]},
-      { id:'sa-shop', nombre:'SHOP Â· San AgustÃ­n', items:[
+      { id:'sa-shop', nombre:'SHOP · San Agustín', items:[
         { id:'sa-s1', nombre:'Chaquetas Verdes', talles:{'38':2,'40':8} }
       ]},
       { id:'sa-chom', nombre:'Chombas Grises', items:[
@@ -352,7 +341,7 @@ function cargar(){
 function guardar(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} }
 
 /* ===================== UTILIDADES ===================== */
-const ORDEN_TALLES = ['38','40','42','44','46','48','50','52','54','L','XL','XXL','3XL','Ãšnico'];
+const ORDEN_TALLES = ['38','40','42','44','46','48','50','52','54','L','XL','XXL','3XL','Único'];
 const idxTalle = t => { const i = ORDEN_TALLES.indexOf(t); return i < 0 ? 999 : i; };
 const ordenarTalles = arr => [...arr].sort((a,b)=> idxTalle(a)-idxTalle(b) || String(a).localeCompare(String(b)));
 const hoy = () => new Date().toLocaleDateString('sv-SE');
@@ -415,7 +404,7 @@ function vistaUnidad(u){
     <section class="cat">
       <div class="cat-head">
         <span class="dot"></span>
-        <h3>Ãšltimos movimientos Â· ${d.nombre}</h3>
+        <h3>Últimos movimientos · ${d.nombre}</h3>
         <span class="total">${movsU.length} en total</span>
       </div>
       <div class="tbl-scroll">
@@ -426,11 +415,11 @@ function vistaUnidad(u){
             ${ultimos.map(m => `
               <tr>
                 <td>${fmtFecha(m.fecha)}</td>
-                <td><span class="badge ${m.tipo}">${m.tipo === 'entrega' ? 'â†“ Entrega' : 'â†‘ Compra'}</span></td>
+                <td><span class="badge ${m.tipo}">${m.tipo === 'entrega' ? '↓ Entrega' : '↑ Compra'}</span></td>
                 <td>${m.itemNombre}</td>
                 <td class="num">${m.talle}</td>
-                <td class="num" style="color:${m.tipo==='entrega'?'#b91c1c':'#047857'}">${m.tipo==='entrega'?'âˆ’':'+'}${m.cantidad}</td>
-                <td class="nota">${m.nota || 'â€”'}</td>
+                <td class="num" style="color:${m.tipo==='entrega'?'#b91c1c':'#047857'}">${m.tipo==='entrega'?'−':'+'}${m.cantidad}</td>
+                <td class="nota">${m.nota || '—'}</td>
               </tr>`).join('')}
           </tbody>
         </table>
@@ -451,7 +440,7 @@ function vistaUnidad(u){
       </div>
       <div class="stat amber">
         <div class="lbl">Entregas realizadas</div>
-        <div class="val">âˆ’${entregas}</div>
+        <div class="val">−${entregas}</div>
         <div class="sub">${movsU.filter(m=>m.tipo==='entrega').length} movimientos</div>
       </div>
       <div class="stat red">
@@ -468,13 +457,13 @@ function vistaUnidad(u){
 function renderCategoria(u, cat){
   const setT = new Set();
   cat.items.forEach(it => Object.keys(it.talles).forEach(t => setT.add(t)));
-  const talles = setT.size ? ordenarTalles([...setT]) : ['Ãšnico'];
+  const talles = setT.size ? ordenarTalles([...setT]) : ['Único'];
 
   let catTotal = 0;
   const filas = cat.items.map(it => {
     let rowTotal = 0;
     const celdas = talles.map(t => {
-      if(!(t in it.talles)) return '<td class="na">â€“</td>';
+      if(!(t in it.talles)) return '<td class="na">–</td>';
       const v = +(it.talles[t] || 0);
       rowTotal += v;
       const cls = v === 0 ? 'zero' : (v <= 2 ? 'low' : '');
@@ -505,7 +494,7 @@ function renderCategoria(u, cat){
           <thead>
             <tr>
               <th class="prod">Producto</th>
-              ${talles.map(t => `<th>${t === 'Ãšnico' ? 'Ãšnico' : 'Talle ' + t}</th>`).join('')}
+              ${talles.map(t => `<th>${t === 'Único' ? 'Único' : 'Talle ' + t}</th>`).join('')}
               <th>Total</th>
             </tr>
           </thead>
@@ -530,13 +519,13 @@ function vistaMovimientos(){
   const filas = movs.map(m => `
     <tr>
       <td>${fmtFecha(m.fecha)}</td>
-      <td><span class="badge ${m.tipo}">${m.tipo === 'entrega' ? 'â†“ Entrega' : 'â†‘ Compra'}</span></td>
+      <td><span class="badge ${m.tipo}">${m.tipo === 'entrega' ? '↓ Entrega' : '↑ Compra'}</span></td>
       <td><span class="unit-tag ${m.unidad === 'sa' ? 'sa' : ''}">${state.stock[m.unidad].nombre}</span></td>
       <td>${m.itemNombre}<div class="nota">${m.catNombre}</div></td>
       <td class="num">${m.talle}</td>
-      <td class="num" style="color:${m.tipo==='entrega'?'#b91c1c':'#047857'}">${m.tipo==='entrega'?'âˆ’':'+'}${m.cantidad}</td>
-      <td class="nota">${m.nota || 'â€”'}</td>
-      <td><button class="del" data-action="del-mov" data-id="${m.id}" title="Eliminar (ajusta el stock)">ðŸ—‘</button></td>
+      <td class="num" style="color:${m.tipo==='entrega'?'#b91c1c':'#047857'}">${m.tipo==='entrega'?'−':'+'}${m.cantidad}</td>
+      <td class="nota">${m.nota || '—'}</td>
+      <td><button class="del" data-action="del-mov" data-id="${m.id}" title="Eliminar (ajusta el stock)">🗑</button></td>
     </tr>`).join('');
 
   const cuerpo = movs.length
@@ -546,31 +535,31 @@ function vistaMovimientos(){
         <th>Nota</th><th></th></tr></thead>
         <tbody>${filas}</tbody>
        </table></div>`
-    : `<div class="empty"><div class="big">ðŸ“‹</div>
+    : `<div class="empty"><div class="big">📋</div>
         <strong>Sin movimientos registrados</strong>
-        <p>TocÃ¡ cualquier celda de stock o el botÃ³n <b>ï¼‹ Nuevo movimiento</b> para registrar una entrega o una compra.</p>
+        <p>Tocá cualquier celda de stock o el botón <b>＋ Nuevo movimiento</b> para registrar una entrega o una compra.</p>
        </div>`;
 
   return `
     <div class="stats">
       <div class="stat blue"><div class="lbl">Movimientos</div><div class="val">${movs.length}</div>
-        <div class="sub">segÃºn filtros activos</div></div>
+        <div class="sub">según filtros activos</div></div>
       <div class="stat green"><div class="lbl">Total compras</div><div class="val">+${com}</div>
         <div class="sub">unidades ingresadas</div></div>
-      <div class="stat amber"><div class="lbl">Total entregas</div><div class="val">âˆ’${ent}</div>
+      <div class="stat amber"><div class="lbl">Total entregas</div><div class="val">−${ent}</div>
         <div class="sub">unidades entregadas</div></div>
       <div class="stat red"><div class="lbl">Balance</div><div class="val">${com - ent >= 0 ? '+' : ''}${com - ent}</div>
-        <div class="sub">compras âˆ’ entregas</div></div>
+        <div class="sub">compras − entregas</div></div>
     </div>
 
     <div class="filters">
       <button class="chip ${filtroTipo==='todos'?'on':''}" data-action="filtro" data-f="todos">Todos</button>
-      <button class="chip ${filtroTipo==='compra'?'on':''}" data-action="filtro" data-f="compra">â†‘ Compras</button>
-      <button class="chip ${filtroTipo==='entrega'?'on':''}" data-action="filtro" data-f="entrega">â†“ Entregas</button>
+      <button class="chip ${filtroTipo==='compra'?'on':''}" data-action="filtro" data-f="compra">↑ Compras</button>
+      <button class="chip ${filtroTipo==='entrega'?'on':''}" data-action="filtro" data-f="entrega">↓ Entregas</button>
       <select id="filtroUnidad">
         <option value="todas" ${filtroUnidad==='todas'?'selected':''}>Todas las unidades</option>
         <option value="gp" ${filtroUnidad==='gp'?'selected':''}>General Paz</option>
-        <option value="sa" ${filtroUnidad==='sa'?'selected':''}>San AgustÃ­n</option>
+        <option value="sa" ${filtroUnidad==='sa'?'selected':''}>San Agustín</option>
       </select>
     </div>
 
@@ -601,7 +590,7 @@ function poblarTalles(){
   if(!found){ sel.innerHTML = ''; return; }
   const talles = ordenarTalles(Object.keys(found.item.talles));
   sel.innerHTML = talles.map(t =>
-    `<option value="${t}">${t === 'Ãšnico' ? 'Ãšnico' : 'Talle ' + t} Â· ${found.item.talles[t]} u. en stock</option>`
+    `<option value="${t}">${t === 'Único' ? 'Único' : 'Talle ' + t} · ${found.item.talles[t]} u. en stock</option>`
   ).join('');
 }
 
@@ -644,15 +633,15 @@ function guardarMov(){
   const fecha   = document.getElementById('movFecha').value || hoy();
   const nota    = document.getElementById('movNota').value.trim();
 
-  if(!itemId || !talle){ toast('SeleccionÃ¡ producto y talle'); return; }
-  if(!cant || cant <= 0){ toast('IngresÃ¡ una cantidad vÃ¡lida'); return; }
+  if(!itemId || !talle){ toast('Seleccioná producto y talle'); return; }
+  if(!cant || cant <= 0){ toast('Ingresá una cantidad válida'); return; }
 
   const found = buscarItem(u, itemId);
   if(!found) return;
 
   const actual = +(found.item.talles[talle] || 0);
   if(tipo === 'entrega' && cant > actual){
-    if(!confirm(`Solo hay ${actual} unidad(es) de "${found.item.nombre}" talle ${talle}.\nÂ¿Registrar la entrega igual?`)) return;
+    if(!confirm(`Solo hay ${actual} unidad(es) de "${found.item.nombre}" talle ${talle}.\n¿Registrar la entrega igual?`)) return;
   }
 
   found.item.talles[talle] = (tipo === 'entrega') ? actual - cant : actual + cant;
@@ -668,13 +657,13 @@ function guardarMov(){
   });
 
   guardar(); cerrarModal(); render();
-  toast(tipo === 'entrega' ? 'âœ” Entrega registrada' : 'âœ” Compra registrada');
+  toast(tipo === 'entrega' ? '✔ Entrega registrada' : '✔ Compra registrada');
 }
 
 function eliminarMov(id){
   const m = state.movimientos.find(x => x.id === id);
   if(!m) return;
-  if(!confirm(`Â¿Eliminar este movimiento?\n\n${m.tipo === 'entrega' ? 'Entrega' : 'Compra'} de ${m.cantidad} u. â€” ${m.itemNombre} (Talle ${m.talle})\n\nEl stock se ajustarÃ¡ automÃ¡ticamente.`)) return;
+  if(!confirm(`¿Eliminar este movimiento?\n\n${m.tipo === 'entrega' ? 'Entrega' : 'Compra'} de ${m.cantidad} u. — ${m.itemNombre} (Talle ${m.talle})\n\nEl stock se ajustará automáticamente.`)) return;
 
   const found = buscarItem(m.unidad, m.itemId);
   if(found){
@@ -706,8 +695,8 @@ function exportarCSV(){
 
 /* ===================== RESET ===================== */
 function resetear(){
-  if(!confirm('Esto borrarÃ¡ TODOS los movimientos y devolverÃ¡ el stock a los valores iniciales del archivo.\n\nÂ¿Continuar?')) return;
-  if(!confirm('Â¿EstÃ¡s completamente seguro? Esta acciÃ³n no se puede deshacer.')) return;
+  if(!confirm('Esto borrará TODOS los movimientos y devolverá el stock a los valores iniciales del archivo.\n\n¿Continuar?')) return;
+  if(!confirm('¿Estás completamente seguro? Esta acción no se puede deshacer.')) return;
   state = { stock: clone(STOCK_INICIAL), movimientos: [] };
   guardar(); render();
   toast('Datos restablecidos al stock inicial');
