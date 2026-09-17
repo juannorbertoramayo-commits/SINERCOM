@@ -668,9 +668,101 @@
         :is(a, button, input):focus-visible {
             outline-color: rgba(221, 47, 181, .5);
         }
+        body.auth-locked > :not(.access-gate) {
+            visibility: hidden;
+        }
+        .access-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at 20% 10%, rgba(221, 47, 181, .3), transparent 38%),
+                linear-gradient(135deg, #021241 0%, #17146d 55%, #7a29e6 140%);
+        }
+        .access-gate-card {
+            width: min(100%, 390px);
+            padding: 34px;
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 22px;
+            color: #fff;
+            text-align: center;
+            background: rgba(2,18,65,.7);
+            box-shadow: 0 24px 70px rgba(0,0,0,.3);
+            backdrop-filter: blur(18px);
+        }
+        .access-gate-card .access-icon {
+            display: grid;
+            place-items: center;
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 18px;
+            border-radius: 18px;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #dd2fb5, #7a29e6);
+        }
+        .access-gate-card h2 {
+            margin-bottom: 8px;
+            font-size: 1.35rem;
+        }
+        .access-gate-card p {
+            margin-bottom: 22px;
+            color: #d9d8f5;
+            font-size: .86rem;
+        }
+        .access-gate-card form {
+            display: flex;
+            gap: 9px;
+        }
+        .access-gate-card input {
+            min-width: 0;
+            flex: 1;
+            padding: 12px 14px;
+            border: 1px solid rgba(255,255,255,.25);
+            border-radius: 10px;
+            color: #fff;
+            background: rgba(255,255,255,.1);
+            font: inherit;
+        }
+        .access-gate-card input::placeholder { color: #c9c9e8; }
+        .access-gate-card button {
+            padding: 12px 17px;
+            border: 0;
+            border-radius: 10px;
+            color: #fff;
+            background: linear-gradient(135deg, #dd2fb5, #7a29e6);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .access-error {
+            min-height: 20px;
+            margin-top: 12px;
+            color: #ffb4d9;
+            font-size: .78rem;
+        }
+        @media (max-width: 480px) {
+            .access-gate-card { padding: 26px 20px; }
+            .access-gate-card form { flex-direction: column; }
+        }
     </style>
 </head>
-<body>
+<body class="auth-locked">
+    <section class="access-gate" id="accessGate" aria-label="Acceso protegido">
+        <div class="access-gate-card">
+            <div class="access-icon">🔐</div>
+            <h2>Centro de Control SINERCOM</h2>
+            <p>Ingresá la clave de acceso para continuar.</p>
+            <form id="accessForm">
+                <input id="accessKey" type="password" placeholder="Clave de acceso" autocomplete="current-password" required />
+                <button type="submit">Ingresar</button>
+            </form>
+            <div class="access-error" id="accessError" role="alert" aria-live="polite"></div>
+        </div>
+    </section>
 
     <!-- ===== HEADER ===== -->
     <header class="app-header">
@@ -1070,6 +1162,36 @@
     </footer>
 
     <script>
+        (function() {
+            const accessKey = 'zazu2026';
+            const gate = document.getElementById('accessGate');
+            const form = document.getElementById('accessForm');
+            const input = document.getElementById('accessKey');
+            const error = document.getElementById('accessError');
+
+            function unlock() {
+                document.body.classList.remove('auth-locked');
+                gate.remove();
+                sessionStorage.setItem('sinercomAccess', 'granted');
+            }
+
+            if (sessionStorage.getItem('sinercomAccess') === 'granted') {
+                unlock();
+            } else {
+                input.focus();
+            }
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                if (input.value === accessKey) {
+                    unlock();
+                } else {
+                    error.textContent = 'La clave ingresada no es válida.';
+                    input.select();
+                }
+            });
+        })();
+
         function filterCards() {
             const query = document.getElementById('globalSearch').value.toLowerCase().trim();
             const cards = document.querySelectorAll('.tool-card');
