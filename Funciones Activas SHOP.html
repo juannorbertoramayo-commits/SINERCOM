@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Funciones Activas · SHOP</title>
+
+<!-- Montserrat (600 = Semibold) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    /* ── PALETA ───────────────────────────── */
+    --magenta:#DD2FB5;
+    --purple:#7A29E6;
+    --blue:#2632F0;
+    --navy:#021241;
+
+    --magenta-soft:#FBE0F4;
+    --purple-soft:#EDE3FC;
+    --blue-soft:#E1E4FE;
+    --navy-soft:#D9DBE9;
+
+    --bg:#F7F7FB;
+    --paper:#FFFFFF;
+    --ink:#021241;
+    --ink-soft:#3A3F66;
+    --muted:#7C7FA3;
+    --line:#E7E7F2;
+
+    --shadow:0 12px 34px rgba(2,18,65,.10);
+    --shadow-hover:0 20px 46px rgba(2,18,65,.18);
+    --radius:20px;
+  }
+
+  *{box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    /* Tipografía base: Helvética regular */
+    font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight:400;
+    color:var(--ink);
+    background:
+      radial-gradient(1000px 500px at 8% -8%, #F0E7FC 0%, transparent 58%),
+      radial-gradient(900px 480px at 100% 0%, #E3E6FE 0%, transparent 55%),
+      var(--bg);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* Montserrat Semibold para todos los títulos */
+  h1, h2, h3, .tag, .btn, .eyebrow{
+    font-family:"Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight:600;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    overflow:hidden;
+    padding:52px 28px 72px;
+    color:#fff;
+    background:
+      linear-gradient(115deg, var(--navy) 0%, #1B1F6B 42%, var(--purple) 100%);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    top:-140px; right:-100px;
+    width:420px;height:420px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(221,47,181,.55), transparent 62%);
+    filter:blur(4px);
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    bottom:-180px; left:-120px;
+    width:460px;height:460px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(38,50,240,.55), transparent 65%);
+  }
+  .hero__inner{
+    position:relative;
+    z-index:2;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    display:inline-block;
+    font-size:.7rem;
+    letter-spacing:.26em;
+    text-transform:uppercase;
+    color:#fff;
+    padding:6px 16px;
+    border-radius:999px;
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.28);
+    backdrop-filter:blur(6px);
+    margin-bottom:18px;
+  }
+  .hero h1{
+    margin:0 0 10px;
+    font-size:clamp(1.9rem, 4.2vw, 2.9rem);
+    font-weight:700;
+    letter-spacing:-.8px;
+    line-height:1.15;
+  }
+  .hero p{
+    margin:0;
+    max-width:640px;
+    font-size:1rem;
+    color:rgba(255,255,255,.82);
+  }
+  .hero__rule{
+    width:78px;height:5px;border-radius:99px;
+    margin-top:22px;
+    background:linear-gradient(90deg, var(--magenta), var(--blue));
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .wrap{
+    max-width:1180px;
+    margin:-40px auto 72px;
+    padding:0 24px;
+    position:relative;
+    z-index:3;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(350px,1fr));
+    gap:26px;
+    align-items:start;
+  }
+
+  /* ---------- CARD ---------- */
+  .card{
+    background:var(--paper);
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    transition:transform .28s ease, box-shadow .28s ease;
+    position:relative;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow:var(--shadow-hover);
+  }
+
+  .card__head{
+    position:relative;
+    padding:20px 24px 18px;
+    color:#fff;
+    background:linear-gradient(120deg, var(--navy) 0%, var(--purple) 100%);
+  }
+  .card__head::after{
+    content:"";
+    position:absolute;
+    left:0; bottom:0;
+    height:4px; width:100%;
+    background:linear-gradient(90deg, var(--magenta), var(--blue));
+  }
+  .card__head h2{
+    margin:0 0 10px;
+    font-size:1.1rem;
+    font-weight:700;
+    letter-spacing:.1px;
+  }
+
+  .tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+  }
+  .tag{
+    font-size:.7rem;
+    letter-spacing:.05em;
+    padding:5px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.13);
+    border:1px solid rgba(255,255,255,.28);
+    color:#fff;
+  }
+  .tag--turn{
+    background:var(--magenta);
+    border-color:var(--magenta);
+    color:#fff;
+    font-weight:700;
+  }
+
+  .card__body{
+    padding:20px 24px 24px;
+  }
+
+  /* ---------- BLOCKS ---------- */
+  .block + .block{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px dashed var(--line);
+  }
+  .block h3{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:0 0 12px;
+    font-size:.78rem;
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+  .block h3::before{
+    content:"";
+    width:10px;height:10px;
+    border-radius:3px;
+    flex:0 0 auto;
+  }
+
+  .block--activas h3{color:var(--magenta);}
+  .block--activas h3::before{background:var(--magenta);}
+
+  .block--pasivas h3{color:var(--purple);}
+  .block--pasivas h3::before{background:var(--purple);}
+
+  .block--recepcion h3{color:var(--blue);}
+  .block--recepcion h3::before{background:var(--blue);}
+
+  ul.list{
+    margin:0;
+    padding:0;
+    list-style:none;
+  }
+  ul.list li{
+    position:relative;
+    padding:6px 0 6px 22px;
+    font-size:.93rem;
+    color:var(--ink-soft);
+  }
+  ul.list li::before{
+    content:"";
+    position:absolute;
+    left:2px; top:.85em;
+    width:7px;height:7px;
+    border-radius:50%;
+    flex:0 0 auto;
+  }
+  .block--activas ul.list li::before{background:var(--magenta-soft);}
+  .block--pasivas ul.list li::before{background:var(--purple-soft);}
+  .block--recepcion ul.list li::before{background:var(--blue-soft);}
+
+  .empty{
+    font-size:.9rem;
+    font-style:italic;
+    color:var(--muted);
+    padding:2px 0 2px 22px;
+    position:relative;
+    margin:0;
+  }
+  .empty::before{
+    content:"—";
+    position:absolute;
+    left:0;
+    color:var(--muted);
+  }
+
+  .highlight{
+    background:linear-gradient(transparent 62%, rgba(221,47,181,.28) 62%);
+    font-weight:600;
+    color:var(--navy);
+  }
+
+  /* ---------- EDIT BAR ---------- */
+  .edit-bar{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:60;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .btn{
+    font-family:"Montserrat","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight:600;
+    font-size:.85rem;
+    letter-spacing:.03em;
+    border:none;
+    cursor:pointer;
+    border-radius:999px;
+    padding:12px 22px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:#fff;
+    background:linear-gradient(120deg, var(--purple), var(--magenta));
+    box-shadow:0 8px 22px rgba(122,41,230,.42);
+    transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  }
+  .btn:hover{filter:brightness(1.08); box-shadow:0 12px 28px rgba(221,47,181,.42);}
+  .btn:active{transform:scale(.97);}
+
+  .btn--edit.is-on{
+    background:linear-gradient(120deg, var(--blue), var(--navy));
+    box-shadow:0 10px 26px rgba(38,50,240,.40);
+  }
+
+  .btn--ghost{
+    background:rgba(255,255,255,.92);
+    color:var(--navy);
+    box-shadow:0 8px 20px rgba(2,18,65,.18);
+    display:none;
+  }
+  .btn--ghost:hover{background:#fff;}
+  .editing .btn--ghost{display:inline-flex;}
+
+  /* ---------- EDITING STATE ---------- */
+  .editing .card__head,
+  .editing .card__body{
+    outline:2px dashed rgba(221,47,181,.55);
+    outline-offset:-8px;
+    border-radius:14px;
+  }
+  [contenteditable="true"]:focus{
+    outline:2px solid var(--magenta);
+    outline-offset:6px;
+    border-radius:10px;
+    background:#FFF6FC;
+  }
+
+  /* ---------- TOAST ---------- */
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:28px;
+    transform:translate(-50%, 150%);
+    padding:13px 24px;
+    border-radius:999px;
+    font-size:.87rem;
+    letter-spacing:.02em;
+    font-family:"Montserrat","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight:600;
+    color:#fff;
+    background:linear-gradient(120deg, var(--navy), var(--purple));
+    box-shadow:0 14px 32px rgba(2,18,65,.42);
+    transition:transform .38s cubic-bezier(.2,.8,.3,1);
+    z-index:90;
+    max-width:90vw;
+    text-align:center;
+  }
+  .toast.show{transform:translate(-50%,0);}
+
+  /* ---------- FOOTER ---------- */
+  .foot{
+    text-align:center;
+    font-size:.78rem;
+    color:var(--muted);
+    padding:0 24px 44px;
+    letter-spacing:.04em;
+  }
+
+  @media (max-width:640px){
+    .hero{padding:40px 20px 60px;}
+    .wrap{padding:0 16px;}
+    .grid{grid-template-columns:1fr;gap:20px;}
+    .edit-bar{top:12px;right:12px;}
+    .btn{padding:10px 16px;font-size:.78rem;}
+  }
+
+  @media print{
+    .edit-bar,.toast{display:none !important;}
+    body{background:#fff;}
+    .card{break-inside:avoid; box-shadow:none;}
+    .hero{background:var(--navy) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .card__head{background:var(--navy) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+
+<!-- BOTÓN EDITAR -->
+<div class="edit-bar">
+  <button class="btn btn--ghost" id="btnPrint">🖨️ Imprimir</button>
+  <button class="btn btn--edit" id="btnEdit">✏️ Editar</button>
+</div>
+
+<!-- ENCABEZADO -->
+<header class="hero">
+  <div class="hero__inner">
+    <span class="eyebrow">Manual operativo</span>
+    <h1>Funciones Activas · SHOP</h1>
+    <p>Organización de puestos, turnos y responsabilidades del equipo. Funciones activas, pasivas y de recepción por sector.</p>
+    <div class="hero__rule"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid" id="board">
+
+    <!-- ============ CAJA MAÑANA / TARDE ============ -->
+    <article class="card">
+      <div class="card__head">
+        <h2>Puesto: Caja</h2>
+        <div class="tags">
+          <span class="tag tag--turn">Turno: Mañana / Tarde</span>
+          <span class="tag">Coordina: Cafetería · Parada S.</span>
+        </div>
+      </div>
+      <div class="card__body">
+
+        <section class="block block--activas">
+          <h3>Funciones Activas</h3>
+          <ul class="list">
+            <li>Apertura de las puertas Sur y Este.</li>
+            <li>Coordinar el grupo de trabajo en el SHOP.</li>
+            <li>Recepción y atención al cliente.</li>
+            <li>Aplicación del protocolo de atención establecido.</li>
+            <li>Toma de pedidos.</li>
+            <li>Cobro y emisión de ticket.</li>
+            <li>Numeración de pedidos según orden de llegada y registro del nombre del cliente en la planilla correspondiente.</li>
+            <li>Seguimiento visual.</li>
+            <li>Comunicación fluida entre Caja 1 y Caja 2.</li>
+            <li>Entrega de bandeja y ticket a la compañera encargada.</li>
+          </ul>
+        </section>
+
+        <section class="block block--pasivas">
+          <h3>Funciones Pasivas</h3>
+          <p class="empty">Sin tareas asignadas.</p>
+        </section>
+
+        <section class="block block--recepcion">
+          <h3>Recepción</h3>
+          <ul class="list">
+            <li>Recepción de pedido.</li>
+            <li>Verificación del stock de insumos y materiales descartables.</li>
+            <li>Solicitud de reposición a cafetería o parada.</li>
+            <li>Preparado de café (en caso de ser necesario).</li>
+            <li>Revisión y reposición de exhibidoras.</li>
+            <li>Mantenimiento del orden y limpieza en el sector de Check-Out (incluyendo cestos de Take-Way).</li>
+            <li>Limpieza y organización de cajones.</li>
+            <li>Asistencia de productos provenientes de proveedores.</li>
+            <li>Retiro de bandejas de mesas, limpieza con alcohol al 70% y colocación en remojo.</li>
+            <li>Reposición de panificación.</li>
+          </ul>
+        </section>
+
+      </div>
+    </article>
+
+    <!-- ============ CAJA NOCHE ============ -->
+    <article class="card">
+      <div class="card__head">
+        <h2>Puesto: Caja</h2>
+        <div class="tags">
+          <span class="tag tag--turn">Turno: Noche</span>
+          <span class="tag">Coordina: Playa</span>
+        </div>
+      </div>
+      <div class="card__body">
+
+        <section class="block block--activas">
+          <h3>Funciones Activas</h3>
+          <ul class="list">
+            <li>Cierre de puertas Sur y Este.</li>
+            <li>Descongelado de productos de la Parada Sanguchera (P-S) y mantequería, según cantidades establecidas.</li>
+            <li>Atención al cliente y aplicación del protocolo de atención.</li>
+            <li>Toma de pedidos.</li>
+            <li>Coordinar el grupo de trabajo en el SHOP.</li>
+            <li>Reposición de panificación.</li>
+            <li>Cobro y emisión de ticket.</li>
+            <li>Numeración de pedidos y registro del nombre del cliente.</li>
+            <li>Elaboración completa del pedido, retirando todos los alimentos en una sola vuelta.</li>
+            <li>Finalización del pedido con productos calientes (café, tostados, etc.).</li>
+            <li>Traslado de la bandeja al Check-out y llamado al cliente.</li>
+            <li><span class="highlight">Despedida cordial: "Que lo disfrutes" ♥</span></li>
+          </ul>
+        </section>
+
+        <section class="block block--pasivas">
+          <h3>Funciones Pasivas</h3>
+          <ul class="list">
+            <li>Limpieza de pisos.</li>
+            <li>Reposición de góndolas dentro del SHOP.</li>
+            <li>Limpieza y reposición de heladeras.</li>
+            <li>Limpieza de vidrios (con apoyo del playero de turno, si es necesario).</li>
+            <li>Retiro de bandejas de mesas, limpieza con alcohol al 70% y colocación en remojo.</li>
+            <li>Reposición de panificación.</li>
+            <li>Limpieza profunda de paños y trapos de piso.</li>
+            <li>Descongelar freezer (en caso de ser necesario).</li>
+            <li>Limpieza de hornos.</li>
+            <li>Limpieza de prensador.</li>
+          </ul>
+        </section>
+
+        <section class="block block--recepcion">
+          <h3>Recepción</h3>
+          <p class="empty">No aplica.</p>
+        </section>
+
+      </div>
+    </article>
+
+    <!-- ============ CAFETERÍA / ARMADO ============ -->
+    <article class="card">
+      <div class="card__head">
+        <h2>Puesto: Cafetería / Armado de Pedidos</h2>
+        <div class="tags">
+          <span class="tag tag--turn">Turno: Mañana / Tarde</span>
+          <span class="tag">Asistencia: Caja</span>
+        </div>
+      </div>
+      <div class="card__body">
+
+        <section class="block block--activas">
+          <h3>Funciones Activas</h3>
+          <ul class="list">
+            <li>Preparación y cocción de productos panificados.</li>
+            <li>Recepción de bandejas y tickets, verificando número de orden y nombre del cliente.</li>
+            <li>Retiro de todos los alimentos solicitados en una sola vuelta.</li>
+            <li>Finalización del pedido con productos calientes (café, tostados, etc.).</li>
+            <li>Traslado de la bandeja al Check-out y llamado al cliente.</li>
+            <li>Entregar como máximo 2 sobres de azúcar.</li>
+            <li><span class="highlight">Despedida cordial: "Que lo disfrute" ♥</span></li>
+          </ul>
+        </section>
+
+        <section class="block block--pasivas">
+          <h3>Funciones Pasivas</h3>
+          <ul class="list">
+            <li>Retiro de bandejas de mesas y limpieza con alcohol al 70%.</li>
+            <li>Traslado de vajilla usada a la bacha y colocación en remojo.</li>
+            <li>Lavado de vajilla.</li>
+            <li>Limpieza de bandejas con alcohol y disposición en el sector correspondiente.</li>
+            <li>Reposición de insumos y descartables según indicaciones de caja.</li>
+            <li>Control de limpieza y orden en la mesada trasera.</li>
+          </ul>
+        </section>
+
+        <section class="block block--recepcion">
+          <h3>Recepción</h3>
+          <ul class="list">
+            <li>Recepción de pedido.</li>
+            <li>Reposición de heladeras y góndolas.</li>
+            <li>Limpieza de piso.</li>
+            <li>Mantenimiento de la limpieza de cajones.</li>
+            <li>Asistencia en la acomodación de productos de proveedores.</li>
+          </ul>
+        </section>
+
+      </div>
+    </article>
+
+    <!-- ============ PARADA SANGUCHERA MAÑANA ============ -->
+    <article class="card">
+      <div class="card__head">
+        <h2>Puesto: Parada Sanguchera</h2>
+        <div class="tags">
+          <span class="tag tag--turn">Turno: Mañana</span>
+          <span class="tag">Asistencia: Cafetería</span>
+        </div>
+      </div>
+      <div class="card__body">
+
+        <section class="block block--activas">
+          <h3>Funciones Activas</h3>
+          <ul class="list">
+            <li>Revisión de fechas de vencimiento, vida útil y correcto rotulado de productos.</li>
+            <li>Feteado de fiambre en tupper, en cantidad equivalente al stock establecido de sándwiches armados.</li>
+            <li>Recepción de proveedores.</li>
+            <li>Armado de sándwiches hasta completar el stock establecido.</li>
+            <li>Preparación de conservas.</li>
+            <li>Descongelado de hamburguesas, prensados y bondiola según stock establecido.</li>
+            <li><span class="highlight">A las 11:30 h:</span> cocción de empanadas y pizzas.</li>
+            <li>Venta activa: ofrecer, explicar y mostrar conservas y alternativas de productos.</li>
+            <li>Entregar como máximo 2 sobres de aderezos.</li>
+          </ul>
+        </section>
+
+        <section class="block block--pasivas">
+          <h3>Funciones Pasivas</h3>
+          <ul class="list">
+            <li>Mantenimiento de la limpieza de cajones y cestos de basura.</li>
+            <li>Control de materiales descartables.</li>
+            <li>Limpieza permanente de la mesada.</li>
+            <li>Limpieza al cierre de turno.</li>
+            <li>Limpieza y orden de la máquina cortadora de fiambre y utensilios.</li>
+          </ul>
+        </section>
+
+        <section class="block block--recepcion">
+          <h3>Recepción</h3>
+          <ul class="list">
+            <li>Recepción de pedido.</li>
+          </ul>
+        </section>
+
+      </div>
+    </article>
+
+    <!-- ============ PARADA SANGUCHERA TARDE ============ -->
+    <article class="card">
+      <div class="card__head">
+        <h2>Puesto: Parada Sanguchera</h2>
+        <div class="tags">
+          <span class="tag tag--turn">Turno: Tarde</span>
+          <span class="tag">Asistencia: Cafetería</span>
+        </div>
+      </div>
+      <div class="card__body">
+
+        <section class="block block--activas">
+          <h3>Funciones Activas</h3>
+          <ul class="list">
+            <li>Reposición total del stock de sándwiches vendidos durante el mediodía.</li>
+            <li>Reposición de conservas preparadas.</li>
+            <li>Reposición de feteado según necesidad.</li>
+            <li>Recepción de proveedores.</li>
+            <li>Evaluación de la necesidad de descongelar adicionalmente hamburguesas, prensados o bondiola, según stock.</li>
+            <li><span class="highlight">A las 20:00 h:</span> cocción de empanadas y pizzas.</li>
+            <li>Permanencia en el sector para atender pedidos de clientes hasta el final del turno o hasta que disminuya el flujo de trabajo.</li>
+          </ul>
+        </section>
+
+        <section class="block block--pasivas">
+          <h3>Funciones Pasivas</h3>
+          <ul class="list">
+            <li>Asistencia en la acomodación de productos de proveedores.</li>
+            <li>En momentos de baja actividad en la Parada Sanguchera, apoyar en el sector de cafetería o realizar tareas auxiliares que no involucren caja.</li>
+            <li>Colaborar con el turno noche, desligándolo de la responsabilidad del feteado y armado de sándwiches, permitiendo que se enfoque en tareas de salón, limpieza, reposición de góndolas, golosinas y heladeras, que resultan más complejas durante el horario diurno por la afluencia de clientes.</li>
+          </ul>
+        </section>
+
+        <section class="block block--recepcion">
+          <h3>Recepción</h3>
+          <ul class="list">
+            <li>Recepción de pedido.</li>
+          </ul>
+        </section>
+
+      </div>
+    </article>
+
+    <!-- ============ REFUERZO TARDE ============ -->
+    <article class="card">
+      <div class="card__head">
+        <h2>Puesto: Refuerzo</h2>
+        <div class="tags">
+          <span class="tag tag--turn">Turno: Tarde</span>
+          <span class="tag">Asistencia: Caja 1 · Cafetería</span>
+        </div>
+      </div>
+      <div class="card__body">
+
+        <section class="block block--activas">
+          <h3>Funciones Activas</h3>
+          <ul class="list">
+            <li>Limpieza de Shop (mesas, pisos, vajilla).</li>
+            <li>Reposición total del stock de sándwiches.</li>
+            <li>Reposición de conservas preparadas.</li>
+            <li>Cocción de productos.</li>
+            <li>Recepción de proveedores.</li>
+            <li>Descongelar adicionalmente hamburguesas, prensados o bondiola, según stock.</li>
+            <li>Abrir la segunda caja.</li>
+            <li>Cafetería (en caso de ser necesario).</li>
+            <li>Parada Sanguchera.</li>
+          </ul>
+        </section>
+
+        <section class="block block--pasivas">
+          <h3>Funciones Pasivas</h3>
+          <ul class="list">
+            <li>Sacar basura.</li>
+          </ul>
+        </section>
+
+        <section class="block block--recepcion">
+          <h3>Recepción</h3>
+          <ul class="list">
+            <li>Recepción de pedido.</li>
+          </ul>
+        </section>
+
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer class="foot">
+  Documento interno · SHOP — Funciones por puesto y turno
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const PASSWORD = "zazu2026";
+  const btnEdit   = document.getElementById('btnEdit');
+  const btnPrint  = document.getElementById('btnPrint');
+  const board     = document.getElementById('board');
+  const toastEl   = document.getElementById('toast');
+
+  let editing = false;
+  let toastTimer = null;
+
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2600);
+  }
+
+  function setEditable(state){
+    editing = state;
+    board.querySelectorAll('.card__head, .card__body').forEach(el => {
+      el.setAttribute('contenteditable', state ? 'true' : 'false');
+    });
+    document.body.classList.toggle('editing', state);
+
+    if(state){
+      btnEdit.textContent = '💾 Guardar';
+      btnEdit.classList.add('is-on');
+      toast('Modo edición activado. Ya podés modificar el texto.');
+    }else{
+      btnEdit.textContent = '✏️ Editar';
+      btnEdit.classList.remove('is-on');
+      toast('Cambios guardados en pantalla.');
+    }
+  }
+
+  btnEdit.addEventListener('click', function(){
+    if(!editing){
+      const pass = prompt('Ingresá la clave para editar:');
+      if(pass === null) return;
+      if(pass !== PASSWORD){
+        toast('Clave incorrecta. Acceso denegado.');
+        return;
+      }
+      setEditable(true);
+    }else{
+      setEditable(false);
+    }
+  });
+
+  btnPrint.addEventListener('click', () => window.print());
+
+  board.addEventListener('keydown', function(e){
+    if(!editing) return;
+    if(e.key === 'Escape'){
+      e.preventDefault();
+      setEditable(false);
+    }
+  });
+})();
+</script>
+</body>
+</html>
