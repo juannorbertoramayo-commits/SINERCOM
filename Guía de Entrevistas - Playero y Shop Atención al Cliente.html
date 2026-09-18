@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Entrevistas - Playero y Shop / Atención al Cliente</title>
+<style>
+  :root{
+    --playero:#0d6efd;
+    --shop:#e83e8c;
+    --general:#6c757d;
+    --vak:#20c997;
+    --disc:#fd7e14;
+    --bg:#f5f7fa;
+    --card:#ffffff;
+    --text:#212529;
+    --muted:#6c757d;
+    --border:#dee2e6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.55;
+  }
+  header{
+    background:linear-gradient(135deg,#1f2937,#0d6efd);
+    color:#fff;
+    padding:35px 20px;
+    text-align:center;
+  }
+  header h1{margin:0 0 8px;font-size:1.8rem;}
+  header p{margin:0;opacity:.9;font-size:.95rem;}
+
+  .candidato-bar{
+    max-width:1100px;
+    margin:-25px auto 20px;
+    padding:0 20px;
+    position:relative;
+    z-index:5;
+  }
+  .candidato-card{
+    background:#fff;
+    border-radius:14px;
+    padding:18px 22px;
+    box-shadow:0 4px 14px rgba(0,0,0,.08);
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:14px;
+  }
+  .candidato-card label{
+    display:block;
+    font-size:.75rem;
+    font-weight:700;
+    text-transform:uppercase;
+    color:var(--muted);
+    letter-spacing:.5px;
+    margin-bottom:4px;
+  }
+  .candidato-card input{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:9px 12px;
+    font-size:.95rem;
+    font-family:inherit;
+    background:#fafbfc;
+  }
+  .candidato-card input:focus{
+    outline:none;
+    border-color:var(--playero);
+    background:#fff;
+    box-shadow:0 0 0 3px rgba(13,110,253,.12);
+  }
+
+  .container{max-width:1100px;margin:0 auto;padding:0 20px 40px;}
+
+  .tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    margin:0 auto 25px;
+    max-width:1100px;
+    padding:0 20px;
+  }
+  .tab-btn{
+    border:none;
+    padding:12px 22px;
+    border-radius:30px;
+    background:#fff;
+    color:var(--text);
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+    transition:.2s;
+    font-size:.95rem;
+  }
+  .tab-btn:hover{transform:translateY(-2px);}
+  .tab-btn.active{color:#fff;}
+  .tab-btn[data-tab="playero"].active{background:var(--playero);}
+  .tab-btn[data-tab="shop"].active{background:var(--shop);}
+  .tab-btn[data-tab="roleplay"].active{background:#6f42c1;}
+  .tab-btn[data-tab="planilla"].active{background:#198754;}
+
+  .panel{display:none;animation:fade .3s ease;}
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+
+  .card{
+    background:var(--card);
+    border-radius:14px;
+    padding:25px 28px;
+    margin-bottom:20px;
+    box-shadow:0 4px 14px rgba(0,0,0,.06);
+    border-left:6px solid var(--border);
+  }
+  .card.playero{border-left-color:var(--playero);}
+  .card.shop{border-left-color:var(--shop);}
+  .card.general{border-left-color:var(--general);}
+  .card.vak{border-left-color:var(--vak);}
+  .card.disc{border-left-color:var(--disc);}
+  .card.roleplay{border-left-color:#6f42c1;}
+  .card.planilla{border-left-color:#198754;}
+
+  h2{
+    margin-top:0;
+    font-size:1.35rem;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  h3{
+    font-size:1.05rem;
+    margin-top:26px;
+    margin-bottom:14px;
+    color:#1f2937;
+    border-bottom:2px solid var(--border);
+    padding-bottom:6px;
+  }
+
+  .badge{
+    display:inline-block;
+    font-size:.7rem;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:20px;
+    color:#fff;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+  }
+  .badge.playero{background:var(--playero);}
+  .badge.shop{background:var(--shop);}
+  .badge.general{background:var(--general);}
+  .badge.vak{background:var(--vak);}
+  .badge.disc{background:var(--disc);}
+
+  .qa{
+    margin-bottom:16px;
+    padding:12px 14px;
+    border-radius:10px;
+    background:#fafbfc;
+    border:1px solid var(--border);
+    transition:.2s;
+  }
+  .qa:focus-within{
+    background:#fff;
+    border-color:var(--playero);
+    box-shadow:0 0 0 3px rgba(13,110,253,.08);
+  }
+  .qa .pregunta{
+    font-weight:600;
+    font-size:.93rem;
+    color:#1f2937;
+    margin-bottom:8px;
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+  }
+  .qa .pregunta::before{
+    content:"❓";
+    flex-shrink:0;
+    opacity:.7;
+  }
+  .qa textarea{
+    width:100%;
+    min-height:60px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:10px 12px;
+    font-family:inherit;
+    font-size:.9rem;
+    resize:vertical;
+    background:#fff;
+    color:var(--text);
+    line-height:1.5;
+  }
+  .qa textarea:focus{outline:none;border-color:var(--playero);}
+  .qa textarea::placeholder{color:#adb5bd;font-style:italic;}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:15px 0;
+    font-size:.9rem;
+  }
+  th,td{
+    border:1px solid var(--border);
+    padding:10px 12px;
+    text-align:left;
+    vertical-align:top;
+  }
+  th{background:#f1f3f5;font-weight:600;}
+  tr:nth-child(even) td{background:#fafbfc;}
+
+  .note{
+    background:#fff8e1;
+    border-left:4px solid #ffc107;
+    padding:12px 16px;
+    border-radius:8px;
+    margin:15px 0;
+    font-size:.9rem;
+  }
+  .tip{
+    background:#e7f5ff;
+    border-left:4px solid #0d6efd;
+    padding:12px 16px;
+    border-radius:8px;
+    margin:15px 0;
+    font-size:.9rem;
+  }
+  .redflag{
+    background:#ffe8e8;
+    border-left:4px solid #dc3545;
+    padding:12px 16px;
+    border-radius:8px;
+    margin:15px 0;
+    font-size:.9rem;
+  }
+  .roleplay-box{
+    background:#f3f0ff;
+    border-left:4px solid #6f42c1;
+    padding:12px 16px;
+    border-radius:8px;
+    margin:12px 0;
+  }
+
+  .toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+    margin-bottom:15px;
+  }
+  .tool-btn{
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text);
+    padding:8px 16px;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:.85rem;
+    font-weight:600;
+    transition:.2s;
+  }
+  .tool-btn:hover{background:#f1f3f5;}
+  .tool-btn.danger{color:#dc3545;border-color:#f5c2c7;}
+  .tool-btn.danger:hover{background:#f8d7da;}
+
+  .save-status{
+    font-size:.8rem;
+    color:#198754;
+    font-weight:600;
+    align-self:center;
+    margin-right:auto;
+    opacity:0;
+    transition:opacity .3s;
+  }
+  .save-status.show{opacity:1;}
+
+  .print-btn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#1f2937;
+    color:#fff;
+    border:none;
+    padding:12px 20px;
+    border-radius:30px;
+    cursor:pointer;
+    font-weight:600;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+    z-index:100;
+  }
+  .print-btn:hover{background:#0d6efd;}
+
+  @media (max-width:700px){
+    .candidato-card{grid-template-columns:1fr;}
+  }
+
+  /* ====================================================== */
+  /* ============ CONFIGURACIÓN A4 COMPACTA =============== */
+  /* ====================================================== */
+  @page {
+    size: A4 portrait;
+    margin: 8mm 7mm;
+  }
+
+  @media print{
+    html, body{
+      background:#fff !important;
+      font-size:9pt;
+      line-height:1.25;
+      color:#000;
+    }
+
+    .tabs, .toolbar, .print-btn, .candidato-bar{display:none !important;}
+
+    .container{max-width:100%;padding:0;margin:0;}
+
+    .panel{display:none !important;page-break-before:auto;}
+    .panel.active{display:block !important;}
+
+    .card{
+      page-break-inside:auto;
+      box-shadow:none;
+      border:1px solid #ccc;
+      border-left-width:3px;
+      margin-bottom:4px;
+      padding:6px 8px;
+      border-radius:3px;
+      background:#fff;
+    }
+
+    [data-questions]{
+      column-count:2;
+      column-gap:5mm;
+      column-fill:balance;
+    }
+    [data-questions] .qa{
+      break-inside:avoid;
+      page-break-inside:avoid;
+      padding:3px 5px;
+      margin:0 0 3px 0;
+      border:1px solid #ddd;
+      border-radius:3px;
+      background:#fff;
+      display:inline-block;
+      width:100%;
+    }
+    .qa .pregunta{
+      font-size:8pt;
+      margin-bottom:2px;
+      line-height:1.2;
+      color:#000;
+    }
+    .qa .pregunta::before{content:"";}
+    .qa textarea{display:none !important;}
+
+    .print-answer{
+      display:block !important;
+      border-bottom:1px dotted #999;
+      padding:0;
+      min-height:11px;
+      font-size:8pt;
+      background:transparent;
+      white-space:pre-wrap;
+      color:#000;
+      line-height:1.2;
+    }
+
+    header{
+      padding:5px 8px;
+      margin-bottom:3px;
+      background:#1f2937 !important;
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+      page-break-after:avoid;
+    }
+    header h1{font-size:12pt;margin:0 0 1px;}
+    header p{font-size:7.5pt;}
+
+    h2{
+      font-size:11pt;
+      margin:0 0 3px;
+      gap:4px;
+      page-break-after:avoid;
+    }
+    h3{
+      font-size:9pt;
+      margin:5px 0 2px;
+      padding-bottom:1px;
+      border-bottom-width:1px;
+      page-break-after:avoid;
+    }
+
+    table{
+      font-size:7.5pt;
+      margin:2px 0;
+      page-break-inside:avoid;
+    }
+    th,td{padding:2px 3px;line-height:1.2;}
+    th{font-size:7pt;}
+
+    .tip, .note, .redflag, .roleplay-box{
+      font-size:7.5pt;
+      padding:3px 5px;
+      margin:2px 0;
+      break-inside:avoid;
+      page-break-inside:avoid;
+    }
+    .roleplay-box{margin:1px 0;padding:2px 5px;}
+
+    .badge{font-size:6.5pt;padding:1px 5px;}
+
+    input[type="text"], input[type="date"]{
+      border:none !important;
+      border-bottom:1px solid #999 !important;
+      padding:0 1px !important;
+      background:transparent !important;
+      font-size:8pt !important;
+      height:auto;
+    }
+    input[type="radio"], input[type="checkbox"]{
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+      transform:scale(0.8);
+      margin:0;
+    }
+
+    #planilla .planilla-col-wrap{
+      column-count:2;
+      column-gap:5mm;
+      column-fill:balance;
+    }
+    #planilla .card > h2{
+      column-span:all;
+    }
+    #planilla .planilla-table-block{
+      column-span:all;
+      break-inside:avoid;
+      page-break-inside:avoid;
+      margin-bottom:3px;
+    }
+    #planilla .planilla-block{
+      break-inside:avoid;
+      page-break-inside:avoid;
+      display:inline-block;
+      width:100%;
+    }
+    #planilla .card > .note{
+      column-span:all;
+      margin-top:3px;
+    }
+    #planilla table{font-size:7pt;}
+    #planilla th, #planilla td{padding:1.5px 2px;}
+  }
+
+  .print-answer{display:none;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Guía de Entrevistas</h1>
+  <p>Vacantes: Playero de Estación de Servicio &amp; Shop / Atención al Cliente</p>
+</header>
+
+<div class="candidato-bar">
+  <div class="candidato-card">
+    <div>
+      <label for="nombre">Nombre del candidato</label>
+      <input type="text" id="nombre" data-save placeholder="Ej: Juan Pérez">
+    </div>
+    <div>
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" data-save>
+    </div>
+    <div>
+      <label for="puesto">Puesto</label>
+      <input type="text" id="puesto" data-save placeholder="Playero / Shop / Mixto">
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="playero">⛽ Playero</button>
+  <button class="tab-btn" data-tab="shop">🛒 Shop / Atención al Cliente</button>
+  <button class="tab-btn" data-tab="roleplay">🎭 Role Play</button>
+  <button class="tab-btn" data-tab="planilla">📊 Planilla / Resumen</button>
+</div>
+
+<div class="container">
+
+  <div class="toolbar">
+    <span class="save-status" id="saveStatus">✓ Guardado</span>
+    <button class="tool-btn" onclick="imprimirActual()">🖨 Imprimir pestaña actual</button>
+    <button class="tool-btn" onclick="imprimirTodo()">🖨 Imprimir todo</button>
+    <button class="tool-btn danger" onclick="limpiarTodo()">🗑 Limpiar todo</button>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- ======================== PLAYERO ============================ -->
+  <!-- ============================================================= -->
+  <section id="playero" class="panel active">
+
+    <div class="card general">
+      <h2><span class="badge general">General</span> Filtro y disponibilidad — Playero</h2>
+      <div data-questions>
+        <div class="qa" data-q="play-gen1"><div class="pregunta">¿Qué te motivó a postularte para este puesto?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen2"><div class="pregunta">¿Qué experiencia tenés en atención al público, caja o estaciones de servicio?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen3"><div class="pregunta">¿Tenés disponibilidad para turnos rotativos, nocturnos, fines de semana y feriados?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen5"><div class="pregunta">¿Cómo te trasladás hasta el trabajo? ¿Tenés forma de llegar en turnos nocturnos?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen6"><div class="pregunta">Contame un error que cometiste en el trabajo. ¿Cómo lo resolviste?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen7"><div class="pregunta">¿Qué hacés si un compañero no cumple con su tarea?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen8"><div class="pregunta">¿Qué harías si surge un problema y no está el supervisor?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen10"><div class="pregunta">¿Cómo manejás el estrés en hora pico?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen11"><div class="pregunta">¿Qué harías si ves a un compañero robando o no respetando una norma?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen-ci1"><div class="pregunta">¿Tenés preguntas sobre el puesto?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen-ci2"><div class="pregunta">¿Cuál es tu expectativa salarial?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen-ci3"><div class="pregunta">¿Cuándo podrías empezar?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-gen-ci4"><div class="pregunta">¿Hay algo más que debamos saber de vos?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="card playero">
+      <h2><span class="badge playero">Playero</span> Preguntas específicas del puesto</h2>
+
+      <h3>🔧 Operativas</h3>
+      <div data-questions>
+        <div class="qa" data-q="play-op1"><div class="pregunta">¿Qué tareas creés que hace un playero además de cargar combustible?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-op2"><div class="pregunta">¿Qué harías al recibir un vehículo: desde que llega hasta que se va?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-op3"><div class="pregunta">¿Cómo organizás tus tareas en hora pico con varios autos esperando?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-op4"><div class="pregunta">¿Cómo mantenés limpio y ordenado el surtidor, la tienda y los baños?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-op5"><div class="pregunta">¿Sabés revisar niveles de aceite, agua, presión de neumáticos?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+
+      <h3>🦺 Seguridad</h3>
+      <div data-questions>
+        <div class="qa" data-q="play-seg1"><div class="pregunta">¿Qué normas de seguridad conocés al cargar combustible?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-seg2"><div class="pregunta">¿Qué harías si un cliente no apaga el motor, usa el celular o fuma?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-seg3"><div class="pregunta">¿Cómo actuarías ante un derrame de combustible?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-seg4"><div class="pregunta">¿Qué harías si ves una pérdida, chispa o situación de riesgo?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+
+      <h3>💵 Manejo de dinero y caja</h3>
+      <div data-questions>
+        <div class="qa" data-q="play-caja1"><div class="pregunta">¿Cómo evitás errores con el dinero y las vueltas?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-caja2"><div class="pregunta">¿Qué harías si al cerrar la caja falta dinero?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-caja3"><div class="pregunta">¿Qué harías si un cliente se olvida el cambio o una billetera?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-caja4"><div class="pregunta">¿Manejás efectivo, posnet, tarjetas o aplicaciones de pago?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+
+      <h3>🚗 Situaciones con clientes</h3>
+      <div data-questions>
+        <div class="qa" data-q="play-cli1"><div class="pregunta">¿Qué harías si un cliente pide cargar en un bidón sin autorización?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-cli3"><div class="pregunta">¿Cómo reaccionás si un cliente te apura o te grita?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+
+      <div class="tip">💡 <strong>Tip:</strong> Priorizá <em>seguridad, honestidad y responsabilidad</em> por encima de la simpatía.</div>
+      <div class="redflag">🚩 <strong>Red flags:</strong> minimiza normas de seguridad, no reconoce errores, no acepta turnos nocturnos.</div>
+    </div>
+
+    <div class="card vak">
+      <h2><span class="badge vak">VAK</span> Visual · Auditivo · Kinestésico — Playero</h2>
+      <div data-questions>
+        <div class="qa" data-q="play-vak1"><div class="pregunta">¿Cómo aprendés mejor una tarea nueva: leyendo, escuchando o practicando?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-vak2"><div class="pregunta">Si te doy instrucciones para cargar combustible, ¿preferís que te las explique, que te las escriba o que te acompañe?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-vak3"><div class="pregunta">¿Cómo recordás mejor lo que tenés que hacer durante el turno?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-vak4"><div class="pregunta">¿Qué te ayuda a concentrarte en un lugar con ruido, movimiento y gente?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-vak5"><div class="pregunta">Contame cómo aprendiste tu trabajo anterior.</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-vak-perfil">
+          <div class="pregunta">Perfiles predominantes:</div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin:4px 0 6px;">
+            <label style="font-size:.85rem;"><input type="checkbox" data-save> Visual</label>
+            <label style="font-size:.85rem;"><input type="checkbox" data-save> Auditivo</label>
+            <label style="font-size:.85rem;"><input type="checkbox" data-save> Kinestésico</label>
+          </div>
+          <textarea placeholder="Justificación..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card disc">
+      <h2><span class="badge disc">DISC + K</span> Conducta y Conocimiento — Playero</h2>
+      <div data-questions>
+        <div class="qa" data-q="play-discD"><div class="pregunta"><strong>D:</strong> Contame una vez que tuviste que decidir rápido y sin ayuda.</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-discI"><div class="pregunta"><strong>I:</strong> ¿Cómo ofrecerías un producto adicional sin ser insistente?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-discS"><div class="pregunta"><strong>S:</strong> ¿Qué hacés si un compañero se enferma y tenés que cubrirlo?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="play-discC"><div class="pregunta"><strong>C:</strong> ¿Qué hacés si el procedimiento dice una cosa y el cliente te pide otra?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+
+      <h3>Puntuación del entrevistador</h3>
+      <table>
+        <thead><tr><th>Dimensión</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>Observación</th></tr></thead>
+        <tbody>
+          <tr><td><strong>D</strong></td>
+            <td><input type="radio" name="play-pD" value="1" data-save></td><td><input type="radio" name="play-pD" value="2" data-save></td><td><input type="radio" name="play-pD" value="3" data-save></td><td><input type="radio" name="play-pD" value="4" data-save></td><td><input type="radio" name="play-pD" value="5" data-save></td>
+            <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+          <tr><td><strong>I</strong></td>
+            <td><input type="radio" name="play-pI" value="1" data-save></td><td><input type="radio" name="play-pI" value="2" data-save></td><td><input type="radio" name="play-pI" value="3" data-save></td><td><input type="radio" name="play-pI" value="4" data-save></td><td><input type="radio" name="play-pI" value="5" data-save></td>
+            <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+          <tr><td><strong>S</strong></td>
+            <td><input type="radio" name="play-pS" value="1" data-save></td><td><input type="radio" name="play-pS" value="2" data-save></td><td><input type="radio" name="play-pS" value="3" data-save></td><td><input type="radio" name="play-pS" value="4" data-save></td><td><input type="radio" name="play-pS" value="5" data-save></td>
+            <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+          <tr><td><strong>C</strong></td>
+            <td><input type="radio" name="play-pC" value="1" data-save></td><td><input type="radio" name="play-pC" value="2" data-save></td><td><input type="radio" name="play-pC" value="3" data-save></td><td><input type="radio" name="play-pC" value="4" data-save></td><td><input type="radio" name="play-pC" value="5" data-save></td>
+            <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+          <tr><td><strong>K</strong></td>
+            <td><input type="radio" name="play-pK" value="1" data-save></td><td><input type="radio" name="play-pK" value="2" data-save></td><td><input type="radio" name="play-pK" value="3" data-save></td><td><input type="radio" name="play-pK" value="4" data-save></td><td><input type="radio" name="play-pK" value="5" data-save></td>
+            <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+        </tbody>
+      </table>
+
+      <div class="qa" data-q="play-disc-concl">
+        <div class="pregunta">Conclusión del entrevistador:</div>
+        <textarea placeholder="Perfil predominante y comentario final..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- ========================== SHOP ============================= -->
+  <!-- ============================================================= -->
+  <section id="shop" class="panel">
+
+    <div class="card general">
+      <h2><span class="badge general">General</span> Filtro y disponibilidad — Shop</h2>
+      <div data-questions>
+        <div class="qa" data-q="shop-gen1"><div class="pregunta">¿Qué te motivó a postularte para este puesto?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen2"><div class="pregunta">¿Qué experiencia tenés en atención al público, caja o estaciones de servicio?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen3"><div class="pregunta">¿Tenés disponibilidad para turnos rotativos, nocturnos, fines de semana y feriados?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen5"><div class="pregunta">¿Cómo te trasladás hasta el trabajo? ¿Tenés forma de llegar en turnos nocturnos?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen6"><div class="pregunta">Contame un error que cometiste en el trabajo. ¿Cómo lo resolviste?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen7"><div class="pregunta">¿Qué hacés si un compañero no cumple con su tarea?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen8"><div class="pregunta">¿Qué harías si surge un problema y no está el supervisor?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen10"><div class="pregunta">¿Cómo manejás el estrés en hora pico?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen11"><div class="pregunta">¿Qué harías si ves a un compañero robando o no respetando una norma?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen-ci1"><div class="pregunta">¿Tenés preguntas sobre el puesto?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen-ci2"><div class="pregunta">¿Cuál es tu expectativa salarial?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen-ci3"><div class="pregunta">¿Cuándo podrías empezar?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-gen-ci4"><div class="pregunta">¿Hay algo más que debamos saber de vos?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="card shop">
+      <h2><span class="badge shop">Shop</span> Preguntas específicas de Atención al Cliente</h2>
+
+      <h3>💬 Servicio y trato</h3>
+      <div data-questions>
+        <div class="qa" data-q="shop-serv1"><div class="pregunta">¿Qué significa para vos dar una buena atención?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-serv2"><div class="pregunta">Contame una vez que atendiste a un cliente enojado.</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-serv3"><div class="pregunta">¿Cómo reaccionás si un cliente te grita o insulta?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-serv4"><div class="pregunta">¿Cómo te comunicás con alguien apurado o que no entiende bien?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-serv5"><div class="pregunta">¿Qué hacés si no podés resolver un problema o no sabés una respuesta?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+
+      <h3>🛍 Ventas y productos</h3>
+      <div data-questions>
+        <div class="qa" data-q="shop-vent1"><div class="pregunta">¿Cómo ofrecerías un producto adicional sin ser insistente?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-vent2"><div class="pregunta">¿Qué harías si un cliente pide algo que no está permitido?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-vent3"><div class="pregunta">¿Cómo manejás varias personas esperando al mismo tiempo?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-vent4"><div class="pregunta">¿Cómo registrás una venta y cómo cerrás la caja al final del turno?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-vent5"><div class="pregunta">¿Tenés experiencia con posnet, código de barras, stock o inventario?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+
+      <h3>📦 Organización del shop</h3>
+      <div data-questions>
+        <div class="qa" data-q="shop-org1"><div class="pregunta">¿Cómo mantenés el orden y la reposición de góndolas?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-org2"><div class="pregunta">¿Qué hacés si detectás un producto vencido o en mal estado?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-org3"><div class="pregunta">¿Cómo controlás que no falte stock de los productos más vendidos?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+
+      <div class="tip">💡 <strong>Tip:</strong> Priorizá <em>paciencia, empatía, prolijidad y manejo del dinero</em>.</div>
+      <div class="redflag">🚩 <strong>Red flags:</strong> maltrata clientes, se pone a la defensiva, no reconoce errores.</div>
+    </div>
+
+    <div class="card vak">
+      <h2><span class="badge vak">VAK</span> Visual · Auditivo · Kinestésico — Shop</h2>
+      <div data-questions>
+        <div class="qa" data-q="shop-vak1"><div class="pregunta">¿Cómo aprendés mejor una tarea nueva: leyendo, escuchando o practicando?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-vak2"><div class="pregunta">Si te doy instrucciones para atender la caja, ¿preferís que te las explique, que te las escriba o que te acompañe?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-vak3"><div class="pregunta">¿Cómo recordás mejor lo que tenés que hacer durante el turno?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-vak4"><div class="pregunta">¿Qué te ayuda a concentrarte en un lugar con ruido, movimiento y gente?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-vak5"><div class="pregunta">Contame cómo aprendiste tu trabajo anterior.</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-vak-perfil">
+          <div class="pregunta">Perfiles predominantes:</div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin:4px 0 6px;">
+            <label style="font-size:.85rem;"><input type="checkbox" data-save> Visual</label>
+            <label style="font-size:.85rem;"><input type="checkbox" data-save> Auditivo</label>
+            <label style="font-size:.85rem;"><input type="checkbox" data-save> Kinestésico</label>
+          </div>
+          <textarea placeholder="Justificación..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card disc">
+      <h2><span class="badge disc">DISC + K</span> Conducta y Conocimiento — Shop</h2>
+      <div data-questions>
+        <div class="qa" data-q="shop-discD"><div class="pregunta"><strong>D:</strong> Contame una vez que tuviste que decidir rápido y sin ayuda.</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-discI"><div class="pregunta"><strong>I:</strong> ¿Cómo ofrecerías un producto adicional sin ser insistente?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-discS"><div class="pregunta"><strong>S:</strong> ¿Qué hacés si un compañero se enferma y tenés que cubrirlo?</div><textarea placeholder="Respuesta..."></textarea></div>
+        <div class="qa" data-q="shop-discC"><div class="pregunta"><strong>C:</strong> ¿Qué hacés si el procedimiento dice una cosa y el cliente te pide otra?</div><textarea placeholder="Respuesta..."></textarea></div>
+      </div>
+
+      <h3>Puntuación del entrevistador</h3>
+      <table>
+        <thead><tr><th>Dimensión</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>Observación</th></tr></thead>
+        <tbody>
+          <tr><td><strong>D</strong></td>
+            <td><input type="radio" name="shop-pD" value="1" data-save></td><td><input type="radio" name="shop-pD" value="2" data-save></td><td><input type="radio" name="shop-pD" value="3" data-save></td><td><input type="radio" name="shop-pD" value="4" data-save></td><td><input type="radio" name="shop-pD" value="5" data-save></td>
+            <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+          <tr><td><strong>I</strong></td>
+            <td><input type="radio" name="shop-pI" value="1" data-save></td><td><input type="radio" name="shop-pI" value="2" data-save></td><td><input type="radio" name="shop-pI" value="3" data-save></td><td><input type="radio" name="shop-pI" value="4" data-save></td><td><input type="radio" name="shop-pI" value="5" data-save></td>
+            <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+          <tr><td><strong>S</strong></td>
+            <td><input type="radio" name="shop-pS" value="1" data-save></td><td><input type="radio" name="shop-pS" value="2" data-save></td><td><input type="radio" name="shop-pS" value="3" data-save></td><td><input type="radio" name="shop-pS" value="4" data-save></td><td><input type="radio" name="shop-pS" value="5" data-save></td>
+            <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+          <tr><td><strong>C</strong></td>
+            <td><input type="radio" name="shop-pC" value="1" data-save></td><td><input type="radio" name="shop-pC" value="2" data-save></td><td><input type="radio" name="shop-pC" value="3" data-save></td><td><input type="radio" name="shop-pC" value="4" data-save></td><td><input type="radio" name="shop-pC" value="5" data-save></td>
+            <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+          <tr><td><strong>K</strong></td>
+            <td><input type="radio" name="shop-pK" value="1" data-save></td><td><input type="radio" name="shop-pK" value="2" data-save></td><td><input type="radio" name="shop-pK" value="3" data-save></td><td><input type="radio" name="shop-pK" value="4" data-save></td><td><input type="radio" name="shop-pK" value="5" data-save></td>
+            <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+        </tbody>
+      </table>
+
+      <div class="qa" data-q="shop-disc-concl">
+        <div class="pregunta">Conclusión del entrevistador:</div>
+        <textarea placeholder="Perfil predominante y comentario final..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- ======================= ROLE PLAY =========================== -->
+  <!-- ============================================================= -->
+  <section id="roleplay" class="panel">
+    <div class="card roleplay">
+      <h2>🎭 Role Play — Simulaciones</h2>
+      <div data-questions>
+        <div class="roleplay-box"><strong>1.</strong> Cliente enojado por carga o cobro incorrecto.</div>
+        <div class="roleplay-box"><strong>2.</strong> Cliente quiere cargar en bidón sin autorización.</div>
+        <div class="roleplay-box"><strong>3.</strong> Cliente apurado y hay fila larga.</div>
+        <div class="roleplay-box"><strong>4.</strong> Faltante de caja al cierre del turno.</div>
+        <div class="roleplay-box"><strong>5.</strong> Derrame de combustible en el surtidor.</div>
+        <div class="roleplay-box"><strong>6.</strong> (Shop) Cliente pide producto vencido o en mal estado.</div>
+        <div class="roleplay-box"><strong>7.</strong> (Shop) Dos clientes quieren ser atendidos al mismo tiempo.</div>
+      </div>
+
+      <h3>Evaluación del desempeño</h3>
+      <div data-questions>
+        <div class="qa" data-q="rp1"><div class="pregunta">¿Siguió el protocolo correcto?</div><textarea placeholder="Sí / No / Parcialmente..."></textarea></div>
+        <div class="qa" data-q="rp2"><div class="pregunta">¿Mantuvo la calma y el trato respetuoso?</div><textarea placeholder="Observaciones..."></textarea></div>
+        <div class="qa" data-q="rp3"><div class="pregunta">¿Pidió ayuda a tiempo cuando la necesitaba?</div><textarea placeholder="Observaciones..."></textarea></div>
+        <div class="qa" data-q="rp4"><div class="pregunta">¿Reconoció errores o puntos a mejorar?</div><textarea placeholder="Observaciones..."></textarea></div>
+        <div class="qa" data-q="rp5"><div class="pregunta">Comentario general del role play:</div><textarea placeholder="Fortalezas y aspectos a mejorar..."></textarea></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- ======================= PLANILLA ============================ -->
+  <!-- ============================================================= -->
+  <section id="planilla" class="panel">
+    <div class="card planilla">
+      <h2>📊 Resumen final del candidato</h2>
+
+      <div class="planilla-col-wrap">
+        <div class="planilla-table-block">
+          <h3>Puntuación general</h3>
+          <table>
+            <thead><tr><th>Criterio</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>Comentario</th></tr></thead>
+            <tbody>
+              <tr><td>Honestidad y responsabilidad</td>
+                <td><input type="radio" name="f1" value="1" data-save></td><td><input type="radio" name="f1" value="2" data-save></td><td><input type="radio" name="f1" value="3" data-save></td><td><input type="radio" name="f1" value="4" data-save></td><td><input type="radio" name="f1" value="5" data-save></td>
+                <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+              <tr><td>Respeto por normas de seguridad</td>
+                <td><input type="radio" name="f2" value="1" data-save></td><td><input type="radio" name="f2" value="2" data-save></td><td><input type="radio" name="f2" value="3" data-save></td><td><input type="radio" name="f2" value="4" data-save></td><td><input type="radio" name="f2" value="5" data-save></td>
+                <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+              <tr><td>Trato al cliente / empatía</td>
+                <td><input type="radio" name="f3" value="1" data-save></td><td><input type="radio" name="f3" value="2" data-save></td><td><input type="radio" name="f3" value="3" data-save></td><td><input type="radio" name="f3" value="4" data-save></td><td><input type="radio" name="f3" value="5" data-save></td>
+                <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+              <tr><td>Manejo de efectivo / caja</td>
+                <td><input type="radio" name="f4" value="1" data-save></td><td><input type="radio" name="f4" value="2" data-save></td><td><input type="radio" name="f4" value="3" data-save></td><td><input type="radio" name="f4" value="4" data-save></td><td><input type="radio" name="f4" value="5" data-save></td>
+                <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+              <tr><td>Trabajo bajo presión</td>
+                <td><input type="radio" name="f5" value="1" data-save></td><td><input type="radio" name="f5" value="2" data-save></td><td><input type="radio" name="f5" value="3" data-save></td><td><input type="radio" name="f5" value="4" data-save></td><td><input type="radio" name="f5" value="5" data-save></td>
+                <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+              <tr><td>Disponibilidad horaria</td>
+                <td><input type="radio" name="f6" value="1" data-save></td><td><input type="radio" name="f6" value="2" data-save></td><td><input type="radio" name="f6" value="3" data-save></td><td><input type="radio" name="f6" value="4" data-save></td><td><input type="radio" name="f6" value="5" data-save></td>
+                <td><input type="text" data-save style="width:100%;border:1px solid #dee2e6;border-radius:4px;padding:3px 6px;"></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="planilla-block">
+          <h3>Decisión final</h3>
+          <div class="qa" data-q="decision">
+            <div class="pregunta">Resultado:</div>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;margin:4px 0 6px;">
+              <label><input type="radio" name="decision" value="avanza" data-save> ✅ Avanza</label>
+              <label><input type="radio" name="decision" value="duda" data-save> ⏳ En duda</label>
+              <label><input type="radio" name="decision" value="rechaza" data-save> ❌ No avanza</label>
+            </div>
+            <textarea placeholder="Justificación..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        ⚠️ <strong>Recordá:</strong> VAK y DISC son herramientas de apoyo, no filtros únicos.
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<button class="print-btn" onclick="imprimirActual()">🖨 Imprimir / PDF (A4)</button>
+
+<script>
+  // ===== Tabs =====
+  const buttons = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.panel');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  // ===== Clave estable por campo =====
+  function getStableKey(el){
+    const section = el.closest('section')?.id || 'x';
+    const parent = el.closest('[data-q]');
+    const q = parent?.dataset.q || 'noq';
+    const siblings = Array.from(parent ? parent.querySelectorAll('textarea, input') : [el]);
+    const idx = siblings.indexOf(el);
+    return `${section}::${q}::${idx}`;
+  }
+
+  const STORAGE_KEY = 'entrevistas_estacion_v4';
+  const saveStatus = document.getElementById('saveStatus');
+
+  function recolectarDatos(){
+    const data = {};
+    document.querySelectorAll('textarea').forEach(ta => {
+      data['ta-' + getStableKey(ta)] = ta.value;
+    });
+    document.querySelectorAll('input[type="text"][data-save], input[type="date"][data-save]').forEach(inp => {
+      const key = inp.id || getStableKey(inp);
+      data['in-' + key] = inp.value;
+    });
+    document.querySelectorAll('input[type="radio"][data-save]').forEach(r => {
+      const key = r.name + '::' + r.value;
+      data['r-' + key] = r.checked;
+    });
+    document.querySelectorAll('input[type="checkbox"][data-save]').forEach(c => {
+      data['c-' + getStableKey(c)] = c.checked;
+    });
+    return data;
+  }
+
+  function guardar(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(recolectarDatos()));
+      saveStatus.classList.add('show');
+      clearTimeout(window._saveTimer);
+      window._saveTimer = setTimeout(() => saveStatus.classList.remove('show'), 1200);
+    }catch(e){ console.warn(e); }
+  }
+
+  function cargar(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+
+      document.querySelectorAll('textarea').forEach(ta => {
+        const k = 'ta-' + getStableKey(ta);
+        if(k in data) ta.value = data[k];
+      });
+      document.querySelectorAll('input[type="text"][data-save], input[type="date"][data-save]').forEach(inp => {
+        const key = inp.id || getStableKey(inp);
+        const k = 'in-' + key;
+        if(k in data) inp.value = data[k];
+      });
+      document.querySelectorAll('input[type="radio"][data-save]').forEach(r => {
+        const k = 'r-' + r.name + '::' + r.value;
+        if(k in data) r.checked = data[k];
+      });
+      document.querySelectorAll('input[type="checkbox"][data-save]').forEach(c => {
+        const k = 'c-' + getStableKey(c);
+        if(k in data) c.checked = data[k];
+      });
+    }catch(e){ console.warn(e); }
+  }
+
+  function limpiarTodo(){
+    if(!confirm('¿Seguro que querés borrar todas las respuestas cargadas?')) return;
+    document.querySelectorAll('textarea').forEach(ta => ta.value = '');
+    document.querySelectorAll('input[data-save]').forEach(inp => {
+      if(inp.type === 'radio' || inp.type === 'checkbox') inp.checked = false;
+      else inp.value = '';
+    });
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  document.addEventListener('input', e => {
+    if(e.target.matches('textarea, input')) guardar();
+  });
+  document.addEventListener('change', e => {
+    if(e.target.matches('input[type="radio"], input[type="checkbox"]')) guardar();
+  });
+
+  document.addEventListener('input', e => {
+    if(e.target.tagName === 'TEXTAREA'){
+      e.target.style.height = 'auto';
+      e.target.style.height = (e.target.scrollHeight) + 'px';
+    }
+  });
+
+  // ====== Preparar impresión ======
+  let imprimirTodas = false;
+
+  function prepararImpresion(){
+    if(imprimirTodas){
+      document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+    }
+
+    document.querySelectorAll('textarea').forEach(ta => {
+      let div = ta.parentNode.querySelector(':scope > .print-answer');
+      if(!div){
+        div = document.createElement('div');
+        div.className = 'print-answer';
+        ta.parentNode.insertBefore(div, ta.nextSibling);
+      }
+      const val = ta.value && ta.value.trim() !== '' ? ta.value : '';
+      div.textContent = val || ' ';
+    });
+  }
+
+  function restaurarDespuesDeImprimir(){
+    document.querySelectorAll('.panel').forEach(p => p.style.display = '');
+    document.querySelectorAll('.print-answer').forEach(d => d.remove());
+    imprimirTodas = false;
+  }
+
+  function imprimirActual(){
+    imprimirTodas = false;
+    window.print();
+  }
+
+  function imprimirTodo(){
+    imprimirTodas = true;
+    window.print();
+  }
+
+  window.addEventListener('beforeprint', prepararImpresion);
+  window.addEventListener('afterprint', restaurarDespuesDeImprimir);
+
+  // Cargar datos y fecha por defecto
+  cargar();
+  const fechaInput = document.getElementById('fecha');
+  if(!fechaInput.value){
+    fechaInput.value = new Date().toISOString().split('T')[0];
+  }
+</script>
+
+</body>
+</html>
